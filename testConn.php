@@ -12,31 +12,28 @@ if ($conn->connect_error) {
     die("Conexión fallida: " . $conn->connect_error);
 }
 
-// Crear una tabla
-// $sql = "CREATE TABLE ejemplo (
-//     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-//     nombre VARCHAR(30) NOT NULL,
-//     apellido VARCHAR(30) NOT NULL,
-//     edad INT(3)
-// )";
-
-// if ($conn->query($sql) === TRUE) {
-//     echo "Tabla 'ejemplo' creada exitosamente";
-// } else {
-//     echo "Error al crear la tabla: " . $conn->error;
-// }
-
-// Insertar valores en la tabla
-$sql = "INSERT INTO ejemplo (nombre, apellido, edad)
-        VALUES ('Juan', 'Pérez', 25),
-               ('María', 'Gómez', 30),
-               ('Pedro', 'López', 40)";
-
-if ($conn->query($sql) === TRUE) {
-    echo "Valores insertados exitosamente";
-} else {
-    echo "Error al insertar valores: " . $conn->error;
-}
+ //Crear una tabla
+ $sql = "CREATE TABLE ejemplo (
+     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+     nombre VARCHAR(30) NOT NULL,
+     apellido VARCHAR(30) NOT NULL,
+     edad INT(3)
+ )";
+ if ($conn->query($sql) === TRUE) {
+     echo "Tabla 'ejemplo' creada exitosamente";
+ } else {
+     echo "Error al crear la tabla: " . $conn->error;
+ }
+ //Insertar valores en la tabla
+ $sql = "INSERT INTO ejemplo (nombre, apellido, edad)
+         VALUES ('Juan', 'Pérez', 25),
+                ('María', 'Gómez', 30),
+                ('Pedro', 'López', 40)";
+ if ($conn->query($sql) === TRUE) {
+     echo "Valores insertados exitosamente";
+ } else {
+     echo "Error al insertar valores: " . $conn->error;
+ }
 
 // Cerrar la conexión
 $conn->close();
