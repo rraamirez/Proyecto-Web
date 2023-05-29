@@ -43,6 +43,19 @@ class Conexion {
             echo "Ocurrió un error al crear la tabla";
         }
     }
+
+    function loginDB($email, $passwd) {
+        $sql = "SELECT * FROM usuarios WHERE email='$email' AND password='$passwd'";
+
+        $result = $this->conn->query($sql);
+
+        if ($result->num_rows == 1) {
+            echo "El email y la contraseña coinciden.";
+        } else {
+            echo "El email y la contraseña no coinciden.";
+        }
+
+    }
 }
 
 // // Ejemplo de uso

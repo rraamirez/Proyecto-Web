@@ -1,6 +1,7 @@
 <?php
 
 require_once('model/functionsDB.php');
+require_once('controller/procesarLogin.php');
 
 function HTMLinicio($titulo){
     echo <<< HTML
@@ -56,7 +57,7 @@ function HTMLnav() {
 function HTMLaside() {
     echo <<<HTML
     <aside class="col-3" style="background-color: beige; display:flex;">
-        <form action="">
+        <form action="controller/procesarLogin.php">
             <input type='text' placeholder='usuario' name='user' class="form-control" />
             <input type='password' name='contrasena' class="form-control" />
             <input type='submit' value='login' class='btn btn-primary btn-block' />
