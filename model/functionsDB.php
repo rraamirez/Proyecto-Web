@@ -1,5 +1,5 @@
 <?php
-require_once("db.php");
+require_once("bd.php");
 function loginDB($user, $contrasena, $db){
     
     $con=$contrasena;
@@ -31,6 +31,8 @@ function loginDB($user, $contrasena, $db){
     
     return $salida;
 }
+
+
 
 // function crearTablaVacia($db, $nombreTabla) {
 //     $sql = "CREATE TABLE $nombreTabla (

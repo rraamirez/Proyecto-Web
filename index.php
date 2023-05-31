@@ -1,7 +1,7 @@
 <?php
 require_once('view/funcHTML.php');
-require_once('model/db.php');
 require_once('model/bd.php');
+
 
 $db = new Conexion("localhost", "raul", "raul1234", "proyectoTW");
 $db->conectar();
@@ -12,9 +12,9 @@ HTMLinicio("Inicio");
 HTMLfin();
 HTMLheader();
 
-HTMLnav();
+//HTMLnav();
 HTMLaside();
 HTMLfooter();
 
-DB_disconnection($db);
+
 ?>

@@ -5,27 +5,27 @@ class Conexion {
     private $password;
     private $dbname;
     private $conn;
-    
+
     public function __construct($servername, $username, $password, $dbname) {
         $this->servername = $servername;
         $this->username = $username;
         $this->password = $password;
         $this->dbname = $dbname;
     }
-    
+
     public function conectar() {
         $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-        
+
         if ($this->conn->connect_error) {
             die("Conexión fallida: " . $this->conn->connect_error);
         }
-        
+
         echo "Conexión exitosa";
     }
-    
+
     public function desconectar() {
         $this->conn->close();
-        
+
         echo "Desconexión exitosa";
     }
 
@@ -36,7 +36,7 @@ class Conexion {
             columna2 INT(11),
             columna3 TEXT
         )";
-    
+
         if ($this->conn->query($sql) === TRUE) {
             echo "La tabla se creó exitosamente";
         } else {
@@ -45,18 +45,42 @@ class Conexion {
     }
 
     function loginDB($email, $passwd) {
-        $sql = "SELECT * FROM usuarios WHERE email='$email' AND password='$passwd'";
+        $sql = "SELECT * FROM usuarios WHERE email='$email'";
 
         $result = $this->conn->query($sql);
 
         if ($result->num_rows == 1) {
-            echo "El email y la contraseña coinciden.";
-        } else {
-            echo "El email y la contraseña no coinciden.";
-        }
+            $row = $result->fetch_assoc();
+            $hashedClave = $row['clave'];
 
+            if (password_verify($passwd, $hashedClave)) {
+                echo "El email y la contraseña coinciden.";
+            } else {
+                echo "La contraseña es incorrecta.";
+            }
+        } else {
+            echo "El email no existe.";
+        }
+    }
+
+    function DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol) {
+        $hashedClave = password_hash($clave, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO usuarios (nombre, apellidos, email, foto, clave, usuario, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $prep = $this->conn->prepare($sql);
+        $prep->bind_param('sssssss', $nombre, $apellidos, $email, $foto, $hashedClave, $usuario, $rol);
+
+        if ($prep->execute()) {
+            $id = $prep->insert_id;
+            $prep->close();
+            return $id;
+        } else {
+            $prep->close();
+            return false;
+        }
     }
 }
+
 
 // // Ejemplo de uso
 // $conexion = new Conexion("localhost", "raul", "raul1234", "proyectoTW");
