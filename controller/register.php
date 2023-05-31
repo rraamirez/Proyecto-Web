@@ -17,16 +17,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conexion->conectar();
     
 
-    // Llamar al método DBaddUsuario() para agregar el usuario a la base de datos
-    $idUsuario = $conexion->DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol);
-    if ($idUsuario) {
-        // Usuario registrado exitosamente
-        echo 'Usuario registrado con ID: ' . $idUsuario;
-        echo '<script>alert("Usuario creado correctamente");</script>';
-        header('Location: ../index.php');
+    // Comprobar si el nombre de usuario ya existe
+    if ($conexion->usuarioExiste($usuario)) {
+        echo 'Error: El nombre de usuario ya existe.';
     } else {
-        // Error al registrar el usuario
-        echo 'Error al registrar el usuario.';
+        // Si el nombre de usuario no existe, puedes continuar con el registro del usuario
+        // Llamar al método DBaddUsuario() para agregar el usuario a la base de datos
+        $idUsuario = $conexion->DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol);
+        if ($idUsuario) {
+            // Usuario registrado exitosamente
+            echo 'Usuario registrado con ID: ' . $idUsuario;
+            echo '<script>alert("Usuario creado correctamente");</script>';
+            header('Location: ../index.php');
+        } else {
+            // Error al registrar el usuario
+            echo 'Error al registrar el usuario.';
+        }
     }
 
     // Cerrar la conexión a la base de datos

@@ -1,0 +1,36 @@
+CREATE TABLE usuarios (   id INT PRIMARY KEY AUTO_INCREMENT,   nombre VARCHAR(50) NOT NULL,   apellidos VARCHAR(50) NOT NULL,   email VARCHAR(100) NOT NULL,   foto VARCHAR(100),   clave VARCHAR(255) NOT NULL,   usuario VARCHAR(50) NOT NULL UNIQUE,   rol VARCHAR(50) NOT NULL );
+
+
+CREATE TABLE incidencias (
+    id_incidencia INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
+    titulo VARCHAR(255) NOT NULL,
+    descripcion TEXT,
+    fecha DATETIME,
+    ubicacion VARCHAR(255),
+    estado VARCHAR(50),
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
+
+CREATE TABLE logs ( id_log INT AUTO_INCREMENT PRIMARY KEY, id_usuario INT, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), fecha DATETIME);
+
+
+CREATE TABLE valoraciones ( id_valoracion INT PRIMARY KEY AUTO_INCREMENT, id_incidencia INT, id_usuario INT, puntuacion INT, FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia), FOREIGN KEY (id_usuario) REFERENCES usuarios(id));
+
+CREATE TABLE comentarios (
+  id_comentario INT AUTO_INCREMENT PRIMARY KEY,
+  id_incidencia INT,
+  id_usuario INT,
+  mensaje TEXT,
+  FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia),
+  FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+);
+
+
+CREATE TABLE imagenes (
+  id_imagen INT AUTO_INCREMENT PRIMARY KEY,
+  id_incidencia INT,
+  url VARCHAR(255),
+  FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia)
+);

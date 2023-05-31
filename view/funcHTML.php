@@ -61,9 +61,6 @@ function HTMLnav() {
                 <li class="nav-item mx-auto"> <!-- Agregado mx-auto -->
                     <a class="nav-link" href="#">Incidencias</a>
                 </li>
-    HTML;
-    if(loginDB('Juan','Pérez','proyectoTW')) echo '<li class="nav-item"> <a class="nav-link" href="#">Usuarios</a> </li>';
-    echo <<< HTML
             </ul>
         </div>
     </nav>
@@ -73,8 +70,9 @@ function HTMLnav() {
 
 
 function HTMLaside() {
+    if($_SESSION['user'] == ""){
     echo <<<HTML
-        <form action="procesarLogin.php">
+        <form method="POST" action="../controller/procesarLogin.php">
             <input type='text' placeholder='usuario' name='user' class="form-control" />
             <input type='password' name='contrasena' class="form-control" />
             <input type='submit' value='login' class='btn btn-primary btn-block' />
@@ -82,8 +80,18 @@ function HTMLaside() {
         <form action = "../controller/register.php">
             <input type='submit' value='registrar' class='btn btn-secondary btn-block' />
         </form>
+    HTML;
+    } else {
+    echo <<<HTML
+        <p>
+            Bienvenido, {$_SESSION['user']}
+        </p>
+        <form action = "../controller/procesarLogout.php">
+            <input type='submit' value='logout' class='btn btn-secondary btn-block' />
+        </form>
     
     HTML;
+    }
 }
 
 // function HTMLaside() {

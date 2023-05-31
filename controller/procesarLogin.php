@@ -1,15 +1,33 @@
 <?php
+session_start();
 
-require_once('model/bd.php');
-// Verificar si se ha enviado el formulario de inicio de sesión
-if (isset($_GET['usuario']) && isset($_GET['clave'])) {
-    // Obtener los valores del formulario
-    $usuario = $_GET['user'];
-    $contrasena = $_GET['clave'];
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+    $usuario = $_POST["user"];
+    $contrasena = $_POST["contrasena"];
 
-    $db = new Conexion("localhost", "raul", "raul1234", "proyectoTW");
-    $db->conectar();
-    $db->loginDB($usuario, $contrasena);
-    $db->desconectar();
+    require_once('../model/bd.php');
+
+    $conexion = new Conexion();
+    $conexion->conectar();
+    
+    if (!empty($usuario) && !empty($contrasena)) {
+        if ($conexion->logindb($usuario, $contrasena)) {
+            $_SESSION['user'] = $usuario;
+            $_SESSION['message'] = "Login correcto.";
+        }
+        else
+            $_SESSION['message'] = "Error en el login.";
+    }else{
+        $_SESSION['message'] = "Rellena todos los campos.";
+
+    }
+
+    
+    $conexion->desconectar();
+   
+    // Redireccionar al usuario a index.php
+    header("Location: ../index.php");
+    exit();
 }
+
 ?>

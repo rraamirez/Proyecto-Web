@@ -7,6 +7,8 @@ class Conexion {
     private $dbname;
     private $conn;
 
+    private static $intance = null;
+
     public function __construct() {
         require_once('dbcredencialesRaul.php');
         
@@ -32,6 +34,32 @@ class Conexion {
         echo "Desconexión exitosa";
     }
 
+    public static function getInstance() {
+        if (self::$intance == null) {
+          self::$intance = new Conexion();
+        }
+    
+        return self::$intance;
+    }
+
+    function usuarioExiste($usuario) {
+        // Prepara una consulta SQL para buscar el usuario en la base de datos
+        $sql = "SELECT * FROM usuarios WHERE usuario = ?";
+        $prep = $this->conn->prepare($sql);
+        // Enlaza el valor proporcionado a la consulta SQL
+        $prep->bind_param('s', $usuario);
+        // Ejecuta la consulta
+        $prep->execute();
+        // Recoge el resultado
+        $resultado = $prep->get_result();
+        // Cierra la consulta preparada
+        $prep->close();
+        // Devuelve si se encontró el usuario
+        return $resultado->num_rows > 0;
+    }
+    
+    
+
     function crearTablaVacia($nombreTabla) {
         $sql = "CREATE TABLE $nombreTabla (
             id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -47,24 +75,29 @@ class Conexion {
         }
     }
 
-    function loginDB($email, $passwd) {
-        $sql = "SELECT * FROM usuarios WHERE email='$email'";
-
-        $result = $this->conn->query($sql);
-
-        if ($result->num_rows == 1) {
-            $row = $result->fetch_assoc();
-            $hashedClave = $row['clave'];
-
-            if (password_verify($passwd, $hashedClave)) {
-                echo "El email y la contraseña coinciden.";
+    function logindb($usuario, $contrasena)
+    {
+        $sql = "SELECT clave FROM usuarios WHERE usuario = ?";
+        $prep = $this->conn->prepare($sql);
+        $prep->bind_param('s', $usuario);
+        $prep->execute();
+        $resultado = $prep->get_result();
+        if ($resultado->num_rows > 0) {
+            $fila = $resultado->fetch_assoc();
+            $clave_hash = $fila['clave'];
+            if (password_verify($contrasena, $clave_hash)) {
+                $prep->close();
+                return true;
             } else {
-                echo "La contraseña es incorrecta.";
+                $prep->close();
+                return false;
             }
         } else {
-            echo "El email no existe.";
+            $prep->close();
+            return false;
         }
     }
+    
 
     function DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol) {
         $hashedClave = password_hash($clave, PASSWORD_DEFAULT);
@@ -84,12 +117,4 @@ class Conexion {
     }
 }
 
-
-// // Ejemplo de uso
-// $conexion = new Conexion("localhost", "raul", "raul1234", "proyectoTW");
-// $conexion->conectar();
-
-// // Realiza tus operaciones con la base de datos
-
-// $conexion->desconectar();
 ?>
