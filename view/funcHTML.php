@@ -74,7 +74,6 @@ function HTMLnav() {
 
 function HTMLaside() {
     echo <<<HTML
-    <aside class="col-3" style="background-color: beige; display:flex;">
         <form action="procesarLogin.php">
             <input type='text' placeholder='usuario' name='user' class="form-control" />
             <input type='password' name='contrasena' class="form-control" />
@@ -83,9 +82,39 @@ function HTMLaside() {
         <form action = "../controller/register.php">
             <input type='submit' value='registrar' class='btn btn-secondary btn-block' />
         </form>
-    </aside>
+    
     HTML;
 }
+
+// function HTMLaside() {
+//     echo <<<HTML
+//     <aside class="col-3 bg-beige d-flex flex-column p-3">
+//         <div class="card">
+//             <div class="card-body">
+//                 <h5 class="card-title text-center">Iniciar sesión</h5>
+//                 <form action="procesarLogin.php" method="POST">
+//                     <div class="form-group">
+//                         <label for="email">Correo electrónico</label>
+//                         <input type="email" class="form-control" id="email" name="user" required>
+//                     </div>
+//                     <div class="form-group mt-3">
+//                         <label for="password">Contraseña</label>
+//                         <input type="password" class="form-control" id="password" name="contrasena" required>
+//                     </div>
+//                     <div class="d-grid gap-2 mt-4">
+//                         <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+//                     </div>
+//                 </form>
+//             </div>
+//         </div>
+//         <div class="d-grid gap-2 mt-4">
+//             <form action="../controller/register.php" method="POST">
+//                 <button type="submit" class="btn btn-secondary btn-block">Registrar</button>
+//             </form>
+//         </div>
+//     </aside>
+//     HTML;
+// }
 
 
 
@@ -111,7 +140,7 @@ function HTMLmainContentStart(){
 function HTMLasideStart(){
     echo <<<HTML
         </div>
-        <div class="col-lg-1">
+        <div class="col-lg-2">
             <aside style="background-color: beige;">
     HTML;
 }

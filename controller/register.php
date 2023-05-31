@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($idUsuario) {
         // Usuario registrado exitosamente
         echo 'Usuario registrado con ID: ' . $idUsuario;
+        echo '<script>alert("Usuario creado correctamente");</script>';
         header('Location: ../index.php');
     } else {
         // Error al registrar el usuario
