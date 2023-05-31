@@ -5,16 +5,19 @@ require_once('model/bd.php');
 
 $db = new Conexion("localhost", "raul", "raul1234", "proyectoTW");
 $db->conectar();
-//$db->crearTablaVacia("nueva");
-//$db->loginDB("raul@gmail.com", "raulito");
 
 HTMLinicio("Inicio");
-HTMLfin();
 HTMLheader();
 
-//HTMLnav();
+HTMLmainContentStart();
+// Aquí va tu contenido principal
+HTMLasideStart();
 HTMLaside();
+HTMLasideEnd();
+
 HTMLfooter();
+HTMLfin();
+
 
 
 ?>

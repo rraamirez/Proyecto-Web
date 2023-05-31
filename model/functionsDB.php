@@ -32,20 +32,4 @@ function loginDB($user, $contrasena, $db){
     return $salida;
 }
 
-
-
-// function crearTablaVacia($db, $nombreTabla) {
-//     $sql = "CREATE TABLE $nombreTabla (
-//         id INT(11) AUTO_INCREMENT PRIMARY KEY,
-//         columna1 VARCHAR(255),
-//         columna2 INT(11),
-//         columna3 TEXT
-//     )";
-
-//     if (mysqli_query($db, $sql)) {
-//         return true; // La tabla se creó exitosamente
-//     } else {
-//         return false; // Ocurrió un error al crear la tabla
-//     }
-// }
 ?>

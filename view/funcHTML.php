@@ -100,4 +100,29 @@ function HTMLfooter() {
     HTML;
 }
 
+function HTMLmainContentStart(){
+    echo <<<HTML
+    <div class="row">
+        <div class="col-lg-9">
+    HTML;
+}
+
+
+function HTMLasideStart(){
+    echo <<<HTML
+        </div>
+        <div class="col-lg-1">
+            <aside style="background-color: beige;">
+    HTML;
+}
+
+function HTMLasideEnd(){
+    echo <<<HTML
+            </aside>
+        </div>
+    </div>
+    HTML;
+}
+
+
 ?>
