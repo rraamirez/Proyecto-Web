@@ -3,7 +3,7 @@ require_once('view/funcHTML.php');
 require_once('model/bd.php');
 
 
-$db = new Conexion("localhost", "raul", "raul1234", "proyectoTW");
+$db = new Conexion();
 $db->conectar();
 
 HTMLinicio("Inicio");

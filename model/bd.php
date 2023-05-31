@@ -1,4 +1,5 @@
 <?php
+
 class Conexion {
     private $servername;
     private $username;
@@ -6,15 +7,17 @@ class Conexion {
     private $dbname;
     private $conn;
 
-    public function __construct($servername, $username, $password, $dbname) {
-        $this->servername = $servername;
-        $this->username = $username;
-        $this->password = $password;
-        $this->dbname = $dbname;
+    public function __construct() {
+        include 'dbcredencialesRaul.php';
+        
+        $this->servername = DB_HOST;
+        $this->username = DB_USER;
+        $this->password = DB_PASSWD;
+        $this->dbname = DB_DATABASE;
     }
 
     public function conectar() {
-        $this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+        $this->conn = new mysqli();
 
         if ($this->conn->connect_error) {
             die("Conexión fallida: " . $this->conn->connect_error);
