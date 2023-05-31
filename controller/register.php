@@ -13,14 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Realizar la conexión a la base de datos
     require_once '../model/bd.php'; // Archivo que contiene la clase Conexion
-    $conexion = new Conexion('localhost', 'raul', 'raul1234', 'proyectoTW');
+    $conexion = new Conexion();
     $conexion->conectar();
 
     // Llamar al método DBaddUsuario() para agregar el usuario a la base de datos
     $idUsuario = $conexion->DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol);
     if ($idUsuario) {
         // Usuario registrado exitosamente
+        //altert that user ir created using javascript
+
+
         echo 'Usuario registrado con ID: ' . $idUsuario;
+        header('Location: ../index.php');
     } else {
         // Error al registrar el usuario
         echo 'Error al registrar el usuario.';
@@ -81,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="usuario">Usuario:</label>
             <input type="text" class="form-control" name="usuario" required>
         </div>
-        <button type="submit" class="btn btn-primary" formaction="../index.php">Registrar</button>
+        <button type="submit" class="btn btn-primary" formaction="register.php">Registrar</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
