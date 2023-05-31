@@ -17,7 +17,4 @@ HTMLasideEnd();
 
 HTMLfooter();
 HTMLfin();
-
-
-
 ?>

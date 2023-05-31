@@ -8,7 +8,7 @@ class Conexion {
     private $conn;
 
     public function __construct() {
-        include 'dbcredencialesRaul.php';
+        require_once('dbcredencialesRaul.php');
         
         $this->servername = DB_HOST;
         $this->username = DB_USER;
@@ -17,7 +17,7 @@ class Conexion {
     }
 
     public function conectar() {
-        $this->conn = new mysqli();
+        $this->conn = new mysqli($this->servername,$this->username,$this->password,$this->dbname);
 
         if ($this->conn->connect_error) {
             die("Conexión fallida: " . $this->conn->connect_error);

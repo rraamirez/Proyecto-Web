@@ -12,9 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Aquí puedes realizar la validación de los datos y otras verificaciones necesarias antes de agregar el usuario a la base de datos
 
     // Realizar la conexión a la base de datos
-    require_once '../model/bd.php'; // Archivo que contiene la clase Conexion
-    $conexion = new Conexion('localhost', 'raul', 'raul1234', 'proyectoTW');
+    require_once('../model/bd.php'); // Archivo que contiene la clase Conexion
+    $conexion = new Conexion();
     $conexion->conectar();
+    
 
     // Llamar al método DBaddUsuario() para agregar el usuario a la base de datos
     $idUsuario = $conexion->DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol);
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="usuario">Usuario:</label>
             <input type="text" class="form-control" name="usuario" required>
         </div>
-        <button type="submit" class="btn btn-primary" formaction="../index.php">Registrar</button>
+        <button type="submit" class="btn btn-primary" formaction="register.php" >Registrar</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
