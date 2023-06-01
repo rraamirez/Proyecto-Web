@@ -3,8 +3,9 @@
 require_once('model/functionsDB.php');
 require_once('controller/procesarLogin.php');
 
-function HTMLinicio($titulo){
-    echo <<< HTML
+function HTMLinicio($titulo)
+{
+    echo <<<HTML
     <!DOCTYPE html>
     <html>
     <head>
@@ -15,7 +16,8 @@ function HTMLinicio($titulo){
     HTML;
 }
 
-function HTMLheader() {
+function HTMLheader()
+{
     echo <<<HTML
     <header class="container-fluid bg-light" style="background-color: beige;">
     <div class="row align-items-center justify-content-center text-center">
@@ -26,41 +28,44 @@ function HTMLheader() {
                 <img src="img/cenes.jpeg" id="img_cenes" class="img-fluid" alt="Imagen Cenes">
             </div>
         </div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="#"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Incidencias</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+
     </header>
     HTML;
 }
 
 
 
-function HTMLfin(){
-    echo <<< HTML
+function HTMLfin()
+{
+    echo <<<HTML
     </body>
     HTML;
 }
 
-function HTMLnav() {
-    echo <<< HTML
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: beige;">
-        <div class="container">
-            <ul class="navbar-nav justify-content-center">
-                <li class="nav-item mx-auto"> <!-- Agregado mx-auto -->
-                    <a class="nav-link" href="#">Incidencias</a>
-                </li>
+function HTMLnav()
+{
+    echo <<<HTML
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+    HTML;
+    if (!isset($_SESSION['rol'])) {
+        $items = ["Incidencias"];
+        $links = ["#"];
+    } else {
+        if ($_SESSION['rol'] == 'colaborador') {
+            $items = ["Incidencias", "Mis incidencias"];
+            $links = ["#", "#"];
+        } else if ($_SESSION['rol'] == 'admin') {
+            $items = ["Incidencias", "Mis incidencias", "Usuarios", "Logs", "BBDD"];
+            $links = ["#", "#", "#", "#", "#"];
+        }
+    }
+    foreach ($items as $index => $item) {
+        $link = $links[$index];
+        echo "<li class='nav-item'><a class='nav-link' href='$link'>$item</a></li>";
+    }
+    echo <<<HTML
             </ul>
         </div>
     </nav>
@@ -69,9 +74,11 @@ function HTMLnav() {
 
 
 
-function HTMLaside() {
-    if($_SESSION['user'] == ""){
-    echo <<<HTML
+
+function HTMLaside()
+{
+    if (!isset($_SESSION['user'])) {
+        echo <<<HTML
         <form method="POST" action="../controller/procesarLogin.php">
             <input type='text' placeholder='usuario' name='user' class="form-control" />
             <input type='password' name='contrasena' class="form-control" />
@@ -82,7 +89,7 @@ function HTMLaside() {
         </form>
     HTML;
     } else {
-    echo <<<HTML
+        echo <<<HTML
         <p>
             Bienvenido, {$_SESSION['user']}
         </p>
@@ -94,39 +101,8 @@ function HTMLaside() {
     }
 }
 
-// function HTMLaside() {
-//     echo <<<HTML
-//     <aside class="col-3 bg-beige d-flex flex-column p-3">
-//         <div class="card">
-//             <div class="card-body">
-//                 <h5 class="card-title text-center">Iniciar sesión</h5>
-//                 <form action="procesarLogin.php" method="POST">
-//                     <div class="form-group">
-//                         <label for="email">Correo electrónico</label>
-//                         <input type="email" class="form-control" id="email" name="user" required>
-//                     </div>
-//                     <div class="form-group mt-3">
-//                         <label for="password">Contraseña</label>
-//                         <input type="password" class="form-control" id="password" name="contrasena" required>
-//                     </div>
-//                     <div class="d-grid gap-2 mt-4">
-//                         <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
-//                     </div>
-//                 </form>
-//             </div>
-//         </div>
-//         <div class="d-grid gap-2 mt-4">
-//             <form action="../controller/register.php" method="POST">
-//                 <button type="submit" class="btn btn-secondary btn-block">Registrar</button>
-//             </form>
-//         </div>
-//     </aside>
-//     HTML;
-// }
-
-
-
-function HTMLfooter() {
+function HTMLfooter()
+{
     echo <<<HTML
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
@@ -137,7 +113,8 @@ function HTMLfooter() {
     HTML;
 }
 
-function HTMLmainContentStart(){
+function HTMLmainContentStart()
+{
     echo <<<HTML
     <div class="row">
         <div class="col-lg-9">
@@ -145,7 +122,8 @@ function HTMLmainContentStart(){
 }
 
 
-function HTMLasideStart(){
+function HTMLasideStart()
+{
     echo <<<HTML
         </div>
         <div class="col-lg-2">
@@ -153,7 +131,8 @@ function HTMLasideStart(){
     HTML;
 }
 
-function HTMLasideEnd(){
+function HTMLasideEnd()
+{
     echo <<<HTML
             </aside>
         </div>

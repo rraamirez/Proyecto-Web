@@ -14,6 +14,7 @@ $db->conectar();
 
 HTMLinicio("Inicio");
 HTMLheader();
+HTMLnav();
 
 HTMLmainContentStart();
 // Aquí va tu contenido principal

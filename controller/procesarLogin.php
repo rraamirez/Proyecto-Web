@@ -13,6 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($usuario) && !empty($contrasena)) {
         if ($conexion->logindb($usuario, $contrasena)) {
             $_SESSION['user'] = $usuario;
+            $_SESSION['rol'] = $conexion->getRol($usuario);
             $_SESSION['message'] = "Login correcto.";
         }
         else

@@ -115,6 +115,26 @@ class Conexion {
             return false;
         }
     }
+
+    function getRol($usuario) {
+        $sql = "SELECT rol FROM usuarios WHERE usuario = ?";
+        $prep = $this->conn->prepare($sql);
+        $prep->bind_param('s', $usuario);
+        $prep->execute();
+        $resultado = $prep->get_result();
+        
+        // Obtener el valor del resultado
+        $row = $resultado->fetch_assoc();
+        $rol = $row['rol'];
+        
+        // Cerrar la conexión y liberar recursos
+        $prep->close();
+        $this->conn->close();
+        
+        // Devolver el valor del rol
+        return $rol;
+    }
+    
 }
 
 ?>
