@@ -101,13 +101,13 @@ class Conexion {
 
     function DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol) {
         $hashedClave = password_hash($clave, PASSWORD_DEFAULT);
-
+    
         $sql = "INSERT INTO usuarios (nombre, apellidos, email, foto, clave, usuario, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $prep = $this->conn->prepare($sql);
-        $prep->bind_param('sssssss', $nombre, $apellidos, $email, $foto, $hashedClave, $usuario, $rol);
-
+        $prep->bind_param('sssbsss', $nombre, $apellidos, $email, $foto, $hashedClave, $usuario, $rol);
+    
         if ($prep->execute()) {
-            $id = $prep->insert_id;
+            $id = $this->conn->insert_id;
             $prep->close();
             return $id;
         } else {
@@ -115,6 +115,7 @@ class Conexion {
             return false;
         }
     }
+    
 
     function getRol($usuario) {
         $sql = "SELECT rol FROM usuarios WHERE usuario = ?";
@@ -134,6 +135,27 @@ class Conexion {
         // Devolver el valor del rol
         return $rol;
     }
+
+    function getImage($usuario) {
+        // Prepara la consulta SQL
+        $stmt = $this->conn->prepare("SELECT foto FROM usuarios WHERE usuario = ?");
+        $stmt->bind_param('s', $usuario);
+    
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Obtén el resultado
+        $stmt->bind_result($foto);
+        $stmt->fetch();
+    
+        // Cierra la conexión
+        $stmt->close();
+        $stmt->close();
+    
+        // Retorna los datos de la foto
+        return $foto;
+    }
+    
     
 }
 

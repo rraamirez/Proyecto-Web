@@ -89,17 +89,20 @@ function HTMLaside()
         </form>
     HTML;
     } else {
+        // Convertir la foto a base64 para poder mostrarla en un elemento de imagen
+        $foto = base64_encode($_SESSION['foto']);
         echo <<<HTML
         <p>
             Bienvenido, {$_SESSION['user']}
         </p>
+        <img src="data:image/jpeg;base64,{$foto}" alt="Foto de usuario" />
         <form action = "../controller/procesarLogout.php">
             <input type='submit' value='logout' class='btn btn-secondary btn-block' />
         </form>
-    
     HTML;
     }
 }
+
 
 function HTMLfooter()
 {

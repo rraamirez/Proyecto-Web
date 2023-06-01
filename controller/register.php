@@ -4,7 +4,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'];
     $apellidos = $_POST['apellidos'];
     $email = $_POST['email'];
-    $foto = $_POST['foto'];
+    // Comprueba si se ha cargado un archivo
+    if (isset($_FILES['foto'])) {
+        // Lee el contenido del archivo y lo convierte en un string binario
+        $foto = file_get_contents($_FILES['foto']['tmp_name']);
+    } else {
+        $foto = null;
+    }
     $clave = $_POST['clave'];
     $usuario = $_POST['usuario'];
     $rol = 'colaborador';
@@ -15,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once('../model/bd.php'); // Archivo que contiene la clase Conexion
     $conexion = new Conexion();
     $conexion->conectar();
-    
+
 
     // Comprobar si el nombre de usuario ya existe
     if ($conexion->usuarioExiste($usuario)) {
@@ -42,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Registro de Usuario</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -49,18 +56,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         h2 {
             text-align: center;
         }
+
         body {
             padding: 20px;
         }
+
         form {
             max-width: 400px;
             margin: 0 auto;
         }
     </style>
 </head>
+
 <body>
     <h2>Registro de Usuario</h2>
-    <form method="POST" action="register.php">
+    <form method="POST" action="register.php" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
             <input type="text" class="form-control" name="nombre" required>
@@ -78,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-group">
             <label for="foto">Foto:</label>
-            <input type="text" class="form-control" name="foto">
+            <input type="file" class="form-control" name="foto">
         </div>
 
         <div class="form-group">
@@ -90,12 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="usuario">Usuario:</label>
             <input type="text" class="form-control" name="usuario" required>
         </div>
-        <button type="submit" class="btn btn-primary" formaction="register.php" >Registrar</button>
+        <button type="submit" class="btn btn-primary" formaction="register.php">Registrar</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-</html>
 
+</html>
