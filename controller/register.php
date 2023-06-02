@@ -7,8 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Comprueba si se ha cargado un archivo
     if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
         // Lee el contenido del archivo y lo convierte en un string binario
-        $foto = file_get_contents($_FILES['foto']['tmp_name']);
-        $foto = base64_encode($foto);
+        $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
+
         if(isset($foto) && !empty($foto))
             setcookie("codigofo", "algohay", time()+3600);
     } else {

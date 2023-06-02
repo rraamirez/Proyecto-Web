@@ -99,14 +99,14 @@ function HTMLaside()
     HTML;
     } else {
         // Convertir la foto a base64 para poder mostrarla en un elemento de imagen
-        $foto = base64_decode($_SESSION['foto']);
+        $foto = $_SESSION['foto'];
         echo <<<HTML
 
         <p class="text-center">
             Bienvenido, {$_SESSION['user']}
         </p>
         <div class="text-center">
-            <img src="$foto" alt="Foto de usuario" class="rounded-circle img-thumbnail" />
+            <img src="data:image/jpeg;base64,$foto" alt="Foto de usuario" class="rounded-circle img-thumbnail" />
         </div>
         <form action="../controller/procesarLogout.php" class="form-signin">
             <div class="d-flex justify-content-center mt-3">
