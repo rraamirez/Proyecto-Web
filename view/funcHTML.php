@@ -66,7 +66,7 @@ function HTMLnav()
 function HTMLmainContentStart()
 {
     echo <<<HTML
-    <div class="row">
+    <div class="row align-items-center justify-content-center">
     HTML;
 }
 function HTMLasideStart()
@@ -137,10 +137,10 @@ function HTMLbusqueda()
 {
     echo <<<HTML
     <form method="POST" action="../controller/procesarBusqueda.php">
-        <h2>Listado de incidencias</h2>
-        <div class="container" style="background-color: beige;">
+        <h2 class="border">Listado de incidencias:</h2>
+        <div class="container border" style="background-color: beige;">
             <h3>Criterios de búsqueda</h3>
-            <div class="row">
+            <div class="row border">
                 <h4>Ordenar Por:</h4>
                 <select class="form-select" name="ordenarPor">
                     <option value="sortAge">Antigüedad</option>
@@ -148,12 +148,12 @@ function HTMLbusqueda()
                     <option value="totalLikes">Likes netos</option>
                 </select>
             </div>
-            <div class="row">
+            <div class="row border">
                 <h4>Incidencias que contengan:</h4>
                 <input type="text" class="form-control" name="lugar" placeholder="Lugar">
                 <input type="text" class="form-control" name="textoBusqueda" placeholder="Texto de búsqueda">
             </div>
-            <div class="row">
+            <div class="row border">
                 <div class="d-flex align-items-center">
                     <h4>Estado:</h4>
                     <div class="form-check form-check-inline">
@@ -201,6 +201,27 @@ function HTMLbodyEnd()
     </div>
     HTML;
 }
+
+function HTMLbodyIncidenciasStart()
+{
+    echo <<<HTML
+        <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3" >
+    HTML;
+}
+
+function HTMLbodyIncidencias(){
+
+}
+
+function HTMLbodyIncidenciasEnd()
+{
+    echo <<<HTML
+        </div>
+    </div>
+    HTML;
+}
+
+
 
 function HTMLfooter()
 {
