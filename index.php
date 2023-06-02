@@ -12,6 +12,14 @@ require_once('model/bd.php');
 $db = new Conexion();
 $db->conectar();
 
+
+if (isset($_SESSION['message'])) {
+    echo '<script>alert("' . $_SESSION['message'] . '");</script>';
+    // Borrar el mensaje una vez que se ha mostrado
+    unset($_SESSION['message']);
+    //session_abort();
+}
+
 HTMLinicio("Mi página");
 HTMLheader();
 HTMLnav();
@@ -27,11 +35,5 @@ HTMLfin();
 
 
 
-if (isset($_SESSION['message'])) {
-    echo '<script>alert("' . $_SESSION['message'] . '");</script>';
-    // Borrar el mensaje una vez que se ha mostrado
-    unset($_SESSION['message']);
-    session_abort();
-}
 
 ?>

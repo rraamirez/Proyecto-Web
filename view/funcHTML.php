@@ -69,44 +69,54 @@ function HTMLmainContentStart()
     <div class="row">
     HTML;
 }
-
 function HTMLasideStart()
 {
     echo <<<HTML
-        <div class="col-lg-3">
-            <aside style="background-color: beige;">
+        <div class="col-lg-2 ml-auto">
+            <aside class="p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3">
     HTML;
 }
+
+
 
 function HTMLaside()
 {
     if (!isset($_SESSION['user'])) {
         echo <<<HTML
-        <form method="POST" action="../controller/procesarLogin.php">
-            <input type='text' placeholder='usuario' name='user' class="form-control" />
-            <input type='password' name='contrasena' class="form-control" />
-            <input type='submit' value='login' class='btn btn-primary btn-block' />
+        <form method="POST" action="../controller/procesarLogin.php" class="form-signin">
+            <label for="inputUser" class="sr-only">Usuario</label>
+            <input type="text" id="inputUser" name='user' class="form-control" placeholder="Usuario" required autofocus>
+            <label for="inputPassword" class="sr-only">Contraseña</label>
+            <input type="password" id="inputPassword" name='contrasena' class="form-control" placeholder="Contraseña" required>
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-lg btn-primary" type="submit">Iniciar sesión</button>
+            </div>
         </form>
-        <form action = "../controller/register.php">
-            <input type='submit' value='registrar' class='btnbtn-secondary btn-block' />
+        <form action="../controller/register.php" class="form-signin">
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-lg btn-secondary" type="submit">Registrar</button>
+            </div>
         </form>
     HTML;
     } else {
         // Convertir la foto a base64 para poder mostrarla en un elemento de imagen
         $foto = base64_encode($_SESSION['foto']);
         echo <<<HTML
-        <p>
+        <p class="text-center">
             Bienvenido, {$_SESSION['user']}
         </p>
-        <img src="data:image/jpeg;base64,{$foto}" alt="Foto de usuario" />
-        <form action = "../controller/procesarLogout.php">
-            <input type='submit' value='logout' class='btn btn-secondary btn-block' />
+        <div class="text-center">
+            <img src="data:image/jpeg;base64,{$foto}" alt="Foto de usuario" class="rounded-circle img-thumbnail" />
+        </div>
+        <form action="../controller/procesarLogout.php" class="form-signin">
+            <div class="d-flex justify-content-center mt-3">
+                <button class="btn btn-lg btn-secondary" type="submit">Cerrar sesión</button>
+            </div>
         </form>
     HTML;
     }
 }
 
-<<<<<<< HEAD
 function HTMLasideEnd()
 {
     echo <<<HTML
@@ -115,10 +125,11 @@ function HTMLasideEnd()
     HTML;
 }
 
+
 function HTMLbodyStart()
 {
     echo <<<HTML
-        <div class="col-lg-9">
+        <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3 >
     HTML;
 }
 
@@ -190,8 +201,6 @@ function HTMLbodyEnd()
     </div>
     HTML;
 }
-=======
->>>>>>> refs/remotes/origin/main
 
 function HTMLfooter()
 {
