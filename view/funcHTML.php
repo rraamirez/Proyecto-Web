@@ -129,7 +129,7 @@ function HTMLasideEnd()
 function HTMLbodyStart()
 {
     echo <<<HTML
-        <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3 >
+        <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3" >
     HTML;
 }
 
