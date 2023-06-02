@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $_POST["user"];
     $contrasena = $_POST["contrasena"];
@@ -16,6 +21,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($conexion->logindb($usuario, $contrasena)) {
             $_SESSION['user'] = $usuario;
             $_SESSION['rol'] = $conexion->getRol($usuario);
+            $_SESSION['foto'] = $conexion->getImage($usuario);
             $_SESSION['message'] = "Login correcto.";
         }
         else
@@ -24,7 +30,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['message'] = "Rellena todos los campos.";
 
     }
-
     
     $conexion->desconectar();
    

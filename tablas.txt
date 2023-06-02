@@ -34,3 +34,6 @@ CREATE TABLE imagenes (
   imagen BLOB,
   FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia)
 );
+
+ALTER TABLE usuarios
+CHANGE COLUMN foto BLOB;
