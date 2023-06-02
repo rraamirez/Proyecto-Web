@@ -12,18 +12,20 @@ require_once('model/bd.php');
 $db = new Conexion();
 $db->conectar();
 
-HTMLinicio("Inicio");
+HTMLinicio("Mi página");
 HTMLheader();
 HTMLnav();
-
 HTMLmainContentStart();
-// Aquí va tu contenido principal
+HTMLbodyStart();
+HTMLbusqueda();
+HTMLbodyEnd();
 HTMLasideStart();
 HTMLaside();
 HTMLasideEnd();
-
 HTMLfooter();
 HTMLfin();
+
+
 
 if (isset($_SESSION['message'])) {
     echo '<script>alert("' . $_SESSION['message'] . '");</script>';

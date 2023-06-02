@@ -33,15 +33,6 @@ function HTMLheader()
     HTML;
 }
 
-
-
-function HTMLfin()
-{
-    echo <<<HTML
-    </body>
-    HTML;
-}
-
 function HTMLnav()
 {
     echo <<<HTML
@@ -72,8 +63,20 @@ function HTMLnav()
     HTML;
 }
 
+function HTMLmainContentStart()
+{
+    echo <<<HTML
+    <div class="row">
+    HTML;
+}
 
-
+function HTMLasideStart()
+{
+    echo <<<HTML
+        <div class="col-lg-3">
+            <aside style="background-color: beige;">
+    HTML;
+}
 
 function HTMLaside()
 {
@@ -85,7 +88,7 @@ function HTMLaside()
             <input type='submit' value='login' class='btn btn-primary btn-block' />
         </form>
         <form action = "../controller/register.php">
-            <input type='submit' value='registrar' class='btn btn-secondary btn-block' />
+            <input type='submit' value='registrar' class='btnbtn-secondary btn-block' />
         </form>
     HTML;
     } else {
@@ -101,6 +104,90 @@ function HTMLaside()
     }
 }
 
+function HTMLasideEnd()
+{
+    echo <<<HTML
+            </aside>
+        </div>
+    HTML;
+}
+
+function HTMLbodyStart()
+{
+    echo <<<HTML
+        <div class="col-lg-9">
+    HTML;
+}
+
+function HTMLbusqueda()
+{
+    echo <<<HTML
+    <form method="POST" action="../controller/procesarBusqueda.php">
+        <h2>Listado de incidencias</h2>
+        <div class="container" style="background-color: beige;">
+            <h3>Criterios de búsqueda</h3>
+            <div class="row">
+                <h4>Ordenar Por:</h4>
+                <select class="form-select" name="ordenarPor">
+                    <option value="sortAge">Antigüedad</option>
+                    <option value="likes">Número de likes</option>
+                    <option value="totalLikes">Likes netos</option>
+                </select>
+            </div>
+            <div class="row">
+                <h4>Incidencias que contengan:</h4>
+                <input type="text" class="form-control" name="lugar" placeholder="Lugar">
+                <input type="text" class="form-control" name="textoBusqueda" placeholder="Texto de búsqueda">
+            </div>
+            <div class="row">
+                <div class="d-flex align-items-center">
+                    <h4>Estado:</h4>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="opcion1" name="estado[]">
+                        <label class="form-check-label" for="estado1">
+                            Pendiente
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="opcion2" name="estado[]">
+                        <label class="form-check-label" for="estado2">
+                            Comprobada
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="opcion3" name="estado[]">
+                        <label class="form-check-label" for="estado3">
+                            Tramitada
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="opcion4" name="estado[]">
+                        <label class="form-check-label" for="estado4">
+                            Irresoluble
+                        </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" value="opcion5" name="estado[]">
+                        <label class="form-check-label" for="estado5">
+                            Resueltas
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <input type='submit' value='Buscar' class='btn btn-primary btn-block' />
+    </form>
+    HTML;
+}
+
+
+function HTMLbodyEnd()
+{
+    echo <<<HTML
+        </div>
+    </div>
+    HTML;
+}
+
 function HTMLfooter()
 {
     echo <<<HTML
@@ -109,36 +196,18 @@ function HTMLfooter()
             <p>Proyecto realizado por Jorge y Raúl</p>
         </div>
     </footer>
+    HTML;
+}
+
+function HTMLfin()
+{
+    echo <<<HTML
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </body>
     </html>
     HTML;
 }
-
-function HTMLmainContentStart()
-{
-    echo <<<HTML
-    <div class="row">
-        <div class="col-lg-9">
-    HTML;
-}
-
-
-function HTMLasideStart()
-{
-    echo <<<HTML
-        </div>
-        <div class="col-lg-2">
-            <aside style="background-color: beige;">
-    HTML;
-}
-
-function HTMLasideEnd()
-{
-    echo <<<HTML
-            </aside>
-        </div>
-    </div>
-    HTML;
-}
-
 
 ?>

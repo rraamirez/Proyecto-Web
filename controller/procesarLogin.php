@@ -4,6 +4,8 @@ session_start();
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = $_POST["user"];
     $contrasena = $_POST["contrasena"];
+    
+    header("Location: ../index.php");
 
     require_once('../model/bd.php');
 
@@ -27,7 +29,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     $conexion->desconectar();
    
     // Redireccionar al usuario a index.php
-    header("Location: ../index.php");
+   
     exit();
 }
 

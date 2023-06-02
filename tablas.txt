@@ -31,6 +31,6 @@ CREATE TABLE comentarios (
 CREATE TABLE imagenes (
   id_imagen INT AUTO_INCREMENT PRIMARY KEY,
   id_incidencia INT,
-  url VARCHAR(255),
+  imagen BLOB,
   FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia)
 );
