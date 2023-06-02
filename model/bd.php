@@ -104,7 +104,7 @@ class Conexion {
     
         $sql = "INSERT INTO usuarios (nombre, apellidos, email, foto, clave, usuario, rol) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $prep = $this->conn->prepare($sql);
-        $prep->bind_param('sssbsss', $nombre, $apellidos, $email, $foto, $hashedClave, $usuario, $rol);
+        $prep->bind_param('sssssss', $nombre, $apellidos, $email, $foto, $hashedClave, $usuario, $rol);
     
         if ($prep->execute()) {
             $id = $this->conn->insert_id;
@@ -150,10 +150,16 @@ class Conexion {
     
         // Cierra la conexión
         $stmt->close();
-        $stmt->close();
     
         // Retorna los datos de la foto
-        return $foto;
+        if(isset($foto)){
+            return $foto;
+        }
+        else{
+            echo 'no foto';
+            return null;
+        }
+        
     }
     
     

@@ -5,10 +5,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apellidos = $_POST['apellidos'];
     $email = $_POST['email'];
     // Comprueba si se ha cargado un archivo
-    if (isset($_FILES['foto'])) {
+    if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
         // Lee el contenido del archivo y lo convierte en un string binario
         $foto = file_get_contents($_FILES['foto']['tmp_name']);
+        $foto = base64_encode($foto);
+        if(isset($foto) && !empty($foto))
+            setcookie("codigofo", "algohay", time()+3600);
     } else {
+        echo 'No foto';
         $foto = null;
     }
     $clave = $_POST['clave'];
