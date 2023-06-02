@@ -210,7 +210,7 @@ function HTMLbodyIncidenciasStart()
 }
 
 function HTMLbodyIncidencias(){
-
+ echo 'aquí tienen que salir las incidencias filtradas';
 }
 
 function HTMLbodyIncidenciasEnd()
