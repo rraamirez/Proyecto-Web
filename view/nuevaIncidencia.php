@@ -3,20 +3,26 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+session_start();
+$usuario = $_SESSION['user'] ?? '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Procesar los datos del formulario de registro
+    
+
     $titulo = $_POST['titulo'];
     $descripcion = $_POST['descripcion'];
     $ubicacion = $_POST['ubicacion'];
     $palabrasClave = $_POST['palabrasClave'];
     $estado = 'Pendiente';
+    
 
     require_once('../model/bd.php'); // Archivo que contiene la clase Conexion
     $conexion = new Conexion();
     $conexion->conectar();
     //AQUI ES CUANDO SE INSERTAN LOS DATOS EN LA BASE DE DATOS INDICENCIA Y SE OBTIENE EL ID DE LA ULTIMA INCIDENCIA INSERTADA
     // GUARDA EL ID DE LA ULTIMA INCIDENCIA INSERTADA ADDINCIDENCIA
-    $idIncidencia = $conexion->addIncidencia($idUsuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado);
+    $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado);
 
     //AQUI SE AÑADEN IMAGENES ASOCIANDO A LA ULTIMA INCIDENCIA INSERTADA
     // if (isset($_FILES['imagen'])) {
