@@ -99,21 +99,27 @@ function HTMLaside()
     HTML;
     } else {
         // Convertir la foto a base64 para poder mostrarla en un elemento de imagen
-        $foto = $_SESSION['foto'];
+        require_once('model/bd.php');
+        $db = new Conexion();
+        $db->conectar();
+        $foto = $db->getImage($_SESSION['user']);
+        $db->desconectar();
+
         echo <<<HTML
 
         <p class="text-center">
             Bienvenido, {$_SESSION['user']}
         </p>
         <div class="text-center">
-            <img src="data:image/jpeg;base64,$foto" alt="Foto de usuario" class="rounded-circle img-thumbnail" />
+            <img src="data:image/jpg;base64,$foto" class="img-fluid rounded-circle" style="width: 150px; height: 150px;" alt="Foto de perfil">
         </div>
+
         <form action="../controller/procesarLogout.php" class="form-signin">
             <div class="d-flex justify-content-center mt-3">
                 <button class="btn btn-lg btn-secondary" type="submit">Cerrar sesión</button>
             </div>
         </form>
-    HTML;
+HTML;
     }
 }
 
@@ -209,8 +215,9 @@ function HTMLbodyIncidenciasStart()
     HTML;
 }
 
-function HTMLbodyIncidencias(){
- echo 'aquí tienen que salir las incidencias filtradas';
+function HTMLbodyIncidencias()
+{
+    echo 'aquí tienen que salir las incidencias filtradas';
 }
 
 function HTMLbodyIncidenciasEnd()

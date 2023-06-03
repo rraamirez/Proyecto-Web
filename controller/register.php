@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Procesar los datos del formulario de registro
     $nombre = $_POST['nombre'];
@@ -8,12 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
         // Lee el contenido del archivo y lo convierte en un string binario
         $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
-
-        if(isset($foto) && !empty($foto))
-            setcookie("codigofo", "algohay", time()+3600);
     } else {
-        echo 'No foto';
-        $foto = null;
+        $defaultPath = "../img/foto_base.png";
+        if (file_exists($defaultPath)) {
+            $foto = base64_encode(file_get_contents($defaultPath));
+        } else {
+            echo "El archivo de imagen predeterminado no se encuentra en la ruta especificada.";
+            $foto = null;
+        }
     }
     $clave = $_POST['clave'];
     $usuario = $_POST['usuario'];

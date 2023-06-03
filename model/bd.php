@@ -154,7 +154,7 @@ class Conexion {
         // Retorna los datos de la foto
         if(isset($foto)){
             // Convierte la imagen en una cadena base64
-            return base64_encode($foto);
+            return $foto;
         }
         else{
             echo 'no foto';
