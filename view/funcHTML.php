@@ -111,14 +111,20 @@ function HTMLaside()
             Bienvenido, {$_SESSION['user']}
         </p>
         <div class="text-center">
-            <img src="data:image/jpg;base64,$foto" class="img-fluid rounded-circle" style="width: 150px; height: 150px;" alt="Foto de perfil">
+            <img src="data:image/jpg;base64,$foto" class="img-fluid rounded-circle" style="width: 100px; height: auto; object-fit: cover;" alt="Foto de perfil">
         </div>
 
-        <form action="../controller/procesarLogout.php" class="form-signin">
-            <div class="d-flex justify-content-center mt-3">
+        <div class="d-flex justify-content-center mt-3">
+            <form action="../controller/editarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;">
+                <button class="btn btn-lg">
+                    <img src="../img/edit_icon.png" alt="Editar" style="width: 50px; height: 50px;"/>
+                </button>
+            </form>
+            <form action="../controller/procesarLogout.php" class="form-signin">
                 <button class="btn btn-lg btn-secondary" type="submit">Cerrar sesión</button>
-            </div>
-        </form>
+            </form>
+            
+        </div>
 HTML;
     }
 }
