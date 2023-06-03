@@ -23,6 +23,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['rol'] = $conexion->getRol($usuario);
             $_SESSION['foto'] = $conexion->getImage($usuario);
             $_SESSION['message'] = "Login correcto.";
+            $_SESSION['id'] = $conexion->getId($usuario);
         }
         else
             $_SESSION['message'] = "Error en el login.";

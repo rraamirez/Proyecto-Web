@@ -12,6 +12,10 @@ CREATE TABLE incidencias (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 );
 
+ALTER TABLE incidencias
+ADD palabras_clave VARCHAR(255);
+
+
 
 CREATE TABLE logs ( id_log INT AUTO_INCREMENT PRIMARY KEY, id_usuario INT, FOREIGN KEY (id_usuario) REFERENCES usuarios(id), fecha DATETIME);
 

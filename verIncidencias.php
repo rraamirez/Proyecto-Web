@@ -12,22 +12,20 @@ require_once('model/bd.php');
 $db = new Conexion();
 $db->conectar();
 
-HTMLinicio("Mi página");
+HTMLinicio("Incidencias");
 HTMLheader();
 HTMLnav();
 HTMLmainContentStart();
-HTMLbienvenidaStart();
-HTMLbienvenido();
-HTMLbienvenidaEnd();
-// HTMLbodyStart();
-// HTMLbusqueda();
-// HTMLbodyEnd();
+
+HTMLbodyStart();
+HTMLbusqueda();
+HTMLbodyEnd();
 HTMLasideStart();
 HTMLaside();
 HTMLasideEnd();
-// HTMLbodyIncidenciasStart();
-// HTMLbodyIncidencias();
-// HTMLbodyIncidenciasEnd();
+HTMLbodyIncidenciasStart();
+HTMLbodyIncidencias();
+HTMLbodyIncidenciasEnd();
 
 HTMLfooter();
 HTMLfin();

@@ -44,11 +44,11 @@ function HTMLnav()
         $links = ["#"];
     } else {
         if ($_SESSION['rol'] == 'colaborador') {
-            $items = ["Incidencias", "Mis incidencias"];
-            $links = ["#", "#"];
+            $items = ["Incidencias", "Mis incidencias", "Nueva Incidencia"];
+            $links = ["verIncidencias.php", "#", "/view/nuevaIncidencia.php"];
         } else if ($_SESSION['rol'] == 'admin') {
-            $items = ["Incidencias", "Mis incidencias", "Usuarios", "Logs", "BBDD"];
-            $links = ["#", "#", "#", "#", "#"];
+            $items = ["Incidencias","Nueva Incidencia", "Mis incidencias", "Usuarios", "Logs", "BBDD"];
+            $links = ["verIncidencias.php", "/view/nuevaIncidencia.php", "#", "#", "#", "#"];
         }
     }
     foreach ($items as $index => $item) {
@@ -66,6 +66,27 @@ function HTMLmainContentStart()
 {
     echo <<<HTML
     <div class="row align-items-center justify-content-center">
+    HTML;
+}
+
+function HTMLbienvenidaStart()
+{
+    echo <<<HTML
+        <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3" >
+    HTML;
+}
+
+function HTMLbienvenido(){
+    echo <<<HTML
+    <h2 class="text-center">Bienvenido a tu vecindario</h2>
+    <p class="text-center">Aquí podrás ver las incidencias de tu comunidad, así como crear nuevas incidencias y ver el estado de las mismas.</p>
+    HTML;
+}
+
+function HTMLbienvenidaEnd()
+{
+    echo <<<HTML
+        </div>
     HTML;
 }
 function HTMLasideStart()

@@ -162,6 +162,69 @@ class Conexion {
         }
     }
 
+    function getId($usuario) {
+        // Prepara la consulta SQL
+        $stmt = $this->conn->prepare("SELECT id FROM usuarios WHERE usuario = ?");
+        $stmt->bind_param('s', $usuario);
+    
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Obtén el resultado
+        $stmt->bind_result($id);
+        $stmt->fetch();
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Retorna el ID del usuario
+        if(isset($id)){
+            return $id;
+        }
+        else{
+            echo 'Usuario no encontrado';
+            return null;
+        }
+    }
+    
+    function addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado) {
+        // Primero, obtenemos el id del usuario
+        $id_usuario = $this->getId($usuario);
+        
+        if($id_usuario === null) {
+            echo "No se pudo encontrar el usuario.";
+            return false;
+        }
+    
+        // Preparamos la consulta SQL
+        $stmt = $this->conn->prepare("INSERT INTO incidencias (id_usuario, titulo, descripcion, fecha, ubicacion, estado, palabras_clave) VALUES (?, ?, ?, NOW(), ?, ?, ?)");
+        
+        // Asignamos los parámetros
+        $stmt->bind_param('isssss', $id_usuario, $titulo, $descripcion, $ubicacion, $estado, $palabrasClave);
+    
+        // Ejecutamos la consulta
+        $result = $stmt->execute();
+    
+        // Verificamos si la consulta fue exitosa
+        if($result) {
+            echo "Incidencia añadida correctamente.";
+        } else {
+            echo "Hubo un error al añadir la incidencia.";
+        }
+    
+        // Recuperamos el ID de la incidencia creada
+        $incidencia_id = $stmt->insert_id;
+        echo "El ID de la incidencia creada es: " . $incidencia_id;
+    
+        // Cerramos la consulta
+        $stmt->close();
+    
+        // Retornamos el resultado
+        return $incidencia_id;
+    }
+    
+    
+
     function editarUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario) {
         // Prepara la consulta SQL para actualizar el usuario
         $stmt = $this->conn->prepare("UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ?, clave = ? WHERE usuario = ?");
