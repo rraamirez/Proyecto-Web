@@ -1,6 +1,8 @@
 <?php
 
-require_once('controller/procesarLogin.php');
+require_once(__DIR__ . '/../controller/procesarLogin.php');
+require_once(__DIR__ . '/../model/bd.php');
+
 
 function HTMLinicio($titulo)
 {
@@ -41,7 +43,7 @@ function HTMLnav()
     HTML;
     if (!isset($_SESSION['rol'])) {
         $items = ["Incidencias"];
-        $links = ["#"];
+        $links = [__DIR__ . "/../controller/verIncidencias.php"];
     } else {
         if ($_SESSION['rol'] == 'colaborador') {
             $items = ["Incidencias", "Mis incidencias", "Nueva Incidencia"];
@@ -120,7 +122,6 @@ function HTMLaside()
     HTML;
     } else {
         // Convertir la foto a base64 para poder mostrarla en un elemento de imagen
-        require_once('model/bd.php');
         $db = new Conexion();
         $db->conectar();
         $foto = $db->getImage($_SESSION['user']);
