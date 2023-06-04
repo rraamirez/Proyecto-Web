@@ -10,8 +10,8 @@ $db = new Conexion();
 $db->conectar();
 
 HTMLinicio("Mi página");
-HTMLheader();
-HTMLnav();
+HTMLheader(1);
+HTMLnav(1);
 HTMLmainContentStart();
 HTMLbienvenidaStart();
 HTMLbienvenido();

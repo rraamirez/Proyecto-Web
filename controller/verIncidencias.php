@@ -10,8 +10,8 @@ $db = new Conexion();
 $db->conectar();
 
 HTMLinicio("Incidencias");
-HTMLheader();
-HTMLnav();
+HTMLheader(0);
+HTMLnav(0);
 HTMLmainContentStart();
 HTMLbodyStart();
 HTMLbusqueda();

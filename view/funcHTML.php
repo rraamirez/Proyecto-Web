@@ -17,8 +17,14 @@ function HTMLinicio($titulo)
     HTML;
 }
 
-function HTMLheader()
+function HTMLheader($index)
 {
+    if($index == 1){
+        $ruta_f = "img/cenes.jpeg";
+    }
+    else{
+        $ruta_f = "../img/cenes.jpeg";
+    }
     echo <<<HTML
     <header class="container-fluid bg-light" style="background-color: beige;">
     <div class="row align-items-center justify-content-center text-center">
@@ -26,7 +32,7 @@ function HTMLheader()
                 <h1 class="display-4">Tu vecindario, ¡tu casa!</h1>
             </div>
             <div class="col">
-                <img src="img/cenes.jpeg" id="img_cenes" class="img-fluid" alt="Imagen Cenes">
+                <img src=$ruta_f id="img_cenes" class="img-fluid" alt="Imagen Cenes">
             </div>
         </div>
 
@@ -34,7 +40,7 @@ function HTMLheader()
     HTML;
 }
 
-function HTMLnav()
+function HTMLnav($index)
 {
     echo <<<HTML
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -43,7 +49,10 @@ function HTMLnav()
     HTML;
     if (!isset($_SESSION['rol'])) {
         $items = ["Incidencias"];
-        $links = [__DIR__ . "/../controller/verIncidencias.php"];
+        if($index == 1)
+            $links = ["controller/verIncidencias.php"];
+        else
+            $links = ["verIncidencias.php"];
     } else {
         if ($_SESSION['rol'] == 'colaborador') {
             $items = ["Incidencias", "Mis incidencias", "Nueva Incidencia"];
