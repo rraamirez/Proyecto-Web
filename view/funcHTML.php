@@ -56,7 +56,10 @@ function HTMLnav($index)
     } else {
         if ($_SESSION['rol'] == 'colaborador') {
             $items = ["Incidencias", "Mis incidencias", "Nueva Incidencia"];
-            $links = ["verIncidencias.php", "#", "/view/nuevaIncidencia.php"];
+            if($index == 1)
+            $links = ["controller/verIncidencias.php", "controller/misIncidencias.php", "controller/nuevaIncidencia.php"];
+            else
+            $links = ["verIncidencias.php", "misIncidencias.php", "nuevaIncidencia.php"];
         } else if ($_SESSION['rol'] == 'admin') {
             $items = ["Incidencias","Nueva Incidencia", "Mis incidencias", "Usuarios", "Logs", "BBDD"];
             $links = ["verIncidencias.php", "/view/nuevaIncidencia.php", "#", "#", "#", "#"];
@@ -254,7 +257,7 @@ function HTMLbodyIncidenciasStart()
 
 function HTMLbodyIncidencias()
 {
-    echo 'aquí tienen que salir las incidencias filtradas';
+    mostrarIncidencia(1);
 }
 
 function HTMLbodyIncidenciasEnd()
@@ -265,7 +268,23 @@ function HTMLbodyIncidenciasEnd()
     HTML;
 }
 
-
+function mostrarIncidencia($id_incidencia)
+{
+    $db = new Conexion();
+    $db->conectar();
+    $incidencia = $db->getIncidencia($id_incidencia);
+    $db->desconectar();
+    echo <<<HTML
+        <p>
+        Id de Usuario: {$incidencia['id_usuario']}
+        Titulo: {$incidencia['titulo']}
+        Descripcion: {$incidencia['descripcion']}
+        Fecha: {$incidencia['fecha']}
+        Ubicacion: {$incidencia['ubicacion']}
+        Estado: {$incidencia['estado']}
+        </p>
+    HTML;
+}
 
 function HTMLfooter()
 {

@@ -157,7 +157,6 @@ class Conexion {
             return $foto;
         }
         else{
-            echo 'no foto';
             return null;
         }
     }
@@ -182,8 +181,8 @@ class Conexion {
             return $id;
         }
         else{
-            echo 'Usuario no encontrado';
-            return null;
+            echo 'no user';
+            return "21";
         }
     }
     
@@ -192,36 +191,32 @@ class Conexion {
         $id_usuario = $this->getId($usuario);
         
         if($id_usuario === null) {
-            echo "No se pudo encontrar el usuario.";
             return false;
         }
     
         // Preparamos la consulta SQL
         $stmt = $this->conn->prepare("INSERT INTO incidencias (id_usuario, titulo, descripcion, fecha, ubicacion, estado, palabras_clave) VALUES (?, ?, ?, NOW(), ?, ?, ?)");
         
+        // Aseguramos que $estado es una cadena
+        $estado = (string)$estado;
+        
         // Asignamos los parámetros
         $stmt->bind_param('isssss', $id_usuario, $titulo, $descripcion, $ubicacion, $estado, $palabrasClave);
     
         // Ejecutamos la consulta
-        $result = $stmt->execute();
-    
-        // Verificamos si la consulta fue exitosa
-        if($result) {
-            echo "Incidencia añadida correctamente.";
+        if($stmt->execute()) {
+            $incidencia_id = $stmt->insert_id;
         } else {
-            echo "Hubo un error al añadir la incidencia.";
+            $incidencia_id = false;
         }
-    
-        // Recuperamos el ID de la incidencia creada
-        $incidencia_id = $stmt->insert_id;
-        echo "El ID de la incidencia creada es: " . $incidencia_id;
     
         // Cerramos la consulta
         $stmt->close();
-    
+        
         // Retornamos el resultado
         return $incidencia_id;
     }
+    
     
     
 
@@ -245,7 +240,38 @@ class Conexion {
         return $result;
     }
     
+    function getIncidencia($id_incidencia) {
+        // Prepara la consulta SQL para actualizar el usuario
+        $stmt = $this->conn->prepare("SELECT id_usuario,titulo,descripcion,fecha,ubicacion,estado FROM incidencias WHERE id_incidencia = ?");
+        $stmt->bind_param('i', $id_incidencia);
+
+        // Ejecuta la consulta
+        $stmt->execute();
     
+        // Obtén el resultado
+        $stmt->bind_result($id_usuario, $titulo, $descripcion, $fecha, $ubicacion, $estado);
+        $stmt->fetch();
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Comprueba si se encontró la incidencia
+        if(isset($id_usuario)){
+            // Crea un array asociativo con los valores
+            $incidencia = array(
+                'id_usuario' => $id_usuario,
+                'titulo' => $titulo,
+                'descripcion' => $descripcion,
+                'fecha' => $fecha,
+                'ubicacion' => $ubicacion,
+                'estado' => $estado
+            );
+            return $incidencia;
+        } else {
+            echo 'Incidencia no encontrada';
+            return null;
+        }
+    }
     
     
 }
