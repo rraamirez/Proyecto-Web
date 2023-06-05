@@ -9,6 +9,12 @@ class Conexion {
 
     private static $intance = null;
 
+    ################################################################################################################################
+    ################################################################################################################################
+        #METODOS CLASE CONEXION
+    ################################################################################################################################
+    ################################################################################################################################
+
     public function __construct() {
         require_once('dbcredencialesRaul.php');
         
@@ -42,6 +48,11 @@ class Conexion {
         return self::$intance;
     }
 
+    ################################################################################################################################
+    ################################################################################################################################
+        #METODOS USUARIO
+    ################################################################################################################################
+    ################################################################################################################################
     function usuarioExiste($usuario) {
         // Prepara una consulta SQL para buscar el usuario en la base de datos
         $sql = "SELECT * FROM usuarios WHERE usuario = ?";
@@ -57,47 +68,6 @@ class Conexion {
         // Devuelve si se encontró el usuario
         return $resultado->num_rows > 0;
     }
-    
-    
-
-    function crearTablaVacia($nombreTabla) {
-        $sql = "CREATE TABLE $nombreTabla (
-            id INT(11) AUTO_INCREMENT PRIMARY KEY,
-            columna1 VARCHAR(255),
-            columna2 INT(11),
-            columna3 TEXT
-        )";
-
-        if ($this->conn->query($sql) === TRUE) {
-            echo "La tabla se creó exitosamente";
-        } else {
-            echo "Ocurrió un error al crear la tabla";
-        }
-    }
-
-    function logindb($usuario, $contrasena)
-    {
-        $sql = "SELECT clave FROM usuarios WHERE usuario = ?";
-        $prep = $this->conn->prepare($sql);
-        $prep->bind_param('s', $usuario);
-        $prep->execute();
-        $resultado = $prep->get_result();
-        if ($resultado->num_rows > 0) {
-            $fila = $resultado->fetch_assoc();
-            $clave_hash = $fila['clave'];
-            if (password_verify($contrasena, $clave_hash)) {
-                $prep->close();
-                return true;
-            } else {
-                $prep->close();
-                return false;
-            }
-        } else {
-            $prep->close();
-            return false;
-        }
-    }
-    
 
     function DBaddUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario, $rol) {
         $hashedClave = password_hash($clave, PASSWORD_DEFAULT);
@@ -115,7 +85,6 @@ class Conexion {
             return false;
         }
     }
-    
 
     function getRol($usuario) {
         $sql = "SELECT rol FROM usuarios WHERE usuario = ?";
@@ -135,7 +104,7 @@ class Conexion {
         // Devolver el valor del rol
         return $rol;
     }
-
+    
     function getImage($usuario) {
         // Prepara la consulta SQL
         $stmt = $this->conn->prepare("SELECT foto FROM usuarios WHERE usuario = ?");
@@ -185,6 +154,114 @@ class Conexion {
             return "21";
         }
     }
+
+    function editarUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario) {
+        // Prepara la consulta SQL para actualizar el usuario
+        $stmt = $this->conn->prepare("UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ?, clave = ? WHERE usuario = ?");
+    
+        // Encripta la clave
+        $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT);
+    
+        // Asocia los parámetros a las variables
+        $stmt->bind_param('ssssss', $nombre, $apellidos, $email, $foto, $clave_encriptada, $usuario);
+    
+        // Ejecuta la consulta
+        $result = $stmt->execute();
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Retorna el resultado de la operación
+        return $result;
+    }
+
+    function getUsuarios() {
+        // Prepara la consulta SQL para obtener los usuarios
+        $stmt = $this->conn->prepare("SELECT id, nombre, apellidos, email, foto, clave, usuario, rol FROM usuarios ORDER BY id DESC");
+    
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Vincula las variables a las columnas del resultado
+        $stmt->bind_result($id, $nombre, $apellidos, $email, $foto, $clave, $usuario, $rol);
+    
+        // Crea un array para almacenar todos los usuarios
+        $usuarios = array();
+    
+        // Recorre los resultados y añade cada usuario al array
+        while ($stmt->fetch()) {
+            $usuarios[] = array(
+                'id' => $id,
+                'nombre' => $nombre,
+                'apellidos' => $apellidos,
+                'email' => $email,
+                'foto' => $foto,
+                'clave' => $clave,
+                'usuario' => $usuario,
+                'rol' => $rol
+            );
+        }
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Comprueba si se encontró algún usuario
+        if (!empty($usuarios)){
+            return $usuarios;
+        } else {
+            return null;
+        }
+    }
+    
+    ################################################################################################################################
+    ################################################################################################################################
+        #METODOS BASE DE DATOS
+    ################################################################################################################################
+    ################################################################################################################################
+
+    function crearTablaVacia($nombreTabla) {
+        $sql = "CREATE TABLE $nombreTabla (
+            id INT(11) AUTO_INCREMENT PRIMARY KEY,
+            columna1 VARCHAR(255),
+            columna2 INT(11),
+            columna3 TEXT
+        )";
+
+        if ($this->conn->query($sql) === TRUE) {
+            echo "La tabla se creó exitosamente";
+        } else {
+            echo "Ocurrió un error al crear la tabla";
+        }
+    }
+
+    function logindb($usuario, $contrasena)
+    {
+        $sql = "SELECT clave FROM usuarios WHERE usuario = ?";
+        $prep = $this->conn->prepare($sql);
+        $prep->bind_param('s', $usuario);
+        $prep->execute();
+        $resultado = $prep->get_result();
+        if ($resultado->num_rows > 0) {
+            $fila = $resultado->fetch_assoc();
+            $clave_hash = $fila['clave'];
+            if (password_verify($contrasena, $clave_hash)) {
+                $prep->close();
+                return true;
+            } else {
+                $prep->close();
+                return false;
+            }
+        } else {
+            $prep->close();
+            return false;
+        }
+    }
+
+    ################################################################################################################################
+    ################################################################################################################################
+        #METODOS INCIDENCIA
+    ################################################################################################################################
+    ################################################################################################################################
     
     function addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado) {
         // Primero, obtenemos el id del usuario
@@ -216,30 +293,7 @@ class Conexion {
         // Retornamos el resultado
         return $incidencia_id;
     }
-    
-    
-    
-
-    function editarUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario) {
-        // Prepara la consulta SQL para actualizar el usuario
-        $stmt = $this->conn->prepare("UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ?, clave = ? WHERE usuario = ?");
-    
-        // Encripta la clave
-        $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT);
-    
-        // Asocia los parámetros a las variables
-        $stmt->bind_param('ssssss', $nombre, $apellidos, $email, $foto, $clave_encriptada, $usuario);
-    
-        // Ejecuta la consulta
-        $result = $stmt->execute();
-    
-        // Cierra la consulta
-        $stmt->close();
-    
-        // Retorna el resultado de la operación
-        return $result;
-    }
-    
+        
     function getIncidencia($id_incidencia) {
         // Prepara la consulta SQL para actualizar el usuario
         $stmt = $this->conn->prepare("SELECT id_usuario,titulo,descripcion,fecha,ubicacion,estado FROM incidencias WHERE id_incidencia = ?");
@@ -272,8 +326,6 @@ class Conexion {
             return null;
         }
     }
-    
-    
 }
 
 ?>

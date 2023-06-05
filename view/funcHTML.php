@@ -57,12 +57,15 @@ function HTMLnav($index)
         if ($_SESSION['rol'] == 'colaborador') {
             $items = ["Incidencias", "Mis incidencias", "Nueva Incidencia"];
             if($index == 1)
-            $links = ["controller/verIncidencias.php", "controller/misIncidencias.php", "controller/nuevaIncidencia.php"];
+                $links = ["controller/verIncidencias.php", "controller/misIncidencias.php", "controller/nuevaIncidencia.php"];
             else
-            $links = ["verIncidencias.php", "misIncidencias.php", "nuevaIncidencia.php"];
+                $links = ["verIncidencias.php", "misIncidencias.php", "nuevaIncidencia.php"];
         } else if ($_SESSION['rol'] == 'admin') {
-            $items = ["Incidencias","Nueva Incidencia", "Mis incidencias", "Usuarios", "Logs", "BBDD"];
-            $links = ["verIncidencias.php", "/view/nuevaIncidencia.php", "#", "#", "#", "#"];
+            $items = ["Incidencias","Mis incidencias","Nueva Incidencia", "Usuarios", "Logs", "BBDD"];
+            if($index == 1)
+                $links = ["/controller/verIncidencias.php", "/controller/misIncidencias.php", "/controller/nuevaIncidencia.php", "/controller/verUsuarios.php", "/controller/logs.php", "/controller/verBaseDatos.php"];
+            else
+            $links = ["verIncidencias.php", "misIncidencias.php", "nuevaIncidencia.php", "verUsuarios.php", "logs.php", "verBaseDatos.php"];    
         }
     }
     foreach ($items as $index => $item) {
@@ -182,7 +185,7 @@ function HTMLbodyStart()
 function HTMLbusqueda()
 {
     echo <<<HTML
-    <form method="POST" action="../controller/procesarBusqueda.php">
+    <form method="POST" action="procesarBusqueda.php">
         <h2 class="border">Listado de incidencias:</h2>
         <div class="container border" style="background-color: beige;">
             <h3>Criterios de búsqueda</h3>
@@ -197,7 +200,15 @@ function HTMLbusqueda()
             <div class="row border">
                 <h4>Incidencias que contengan:</h4>
                 <input type="text" class="form-control" name="lugar" placeholder="Lugar">
-                <input type="text" class="form-control" name="textoBusqueda" placeholder="Texto de búsqueda">
+                <input type="text" class="form-control" name="textoBusqueda" placeholder="Palabras clave">
+            </div>
+            <div class="row border">
+                <h4>Número de incidencias por página:</h4>
+                <select class="form-select" name="incidenciasPorPagina">
+                    <option value="3">3</option>
+                    <option value="20">20</option>
+                    <option value="all">Todas</option>
+                </select>
             </div>
             <div class="row border">
                 <div class="d-flex align-items-center">
@@ -248,19 +259,19 @@ function HTMLbodyEnd()
     HTML;
 }
 
-function HTMLbodyIncidenciasStart()
+function HTMLContentStart()
 {
     echo <<<HTML
         <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3" >
     HTML;
 }
 
-function HTMLbodyIncidencias()
+function HTMLIncidencias()
 {
     mostrarIncidencia(1);
 }
 
-function HTMLbodyIncidenciasEnd()
+function HTMLContentEnd()
 {
     echo <<<HTML
         </div>
@@ -286,6 +297,17 @@ function mostrarIncidencia($id_incidencia)
     HTML;
 }
 
+function HTMLUsuarios()
+{
+    $db = new Conexion();
+    $db->conectar();
+    $usuarios = $db->getUsuarios();
+    $db->desconectar();
+    foreach($usuarios as $user) {
+        echo $user['usuario'] . "<br>";
+    }
+}
+
 function HTMLfooter()
 {
     echo <<<HTML
@@ -307,5 +329,7 @@ function HTMLfin()
     </html>
     HTML;
 }
+
+
 
 ?>

@@ -5,36 +5,46 @@ error_reporting(E_ALL);
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Procesar los datos del formulario de incidencia
-    
-    $titulo = $_POST['titulo'];
-    $descripcion = $_POST['descripcion'];
-    $ubicacion = $_POST['ubicacion'];
-    $palabras_clave = $_POST['palabras_clave'];
-    $estado = "Pendiente";
-    $usuario = $_SESSION['user'];
+    if(isset($_POST['confirm'])) {
+        // Procesar los datos del formulario de incidencia
+        $titulo = $_SESSION['incidencia']['titulo'];
+        $descripcion = $_SESSION['incidencia']['descripcion'];
+        $ubicacion = $_SESSION['incidencia']['ubicacion'];
+        $palabras_clave = $_SESSION['incidencia']['palabras_clave'];
+        $estado = "Pendiente";
+        $usuario = $_SESSION['user'];
 
-    // Aquí puedes realizar la validación de los datos y otras verificaciones necesarias antes de agregar la incidencia a la base de datos
+        // Realizar la conexión a la base de datos
+        require_once('../model/bd.php');
+        $conexion = new Conexion();
+        $conexion->conectar();
 
-    // Realizar la conexión a la base de datos
-    require_once('../model/bd.php'); // Archivo que contiene la clase Conexion
-    $conexion = new Conexion();
-    $conexion->conectar();
+        // Llamar al método DBaddIncidencia() para agregar la incidencia a la base de datos
+        $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado);
+        if ($idIncidencia) {
+            // Incidencia registrada exitosamente
+            echo 'Incidencia registrada con ID: ' . $idIncidencia;
+            echo '<script>alert("Incidencia creada correctamente");</script>';
+            header('Location: ../index.php');
+        } else {
+            // Error al registrar la incidencia
+            echo 'Error al registrar la incidencia.';
+        }
 
-    // Llamar al método DBaddIncidencia() para agregar la incidencia a la base de datos
-    $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado);
-    if ($idIncidencia) {
-        // Incidencia registrada exitosamente
-        echo 'Incidencia registrada con ID: ' . $idIncidencia;
-        echo '<script>alert("Incidencia creada correctamente");</script>';
-        header('Location: ../index.php');
+        // Cerrar la conexión a la base de datos
+        $conexion->desconectar();
     } else {
-        // Error al registrar la incidencia
-        echo 'Error al registrar la incidencia.';
+        // Guardar los datos en una sesión y redirigir a la página de confirmación
+        $_SESSION['incidencia'] = $_POST;
+        header('Location: nuevaIncidencia.php');
     }
-
-    // Cerrar la conexión a la base de datos
-    $conexion->desconectar();
+} else {
+    if(isset($_SESSION['incidencia'])) {
+        $titulo = $_SESSION['incidencia']['titulo'];
+        $descripcion = $_SESSION['incidencia']['descripcion'];
+        $ubicacion = $_SESSION['incidencia']['ubicacion'];
+        $palabras_clave = $_SESSION['incidencia']['palabras_clave'];
+    }
 }
 ?>
 
@@ -65,25 +75,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST" action="nuevaIncidencia.php">
         <div class="form-group">
             <label for="titulo">Título:</label>
-            <input type="text" class="form-control" name="titulo" required>
+            <input type="text" class="form-control" name="titulo" value="<?= $titulo ?? '' ?>" required <?= isset($titulo) ? 'readonly' : '' ?>>
         </div>
 
         <div class="form-group">
             <label for="descripcion">Descripción:</label>
-            <textarea class="form-control" name="descripcion" required></textarea>
+            <textarea class="form-control" name="descripcion" required <?= isset($descripcion) ? 'readonly' : '' ?>><?= $descripcion ?? '' ?></textarea>
         </div>
 
         <div class="form-group">
             <label for="ubicacion">Ubicación:</label>
-            <input type="text" class="form-control" name="ubicacion" required>
+            <input type="text" class="form-control" name="ubicacion" value="<?= $ubicacion ?? '' ?>" required <?= isset($ubicacion) ? 'readonly' : '' ?>>
         </div>
 
         <div class="form-group">
             <label for="palabras_clave">Palabras Clave:</label>
-            <input type="text" class="form-control" name="palabras_clave" required>
+            <input type="text" class="form-control" name="palabras_clave" value="<?= $palabras_clave ?? '' ?>" required <?= isset($palabras_clave) ? 'readonly' : '' ?>>
         </div>
 
-        <button type="submit" class="btn btn-primary" formaction="nuevaIncidencia.php">Registrar Incidencia</button>
+        <?php if(isset($titulo)): ?>
+            <button type="submit" name="confirm" class="btn btn-primary">Confirmar Incidencia</button>
+        <?php else: ?>
+            <button type="submit" class="btn btn-primary">Registrar Incidencia</button>
+        <?php endif; ?>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
