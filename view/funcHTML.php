@@ -299,12 +299,29 @@ function mostrarIncidencia($id_incidencia)
 
 function HTMLUsuarios()
 {
+    echo <<<HTML
+        <link href="../view/vista.css" rel="stylesheet">
+    HTML;
     $db = new Conexion();
     $db->conectar();
     $usuarios = $db->getUsuarios();
     $db->desconectar();
-    foreach($usuarios as $user) {
-        echo $user['usuario'] . "<br>";
+    $contador = 0;
+    foreach ($usuarios as $user) {
+        $contador++;
+        $clase = $contador % 2 == 0 ? 'row mt-3 beige-bg' : 'row mt-3 grey-bg'; // Cambia los nombres de clase para colores personalizados
+
+        echo "<div class='$clase'>";
+        echo "<div class='col-md-2'>";
+        echo "<img src='data:image/jpg;base64," . $user['foto'] . "' class='img-fluid rounded-circle' style='width: 100px; height: 100px; object-fit: cover;' alt='Foto de perfil'>";
+        echo "</div>"; // cierre de columna de imagen
+        echo "<div class='col-md-10'>";
+        echo "<br>";
+        echo "<p><strong>Usuario:</strong> " . $user['usuario'] . " <strong>Email:</strong> " . $user['email'] . "<br>";
+        echo "<strong>Dirección:</strong>   <strong>Teléfono:</strong> <br>";
+        echo "<strong>Rol:</strong> " . $user['rol'] . " <strong>Estado:</strong> </p>";
+        echo "</div>"; // cierre de columna de información
+        echo "</div>"; // cierre de fila
     }
 }
 
