@@ -100,6 +100,28 @@ function HTMLbienvenido(){
     HTML;
 }
 
+function HTMLbbdd() {
+    echo <<<HTML
+    <h2 class="text-center">Base de datos</h2>
+    <p class="text-center">Aquí podrás exportar, importar y borrar tu base de datos.</p>
+    <div class="d-flex justify-content-between">
+        <form action="../model/exportar.php" method="post">
+            <button type="submit" class="btn btn-outline-primary">Exportar</button>
+        </form>
+        <form action="../model/importar.php" method="post" enctype="multipart/form-data">
+            <input type="file" name="backupFile" required>
+            <button type="submit" class="btn btn-outline-success">Importar</button>
+        </form>
+        <form action="../model/borrarBBDD.php" method="post">
+            <button type="submit" class="btn btn-outline-danger">Borrar Base de Datos</button>
+        </form>
+    </div>
+    HTML;
+}
+
+
+
+
 function HTMLbienvenidaEnd()
 {
     echo <<<HTML
@@ -192,9 +214,9 @@ function HTMLbusqueda()
             <div class="row border">
                 <h4>Ordenar Por:</h4>
                 <select class="form-select" name="ordenarPor">
-                    <option value="sortAge">Antigüedad</option>
-                    <option value="likes">Número de likes</option>
-                    <option value="totalLikes">Likes netos</option>
+                    <option value=0>Antigüedad</option>
+                    <option value=1>Número de likes</option>
+                    <option value=2>Likes netos</option>
                 </select>
             </div>
             <div class="row border">
@@ -205,9 +227,9 @@ function HTMLbusqueda()
             <div class="row border">
                 <h4>Número de incidencias por página:</h4>
                 <select class="form-select" name="incidenciasPorPagina">
-                    <option value="3">3</option>
-                    <option value="20">20</option>
-                    <option value="all">Todas</option>
+                    <option value=3>3</option>
+                    <option value=20>20</option>
+                    <option value='todas'>Todas</option>
                 </select>
             </div>
             <div class="row border">
@@ -268,7 +290,47 @@ function HTMLContentStart()
 
 function HTMLIncidencias()
 {
-    mostrarIncidencia(1);
+    //TENEMOS QUE HACER QUE DESDE BUSCAR INCIDENCIAS SE ENVIEN LOS DATOS AQUI
+    
+    $db = new Conexion();
+    $db->conectar();
+
+    $ordenarPor = isset($_SESSION['ordenarPor']) && !empty($_SESSION['ordenarPor']) 
+                  ? $_SESSION['ordenarPor'] : 0;
+
+    $textoBusqueda = isset($_SESSION['textoBusqueda']) && !empty($_SESSION['textoBusqueda']) 
+                     ? $_SESSION['textoBusqueda'] : null;
+
+    $lugar = isset($_SESSION['lugar']) && !empty($_SESSION['lugar']) 
+             ? $_SESSION['lugar'] : null;
+
+    $incidenciasPorPagina = isset($_SESSION['incidenciasPorPagina']) && !empty($_SESSION['incidenciasPorPagina']) 
+                            ? $_SESSION['incidenciasPorPagina'] : 3;
+
+    $estado = isset($_SESSION['estado']) && !empty($_SESSION['estado']) 
+              ? $_SESSION['estado'] : "Pendiente";
+
+    // Llama a la función de búsqueda de incidencias.
+    $incidencias = $db->searchIncidencias($incidenciasPorPagina, $ordenarPor, $lugar, $textoBusqueda, $estado);
+
+    // Comprueba si se encontraron incidencias.
+    if (empty($incidencias)) {
+        echo 'No se encontraron incidencias.';
+    } else {
+        // Itera a través de cada incidencia.
+        foreach ($incidencias as $incidencia) {
+            echo 'ID del usuario: ' . $incidencia['id_usuario'] . '<br>';
+            echo 'Título: ' . $incidencia['titulo'] . '<br>';
+            echo 'Descripción: ' . $incidencia['descripcion'] . '<br>';
+            echo 'Fecha: ' . $incidencia['fecha'] . '<br>';
+            echo 'Ubicación: ' . $incidencia['ubicacion'] . '<br>';
+            echo 'Estado: ' . $incidencia['estado'] . '<br>';
+            echo 'Valoración: ' . $incidencia['valoracion'] . '<br>';
+            echo '------------------------<br>';
+        }
+    }
+
+    $db->desconectar();
 }
 
 function HTMLContentEnd()

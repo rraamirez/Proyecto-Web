@@ -2,16 +2,31 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+require_once('../model/bd.php');
 session_start();
 
 $editMode = true;
+
+// Carga los datos del usuario la primera vez que se abre la página
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    require_once('../model/bd.php');
+    $db = new Conexion();
+    $db->conectar();
+    $userData = $db->getUserData($_SESSION['user']);
+    if ($userData) {
+        $_SESSION['nombre'] = $userData['nombre'];
+        $_SESSION['apellidos'] = $userData['apellidos'];
+        $_SESSION['email'] = $userData['email'];
+        $_SESSION['foto'] = $db->getImage($_SESSION['user']);
+    }
+    $db->desconectar();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['confirm'])) {
         // Confirmación de la edición del usuario
         // Realizar la conexión a la base de datos
-        require_once('../model/bd.php'); // Archivo que contiene la clase Conexion
+         // Archivo que contiene la clase Conexion
         $conexion = new Conexion();
         $conexion->conectar();
 
@@ -98,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-group">
             <label for="clave">Contraseña:</label>
-            <input type="password" class="form-control" name="clave" value="<?php echo isset($_SESSION['clave']) ? $_SESSION['clave'] : '' ?>" <?php echo $editMode ? '' : 'readonly' ?>>
+            <input type="password" class="form-control" name="clave" value="<?php echo isset($_SESSION['clave']) ? $_SESSION['clave'] : '' ?>" <?php echo $editMode ? '' : 'readonly' ?> required>
         </div>
 
         <button type="submit" class="btn btn-primary" name="<?php echo $editMode ? 'edit' : 'confirm' ?>" formaction="editarUsuario.php"><?php echo $editMode ? 'Editar' : 'Confirmar' ?></button>

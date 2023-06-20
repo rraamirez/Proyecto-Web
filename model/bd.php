@@ -1,5 +1,5 @@
 <?php
-
+require_once('dbcredencialesRaul.php');
 class Conexion {
     private $servername;
     private $username;
@@ -16,7 +16,7 @@ class Conexion {
     ################################################################################################################################
 
     public function __construct() {
-        require_once('dbcredencialesRaul.php');
+        
         
         $this->servername = DB_HOST;
         $this->username = DB_USER;
@@ -212,6 +212,41 @@ class Conexion {
             return null;
         }
     }
+
+    function getUserData($usuario) {
+        // Prepara la consulta SQL
+        $stmt = $this->conn->prepare("SELECT id, nombre, apellidos, email, foto, usuario, rol FROM usuarios WHERE usuario = ?");
+        $stmt->bind_param('s', $usuario);
+    
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Vincula las variables a las columnas del resultado
+        $stmt->bind_result($id, $nombre, $apellidos, $email, $foto, $usuario, $rol);
+    
+        // Inicializa el array del usuario
+        $usuarioData = array();
+    
+        // Recoge el resultado
+        if ($stmt->fetch()) {
+            $usuarioData = array(
+                'id' => $id,
+                'nombre' => $nombre,
+                'apellidos' => $apellidos,
+                'email' => $email,
+                'foto' => $foto,
+                'usuario' => $usuario,
+                'rol' => $rol
+            );
+        }
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Retorna los datos del usuario
+        return $usuarioData;
+    }
+    
     
     ################################################################################################################################
     ################################################################################################################################
@@ -263,7 +298,7 @@ class Conexion {
     ################################################################################################################################
     ################################################################################################################################
     
-    function addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado) {
+    function addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado, $valoracion) {
         // Primero, obtenemos el id del usuario
         $id_usuario = $this->getId($usuario);
         
@@ -272,13 +307,13 @@ class Conexion {
         }
     
         // Preparamos la consulta SQL
-        $stmt = $this->conn->prepare("INSERT INTO incidencias (id_usuario, titulo, descripcion, fecha, ubicacion, estado, palabras_clave) VALUES (?, ?, ?, NOW(), ?, ?, ?)");
+        $stmt = $this->conn->prepare("INSERT INTO incidencias (id_usuario, titulo, descripcion, fecha, ubicacion, estado, palabras_clave, valoracion) VALUES (?, ?, ?, NOW(), ?, ?, ?, ?)");
         
         // Aseguramos que $estado es una cadena
         $estado = (string)$estado;
         
         // Asignamos los parámetros
-        $stmt->bind_param('isssss', $id_usuario, $titulo, $descripcion, $ubicacion, $estado, $palabrasClave);
+        $stmt->bind_param('isssssi', $id_usuario, $titulo, $descripcion, $ubicacion, $estado, $palabrasClave, $valoracion);
     
         // Ejecutamos la consulta
         if($stmt->execute()) {
@@ -326,6 +361,85 @@ class Conexion {
             return null;
         }
     }
+
+
+    function searchIncidencias($numInc, $tipoBusqueda, $lugar, $palabrasClave, $estado) {
+        // Preparar la consulta SQL
+        $sql = "SELECT id_usuario, titulo, descripcion, fecha, ubicacion, estado, valoracion FROM incidencias WHERE 1";
+    
+        if(!is_null($lugar)) {
+            $sql .= " AND ubicacion = ?";
+        }
+    
+        if(!is_null($palabrasClave)) {
+            $sql .= " AND (titulo LIKE ? OR descripcion LIKE ?)";
+        }
+    
+        if(!is_null($estado)) {
+            $sql .= " AND estado = ?";
+        }
+    
+        switch($tipoBusqueda) {
+            case 0:
+                $sql .= " ORDER BY fecha DESC";
+                break;
+            case 1:
+                $sql .= " ORDER BY valoracion DESC";
+                break;
+            default:
+                // Por defecto ordenará por fecha
+                $sql .= " ORDER BY fecha DESC";
+                break;
+        }
+    
+        if($numInc != 'todas') {
+            $sql .= " LIMIT ?";
+        }
+    
+        // Preparar la sentencia
+        $stmt = $this->conn->prepare($sql);
+    
+        // Ligando los parámetros
+        $bind_types = '';
+        $bind_values = [];
+        
+        if(!is_null($lugar)) {
+            $bind_types .= 's';
+            array_push($bind_values, $lugar);
+        }
+        if(!is_null($palabrasClave)) {
+            $bind_types .= 'ss';
+            array_push($bind_values, "%$palabrasClave%", "%$palabrasClave%");
+        }
+        if(!is_null($estado)) {
+            $bind_types .= 's';
+            array_push($bind_values, $estado);
+        }
+        if($numInc != 'todas') {
+            $bind_types .= 'i';
+            array_push($bind_values, $numInc);
+        }
+        $stmt->bind_param($bind_types, ...$bind_values);
+    
+        // Ejecutar la consulta
+        $stmt->execute();
+    
+        // Obtener los resultados
+        $result = $stmt->get_result();
+        $incidencias = $result->fetch_all(MYSQLI_ASSOC);
+    
+        // Cerrar la consulta
+        $stmt->close();
+    
+        return $incidencias;
+    }
+    
+    
+    //Antiguedad, likes, likes netos
+    //Lugar, palabras clave
+    //Numero de inc por pag (3, 20, todas)
+    //Estado
+
 }
 
 ?>
