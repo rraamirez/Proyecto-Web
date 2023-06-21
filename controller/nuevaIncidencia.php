@@ -7,12 +7,12 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(isset($_POST['confirm'])) {
         // Procesar los datos del formulario de incidencia
-        $titulo = $_SESSION['incidencia']['titulo'];
-        $descripcion = $_SESSION['incidencia']['descripcion'];
-        $ubicacion = $_SESSION['incidencia']['ubicacion'];
-        $palabras_clave = $_SESSION['incidencia']['palabras_clave'];
+        $titulo = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['titulo'])));
+        $descripcion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['descripcion'])));
+        $ubicacion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['ubicacion'])));
+        $palabras_clave = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['palabras_clave'])));
         $estado = "Pendiente";
-        $usuario = $_SESSION['user'];
+        $usuario = trim(stripslashes(htmlspecialchars($_SESSION['user'])));
         $valoracion = 0;
 
         // Realizar la conexión a la base de datos
@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Incidencia registrada exitosamente
             echo 'Incidencia registrada con ID: ' . $idIncidencia;
             echo '<script>alert("Incidencia creada correctamente");</script>';
+            unset($_SESSION['incidencia']);
             header('Location: ../index.php');
         } else {
             // Error al registrar la incidencia
@@ -41,13 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     if(isset($_SESSION['incidencia'])) {
-        $titulo = $_SESSION['incidencia']['titulo'];
-        $descripcion = $_SESSION['incidencia']['descripcion'];
-        $ubicacion = $_SESSION['incidencia']['ubicacion'];
-        $palabras_clave = $_SESSION['incidencia']['palabras_clave'];
+        $titulo = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['titulo'])));
+        $descripcion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['descripcion'])));
+        $ubicacion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['ubicacion'])));
+        $palabras_clave = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['palabras_clave'])));
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

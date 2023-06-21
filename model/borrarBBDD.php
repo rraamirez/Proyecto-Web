@@ -1,4 +1,6 @@
 <?php
+//BORRA LA BASE DE DATOS POR COMPLETO
+
 require_once('dbcredencialesRaul.php');
 
 $db = new mysqli(DB_HOST, DB_USER, DB_PASSWD, DB_DATABASE);

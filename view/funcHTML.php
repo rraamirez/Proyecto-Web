@@ -112,7 +112,7 @@ function HTMLbbdd() {
             <input type="file" name="backupFile" required>
             <button type="submit" class="btn btn-outline-success">Importar</button>
         </form>
-        <form action="../model/borrarBBDD.php" method="post">
+        <form action="../model/borrarBBDD.php" method="post" onsubmit="return confirm('¿Estás seguro de que quieres borrar la base de datos? Esta acción no se puede deshacer. Continúe sólo si sabe lo que está haciendo.');">
             <button type="submit" class="btn btn-outline-danger">Borrar Base de Datos</button>
         </form>
     </div>
@@ -290,8 +290,7 @@ function HTMLContentStart()
 
 function HTMLIncidencias()
 {
-    //TENEMOS QUE HACER QUE DESDE BUSCAR INCIDENCIAS SE ENVIEN LOS DATOS AQUI
-    
+    //FALTA BUSQUEDA POR ESTADO (Y CREO QUE POR PALABRAS CLAVE)
     $db = new Conexion();
     $db->conectar();
 
@@ -319,14 +318,23 @@ function HTMLIncidencias()
     } else {
         // Itera a través de cada incidencia.
         foreach ($incidencias as $incidencia) {
-            echo 'ID del usuario: ' . $incidencia['id_usuario'] . '<br>';
-            echo 'Título: ' . $incidencia['titulo'] . '<br>';
-            echo 'Descripción: ' . $incidencia['descripcion'] . '<br>';
-            echo 'Fecha: ' . $incidencia['fecha'] . '<br>';
-            echo 'Ubicación: ' . $incidencia['ubicacion'] . '<br>';
-            echo 'Estado: ' . $incidencia['estado'] . '<br>';
-            echo 'Valoración: ' . $incidencia['valoracion'] . '<br>';
-            echo '------------------------<br>';
+            echo <<<HTML
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">{$incidencia['titulo']}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Fecha: {$incidencia['fecha']}</li>
+                    <li class="list-group-item">Ubicación: {$incidencia['ubicacion']}</li>
+                    <li class="list-group-item">Estado: {$incidencia['estado']}</li>
+                    <li class="list-group-item">Valoración: {$incidencia['valoracion']}</li>
+                </ul>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">ID del usuario: {$incidencia['id_usuario']}</h6>
+                    <p class="card-text">{$incidencia['descripcion']}</p>
+                </div>
+            </div>
+            HTML;
         }
     }
 
@@ -338,24 +346,6 @@ function HTMLContentEnd()
     echo <<<HTML
         </div>
     </div>
-    HTML;
-}
-
-function mostrarIncidencia($id_incidencia)
-{
-    $db = new Conexion();
-    $db->conectar();
-    $incidencia = $db->getIncidencia($id_incidencia);
-    $db->desconectar();
-    echo <<<HTML
-        <p>
-        Id de Usuario: {$incidencia['id_usuario']}
-        Titulo: {$incidencia['titulo']}
-        Descripcion: {$incidencia['descripcion']}
-        Fecha: {$incidencia['fecha']}
-        Ubicacion: {$incidencia['ubicacion']}
-        Estado: {$incidencia['estado']}
-        </p>
     HTML;
 }
 

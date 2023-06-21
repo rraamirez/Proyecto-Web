@@ -11,8 +11,8 @@ $db->conectar();
 
 if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     HTMLinicio("Mi página");
-    HTMLheader(1);
-    HTMLnav(1);
+    HTMLheader(0);
+    HTMLnav(0);
     HTMLmainContentStart();
     HTMLbienvenidaStart();
     HTMLbbdd();

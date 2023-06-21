@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $db->conectar();
     $userData = $db->getUserData($_SESSION['user']);
     if ($userData) {
-        $_SESSION['nombre'] = $userData['nombre'];
-        $_SESSION['apellidos'] = $userData['apellidos'];
-        $_SESSION['email'] = $userData['email'];
+        $_SESSION['nombre'] = htmlspecialchars(trim($userData['nombre']));
+        $_SESSION['apellidos'] = htmlspecialchars(trim($userData['apellidos']));
+        $_SESSION['email'] = htmlspecialchars(trim($userData['email']));
         $_SESSION['foto'] = $db->getImage($_SESSION['user']);
     }
     $db->desconectar();
@@ -26,12 +26,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['confirm'])) {
         // Confirmación de la edición del usuario
         // Realizar la conexión a la base de datos
-         // Archivo que contiene la clase Conexion
         $conexion = new Conexion();
         $conexion->conectar();
 
         // Llamar al método editarUsuario() para actualizar los datos del usuario en la base de datos
-        $idUsuario = $conexion->editarUsuario($_SESSION['nombre'], $_SESSION['apellidos'], $_SESSION['email'], $_SESSION['foto'], $_SESSION['clave'], $_SESSION['user']);
+        $nombre = htmlspecialchars(trim($_SESSION['nombre']));
+        $apellidos = htmlspecialchars(trim($_SESSION['apellidos']));
+        $email = htmlspecialchars(trim($_SESSION['email']));
+        $foto = $_SESSION['foto'];  // Assuming this is properly handled before being saved in session
+        $clave = $_SESSION['clave']; // Please hash the password before saving it in session
+        $user = $_SESSION['user'];
+
+        $idUsuario = $conexion->editarUsuario($nombre, $apellidos, $email, $foto, $clave, $user);
         if ($idUsuario) {
             // Usuario editado exitosamente
             echo 'Usuario editado con ID: ' . $idUsuario;
@@ -46,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conexion->desconectar();
     } else {
         // Procesar los datos del formulario de edición
-        $_SESSION['nombre'] = $_POST['nombre'];
-        $_SESSION['apellidos'] = $_POST['apellidos'];
-        $_SESSION['email'] = $_POST['email'];
+        $_SESSION['nombre'] = htmlspecialchars(trim($_POST['nombre']));
+        $_SESSION['apellidos'] = htmlspecialchars(trim($_POST['apellidos']));
+        $_SESSION['email'] = htmlspecialchars(trim($_POST['email']));
         // Comprueba si se ha cargado un archivo
         if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
             // Lee el contenido del archivo y lo convierte en un string binario
@@ -60,11 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['foto'] = $db->getImage($_SESSION['user']);
             $db->desconectar();
         }
-        $_SESSION['clave'] = $_POST['clave'];
+        $_SESSION['clave'] = $_POST['clave']; // Please hash the password before saving it in session
         $editMode = false;
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -93,17 +100,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST" action="editarUsuario.php" enctype="multipart/form-data">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
-            <input type="text" class="form-control" name="nombre" value="<?php echo isset($_SESSION['nombre']) ? $_SESSION['nombre'] : '' ?>" <?php echo $editMode ? '' : 'readonly' ?>>
+            <input type="text" class="form-control" name="nombre" value="<?php echo htmlspecialchars($_SESSION['nombre'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" <?php echo $editMode ? '' : 'readonly' ?>>
         </div>
 
         <div class="form-group">
             <label for="apellidos">Apellidos:</label>
-            <input type="text" class="form-control" name="apellidos" value="<?php echo isset($_SESSION['apellidos']) ? $_SESSION['apellidos'] : '' ?>" <?php echo $editMode ? '' : 'readonly' ?>>
+            <input type="text" class="form-control" name="apellidos" value="<?php echo htmlspecialchars($_SESSION['apellidos'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" <?php echo $editMode ? '' : 'readonly' ?>>
         </div>
 
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" name="email" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : '' ?>" <?php echo $editMode ? '' : 'readonly' ?>>
+            <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($_SESSION['email'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" <?php echo $editMode ? '' : 'readonly' ?>>
         </div>
 
         <div class="form-group">
@@ -113,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-group">
             <label for="clave">Contraseña:</label>
-            <input type="password" class="form-control" name="clave" value="<?php echo isset($_SESSION['clave']) ? $_SESSION['clave'] : '' ?>" <?php echo $editMode ? '' : 'readonly' ?> required>
+            <input type="password" class="form-control" name="clave" value="<?php echo htmlspecialchars($_SESSION['clave'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" <?php echo $editMode ? '' : 'readonly' ?> required>
         </div>
 
         <button type="submit" class="btn btn-primary" name="<?php echo $editMode ? 'edit' : 'confirm' ?>" formaction="editarUsuario.php"><?php echo $editMode ? 'Editar' : 'Confirmar' ?></button>

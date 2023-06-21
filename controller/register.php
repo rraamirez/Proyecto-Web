@@ -5,9 +5,12 @@ error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Procesar los datos del formulario de registro
-    $nombre = $_POST['nombre'];
-    $apellidos = $_POST['apellidos'];
-    $email = $_POST['email'];
+    $nombre = htmlentities($_POST['nombre'], ENT_QUOTES, 'UTF-8');
+    $apellidos = htmlentities($_POST['apellidos'], ENT_QUOTES, 'UTF-8');
+    $email = htmlentities($_POST['email'], ENT_QUOTES, 'UTF-8');
+    $clave = htmlentities($_POST['clave'], ENT_QUOTES, 'UTF-8');
+    $usuario = htmlentities($_POST['usuario'], ENT_QUOTES, 'UTF-8');
+    
     // Comprueba si se ha cargado un archivo
     if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
         // Lee el contenido del archivo y lo convierte en un string binario
@@ -21,8 +24,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $foto = null;
         }
     }
-    $clave = $_POST['clave'];
-    $usuario = $_POST['usuario'];
     $rol = 'colaborador';
 
     // Aquí puedes realizar la validación de los datos y otras verificaciones necesarias antes de agregar el usuario a la base de datos
