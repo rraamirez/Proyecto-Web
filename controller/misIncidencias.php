@@ -26,7 +26,7 @@ if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     // Si el usuario no es un administrador o no está logueado, redirigir a otra página
     header("Location: ../index.php");
     exit();
-}
+}    
 
 if (isset($_SESSION['message'])) {
     echo '<script>alert("' . $_SESSION['message'] . '");</script>';
@@ -35,5 +35,4 @@ if (isset($_SESSION['message'])) {
     //session_abort();
 }
 
-$db->desconectar();
 ?>

@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Llamar al método DBaddIncidencia() para agregar la incidencia a la base de datos
         $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $val_pos, $val_neg);
+        $_SESSION['incidencia']['id'] = $idIncidencia;
         if ($idIncidencia) {
             header('Location: editarIncidencia.php');
         } else {

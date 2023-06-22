@@ -466,7 +466,7 @@ function HTMLMisIncidencias()
     $contador = 0;
     foreach ($incidencias as $incidencia) {
         echo <<<HTML
-            <div class="card mb-3">
+            <div class="card mb-2">
                     <div class="card-header">
                         <h5 class="card-title">{$incidencia['titulo']}</h5>
                     </div>

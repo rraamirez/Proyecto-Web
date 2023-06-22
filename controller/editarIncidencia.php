@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif(isset($_POST['upload'])) {
         if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
             $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
-            $resultadoFoto = $conexion->addFoto($_SESSION['incidencia']['id'], $_FILES['foto']);
+            $resultadoFoto = $conexion->addFoto($_SESSION['incidencia']['id'], $foto);
             if (!$resultadoFoto) {
                 // Error al agregar la foto
                 echo 'Error al agregar la foto.';
