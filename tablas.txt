@@ -41,6 +41,7 @@ CREATE TABLE comentarios (
   id_incidencia INT,
   id_usuario INT,
   mensaje TEXT,
+  fecha DATETIME,
   FOREIGN KEY (id_incidencia) REFERENCES incidencias(id_incidencia),
   FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
 );

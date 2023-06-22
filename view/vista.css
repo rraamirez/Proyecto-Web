@@ -3,6 +3,7 @@
     height: auto;
     border-radius: 50%;
     object-fit: cover;
+    
 }
 
 .beige-bg {
@@ -12,3 +13,6 @@
 .grey-bg {
     background-color: bisque;
 }
+
+
+    

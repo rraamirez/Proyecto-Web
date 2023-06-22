@@ -284,13 +284,13 @@ function HTMLbodyEnd()
 function HTMLContentStart()
 {
     echo <<<HTML
-        <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3" >
+        <div class="col-lg-9 p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3">
     HTML;
 }
 
 function HTMLIncidencias()
 {
-    //FALTA BUSQUEDA POR ESTADO (Y CREO QUE POR PALABRAS CLAVE)
+    //FALTA BUSQUEDA POR ESTADO
     $db = new Conexion();
     $db->conectar();
 
@@ -319,19 +319,90 @@ function HTMLIncidencias()
         // Itera a través de cada incidencia.
         foreach ($incidencias as $incidencia) {
             echo <<<HTML
+            <style>
+                .card-header {
+                    background-color: #ADD8E6;
+                }
+                .keyword {
+                    color: blue;
+                    margin-right: 20px;
+                }
+                .value {
+                    margin-right: 40px;
+                }
+                .comment-username {
+                    margin-left: 20px;
+                    font-weight: bold;
+                }
+                .comment-date {
+                    margin-left: 20px;
+                }
+            </style>
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title">{$incidencia['titulo']}</h5>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Fecha: {$incidencia['fecha']}</li>
-                    <li class="list-group-item">Ubicación: {$incidencia['ubicacion']}</li>
-                    <li class="list-group-item">Estado: {$incidencia['estado']}</li>
-                    <li class="list-group-item">Valoración: {$incidencia['valoracion']}</li>
+                    <li class="list-group-item">
+                        <span class="keyword">Lugar:</span> <span class="value">{$incidencia['ubicacion']}</span>
+                        <span class="keyword">Fecha:</span> <span class="value">{$incidencia['fecha']}</span>
+                        <span class="keyword">Usuario:</span> <span class="value">{$db->getUsuario($incidencia['id_usuario'])}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span class="keyword">Palabras clave:</span> <span class="value">{$incidencia['palabras_clave']}</span>
+                        <span class="keyword">Estado:</span> <span class="value">{$incidencia['estado']}</span>
+                        <span class="keyword">Valoraciones:</span> <span class="value">+{$incidencia['val_pos']} -{$incidencia['val_neg']}</span>
+                    </li>
                 </ul>
                 <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">ID del usuario: {$incidencia['id_usuario']}</h6>
                     <p class="card-text">{$incidencia['descripcion']}</p>
+                </div>
+            HTML;
+
+            $comentarios = $db->searchComentarios($incidencia['id_incidencia']);
+        
+            foreach ($comentarios as $comentario) {
+                echo <<<HTML
+                    <div class="row comentario">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-start">
+                                <div class="comment-username">
+                                    <strong>{$db->getUsuario($comentario['id_usuario'])}</strong>
+                                </div>
+                                <div class="comment-date">
+                                    {$comentario['fecha']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <p>{$comentario['mensaje']}</p>
+                        </div>
+                    </div>
+                HTML;
+            }            
+        
+            echo <<<HTML
+                <div class="card-footer d-flex justify-content-end">
+                    <form action="procesarValoracion.php" method="POST" class="mr-1">
+                        <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
+                        <input type="hidden" name="valoracion" value="1">
+                        <button type="submit" class="btn btn-success btn-circle btn-sm">
+                            <img src="../img/plus.png" alt="Positive" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
+                    <form action="procesarValoracion.php" method="POST" class="mr-1">
+                        <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
+                        <input type="hidden" name="valoracion" value="-1">
+                        <button type="submit" class="btn btn-danger btn-circle btn-sm">
+                            <img src="../img/minus.png" alt="Negative" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
+                    <form action="nuevoComentario.php" method="POST">
+                        <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
+                        <button type="submit" class="btn btn-primary btn-circle btn-sm">
+                            <img src="../img/comment.png" alt="Comment" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
                 </div>
             </div>
             HTML;

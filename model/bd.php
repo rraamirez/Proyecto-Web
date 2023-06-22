@@ -155,6 +155,30 @@ class Conexion {
         }
     }
 
+    function getUsuario($id) {
+        // Prepara la consulta SQL
+        $stmt = $this->conn->prepare("SELECT usuario FROM usuarios WHERE id = ?");
+        $stmt->bind_param('i', $id);
+    
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Obtén el resultado
+        $stmt->bind_result($usuario);
+        $stmt->fetch();
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Retorna el usuario
+        if (isset($usuario)) {
+            return $usuario;
+        } else {
+            return "No se encontró el usuario";
+        }
+    }
+    
+
     function editarUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario) {
         // Prepara la consulta SQL para actualizar el usuario
         $stmt = $this->conn->prepare("UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ?, clave = ? WHERE usuario = ?");
@@ -298,38 +322,39 @@ class Conexion {
     ################################################################################################################################
     ################################################################################################################################
     
-    function addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado, $valoracion) {
+    function addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabrasClave, $estado, $val_pos, $val_neg) {
         // Primero, obtenemos el id del usuario
         $id_usuario = $this->getId($usuario);
         
         if($id_usuario === null) {
             return false;
         }
-    
+
         // Preparamos la consulta SQL
-        $stmt = $this->conn->prepare("INSERT INTO incidencias (id_usuario, titulo, descripcion, fecha, ubicacion, estado, palabras_clave, valoracion) VALUES (?, ?, ?, NOW(), ?, ?, ?, ?)");
+        $stmt = $this->conn->prepare("INSERT INTO incidencias (id_usuario, titulo, descripcion, fecha, ubicacion, estado, palabras_clave, val_pos, val_neg) VALUES (?, ?, ?, NOW(), ?, ?, ?, ?, ?)");
         
         // Aseguramos que $estado es una cadena
         $estado = (string)$estado;
         
         // Asignamos los parámetros
-        $stmt->bind_param('isssssi', $id_usuario, $titulo, $descripcion, $ubicacion, $estado, $palabrasClave, $valoracion);
-    
+        $stmt->bind_param('isssssii', $id_usuario, $titulo, $descripcion, $ubicacion, $estado, $palabrasClave, $val_pos, $val_neg);
+
         // Ejecutamos la consulta
         if($stmt->execute()) {
             $incidencia_id = $stmt->insert_id;
         } else {
             $incidencia_id = false;
         }
-    
+
         // Cerramos la consulta
         $stmt->close();
         
         // Retornamos el resultado
         return $incidencia_id;
     }
+
         
-    function getIncidencia($id_incidencia) {
+    /*function getIncidencia($id_incidencia) {
         // Prepara la consulta SQL para actualizar el usuario
         $stmt = $this->conn->prepare("SELECT id_usuario,titulo,descripcion,fecha,ubicacion,estado FROM incidencias WHERE id_incidencia = ?");
         $stmt->bind_param('i', $id_incidencia);
@@ -360,31 +385,31 @@ class Conexion {
             echo 'Incidencia no encontrada';
             return null;
         }
-    }
+    }*/
 
 
     function searchIncidencias($numInc, $tipoBusqueda, $lugar, $palabrasClave, $estado) {
         // Preparar la consulta SQL
-        $sql = "SELECT id_usuario, titulo, descripcion, fecha, ubicacion, estado, valoracion FROM incidencias WHERE 1";
+        $sql = "SELECT id_incidencia, id_usuario, titulo, descripcion, fecha, ubicacion, estado, val_pos, val_neg, palabras_clave FROM incidencias WHERE 1";
     
-        if(!is_null($lugar)) {
+        if (!is_null($lugar)) {
             $sql .= " AND ubicacion = ?";
         }
     
-        if(!is_null($palabrasClave)) {
+        if (!is_null($palabrasClave)) {
             $sql .= " AND (titulo LIKE ? OR descripcion LIKE ?)";
         }
     
-        if(!is_null($estado)) {
+        if (!is_null($estado)) {
             $sql .= " AND estado = ?";
         }
     
-        switch($tipoBusqueda) {
+        switch ($tipoBusqueda) {
             case 0:
                 $sql .= " ORDER BY fecha DESC";
                 break;
             case 1:
-                $sql .= " ORDER BY valoracion DESC";
+                $sql .= " ORDER BY val_pos DESC, val_neg ASC"; // Ordenar primero por valoraciones positivas y luego por negativas
                 break;
             default:
                 // Por defecto ordenará por fecha
@@ -392,7 +417,7 @@ class Conexion {
                 break;
         }
     
-        if($numInc != 'todas') {
+        if ($numInc != 'todas') {
             $sql .= " LIMIT ?";
         }
     
@@ -402,20 +427,20 @@ class Conexion {
         // Ligando los parámetros
         $bind_types = '';
         $bind_values = [];
-        
-        if(!is_null($lugar)) {
+    
+        if (!is_null($lugar)) {
             $bind_types .= 's';
             array_push($bind_values, $lugar);
         }
-        if(!is_null($palabrasClave)) {
+        if (!is_null($palabrasClave)) {
             $bind_types .= 'ss';
             array_push($bind_values, "%$palabrasClave%", "%$palabrasClave%");
         }
-        if(!is_null($estado)) {
+        if (!is_null($estado)) {
             $bind_types .= 's';
             array_push($bind_values, $estado);
         }
-        if($numInc != 'todas') {
+        if ($numInc != 'todas') {
             $bind_types .= 'i';
             array_push($bind_values, $numInc);
         }
@@ -433,7 +458,7 @@ class Conexion {
     
         return $incidencias;
     }
-
+    
 
     ################################################################################################################################
     ################################################################################################################################
@@ -441,9 +466,106 @@ class Conexion {
     ################################################################################################################################
     ################################################################################################################################
     
-    function addComentario($usuario, $incidencia, $mensaje) {
+    function addComentario($idIncidencia, $usuario, $mensaje, $fecha) {
+        // Primero, obtenemos el id del usuario
+        $id_usuario = $this->getId($usuario);
+        
+        if($id_usuario === null) {
+            return false;
+        }
+    
+        // Preparamos la consulta SQL
+        $stmt = $this->conn->prepare("INSERT INTO comentarios (id_incidencia, id_usuario, mensaje, fecha) VALUES (?, ?, ?, ?)");
+        
+        // Asignamos los parámetros
+        $stmt->bind_param('iiss', $idIncidencia, $id_usuario, $mensaje, $fecha);
+    
+        // Ejecutamos la consulta
+        if($stmt->execute()) {
+            $comentario_id = $stmt->insert_id;
+        } else {
+            $comentario_id = false;
+        }
+    
+        // Cerramos la consulta
+        $stmt->close();
+        
+        // Retornamos el resultado
+        return $comentario_id;
+    }
 
+    function searchComentarios($idIncidencia) {
+        // Preparar la consulta SQL
+        $sql = "SELECT id_comentario, id_incidencia, id_usuario, mensaje, fecha FROM comentarios WHERE id_incidencia = ? ORDER BY fecha DESC";
+    
+        // Preparar la sentencia
+        $stmt = $this->conn->prepare($sql);
+    
+        // Ligando los parámetros
+        $stmt->bind_param('i', $idIncidencia);
+    
+        // Ejecutar la consulta
+        $stmt->execute();
+    
+        // Obtener los resultados
+        $result = $stmt->get_result();
+        $comentarios = $result->fetch_all(MYSQLI_ASSOC);
+    
+        // Cerrar la consulta
+        $stmt->close();
+    
+        return $comentarios;
+    }    
+    
+
+    ################################################################################################################################
+    ################################################################################################################################
+        #METODOS VALORACION
+    ################################################################################################################################
+    ################################################################################################################################
+
+    function addValoracion($incidencia_id, $valoracion) {
+        if($incidencia_id === null || $valoracion === null || !in_array($valoracion, [-1, 0, 1])) {
+            return false;
+        }
+    
+        $stmt = $this->conn->prepare("SELECT val_pos, val_neg FROM incidencias WHERE id_incidencia = ?");
+        $stmt->bind_param('i', $incidencia_id);
+        
+        if(!$stmt->execute()) {
+            error_log("Error executing SELECT statement: " . $stmt->error);
+            $stmt->close();
+            return false;
+        }
+    
+        $stmt->bind_result($val_pos, $val_neg);
+        
+        if ($stmt->fetch()) {
+            if ($valoracion > 0) {
+                $val_pos = intval($val_pos + 1);
+            } elseif ($valoracion < 0) {
+                $val_neg = intval($val_neg + 1);
+            }
+    
+            $updateStmt = $this->conn->prepare("UPDATE incidencias SET val_pos = ?, val_neg = ? WHERE id_incidencia = ?");
+            $updateStmt->bind_param('iii', $val_pos, $val_neg, $incidencia_id);
+            
+            if(!$updateStmt->execute()) {
+                error_log("Error executing UPDATE statement: " . $updateStmt->error);
+                $updateStmt->close();
+                $stmt->close();
+                return false;
+            }
+            
+            $updateStmt->close();
+        } else {
+            $stmt->close();
+            return false;
+        }
+        
+        $stmt->close();
+        
+        return true;
     }
 }
-
 ?>

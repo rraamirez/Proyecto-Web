@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $palabras_clave = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['palabras_clave'])));
         $estado = "Pendiente";
         $usuario = trim(stripslashes(htmlspecialchars($_SESSION['user'])));
-        $valoracion = 0;
+        $val_pos = 0;
+        $val_neg = 0;
 
         // Realizar la conexión a la base de datos
         require_once('../model/bd.php');
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conexion->conectar();
 
         // Llamar al método DBaddIncidencia() para agregar la incidencia a la base de datos
-        $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $valoracion);
+        $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $val_pos, $val_neg);
         if ($idIncidencia) {
             // Incidencia registrada exitosamente
             echo 'Incidencia registrada con ID: ' . $idIncidencia;
