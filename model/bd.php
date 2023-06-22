@@ -475,6 +475,50 @@ class Conexion {
         // Retorna el resultado de la operación
         return $result;
     }
+
+    function getUsuarioIncidencias($id_usuario){
+        $incidencias = array();
+    
+        // Prepara la consulta SQL para obtener las incidencias
+        $stmt = $this->conn->prepare("SELECT id_usuario, id_incidencia, titulo, descripcion, fecha, ubicacion, estado, palabras_clave, val_pos, val_neg FROM incidencias WHERE id_usuario = ?");
+        
+        // Asocia los parámetros a las variables
+        $stmt->bind_param('i', $id_usuario);
+        
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Vincula las variables a las columnas del resultado
+        $stmt->bind_result($id_usuario, $id_incidencia, $titulo, $descripcion, $fecha, $ubicacion, $estado, $palabras_clave, $val_pos, $val_neg);
+    
+        // Recorre los resultados
+        while ($stmt->fetch()) {
+            // Crea un array asociativo con los valores
+            $incidencia = array(
+                'id_usuario' => $id_usuario,
+                'id_incidencia' => $id_incidencia,
+                'titulo' => $titulo,
+                'descripcion' => $descripcion,
+                'fecha' => $fecha,
+                'ubicacion' => $ubicacion,
+                'estado' => $estado,
+                'palabras_clave' => $palabras_clave,
+                'val_pos' => $val_pos,
+                'val_neg' => $val_neg
+
+            );
+    
+            // Añade el array asociativo al array de incidencias
+            $incidencias[] = $incidencia;
+        }
+        
+        // Cierra la consulta
+        $stmt->close();
+        
+        // Retorna el resultado de la operación
+        return $incidencias;
+    }
+    
     
 
     ################################################################################################################################

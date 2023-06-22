@@ -31,6 +31,6 @@ if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     exit();
 }
 
-$db->desconectar();
+//$db->desconectar();
 
 ?>

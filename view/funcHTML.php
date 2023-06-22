@@ -452,6 +452,43 @@ function HTMLUsuarios()
     }
 }
 
+function HTMLMisIncidencias()
+{
+    echo <<<HTML
+        <link href="../view/vista.css" rel="stylesheet">
+    HTML;
+    $db = new Conexion();
+    $db->conectar();
+    $user = $_SESSION['user'];
+    $id = $db->getId($user);
+    $incidencias = $db->getUsuarioIncidencias($id);
+    $db->desconectar();
+    $contador = 0;
+    foreach ($incidencias as $incidencia) {
+        echo <<<HTML
+            <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title">{$incidencia['titulo']}</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <span class="keyword">Lugar:</span> <span class="value">{$incidencia['ubicacion']}</span>
+                            <span class="keyword">Fecha:</span> <span class="value">{$incidencia['fecha']}</span>
+                            <span class="keyword">Usuario:</span> <span class="value">{$incidencia['id_usuario']}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <span class="keyword">Palabras clave:</span> <span class="value">{$incidencia['palabras_clave']}</span>
+                            <span class="keyword">Estado:</span> <span class="value">{$incidencia['estado']}</span>
+                            <span class="keyword">Valoraciones:</span> <span class="value">+{$incidencia['val_pos']} -{$incidencia['val_neg']}</span>
+                        </li>
+                    </ul>
+                    <div class="card-body">
+                        <p class="card-text">{$incidencia['descripcion']}</p>
+                    </div>
+        HTML;
+    }
+}
+
 function HTMLfooter()
 {
     echo <<<HTML
