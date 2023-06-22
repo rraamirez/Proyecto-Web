@@ -354,7 +354,7 @@ class Conexion {
     }
 
         
-    /*function getIncidencia($id_incidencia) {
+    function getIncidencia($id_incidencia) {
         // Prepara la consulta SQL para actualizar el usuario
         $stmt = $this->conn->prepare("SELECT id_usuario,titulo,descripcion,fecha,ubicacion,estado FROM incidencias WHERE id_incidencia = ?");
         $stmt->bind_param('i', $id_incidencia);
@@ -385,7 +385,7 @@ class Conexion {
             echo 'Incidencia no encontrada';
             return null;
         }
-    }*/
+    }
 
 
     function searchIncidencias($numInc, $tipoBusqueda, $lugar, $palabrasClave, $estado) {
@@ -458,6 +458,24 @@ class Conexion {
     
         return $incidencias;
     }
+
+    function editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $incidencia_id) {
+        // Prepara la consulta SQL para actualizar la incidencia
+        $stmt = $this->conn->prepare("UPDATE incidencias SET titulo = ?, descripcion = ?, ubicacion = ?, palabras_clave = ? WHERE id_incidencia = ?");
+        
+        // Asocia los parámetros a las variables
+        $stmt->bind_param('ssssi', $titulo, $descripcion, $ubicacion, $palabras_clave, $incidencia_id);
+        
+        // Ejecuta la consulta
+        $result = $stmt->execute();
+        
+        // Cierra la consulta
+        $stmt->close();
+        
+        // Retorna el resultado de la operación
+        return $result;
+    }
+    
 
     ################################################################################################################################
     ################################################################################################################################
@@ -570,5 +588,31 @@ class Conexion {
         return true;
     }
 
+    ################################################################################################################################
+    ################################################################################################################################
+        #METODOS FOTO
+    ################################################################################################################################
+    ################################################################################################################################
+
+    function addFoto($id_incidencia, $foto){
+        // Preparamos la consulta SQL
+        $stmt = $this->conn->prepare("INSERT INTO imagenes (id_incidencia, imagen) VALUES (?, ?)");
+        
+        // Asignamos los parámetros
+        $stmt->bind_param('is', $id_incidencia, $foto);
+    
+        // Ejecutamos la consulta
+        if($stmt->execute()) {
+            $foto_id = $stmt->insert_id;
+        } else {
+            $foto_id = false;
+        }
+    
+        // Cerramos la consulta
+        $stmt->close();
+        
+        // Retornamos el resultado
+        return $foto_id;
+    }
 }
 ?>

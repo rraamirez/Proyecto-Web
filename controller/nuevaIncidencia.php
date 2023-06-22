@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
+require_once('../model/bd.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(isset($_POST['confirm'])) {
@@ -17,24 +18,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $val_neg = 0;
 
         // Realizar la conexión a la base de datos
-        require_once('../model/bd.php');
         $conexion = new Conexion();
         $conexion->conectar();
 
         // Llamar al método DBaddIncidencia() para agregar la incidencia a la base de datos
         $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $val_pos, $val_neg);
         if ($idIncidencia) {
-            // Incidencia registrada exitosamente
-            echo 'Incidencia registrada con ID: ' . $idIncidencia;
-            echo '<script>alert("Incidencia creada correctamente");</script>';
-            unset($_SESSION['incidencia']);
-            header('Location: ../index.php');
+            header('Location: editarIncidencia.php');
         } else {
             // Error al registrar la incidencia
             echo 'Error al registrar la incidencia.';
         }
 
-        // Cerrar la conexión a la base de datos
         $conexion->desconectar();
     } else {
         // Guardar los datos en una sesión y redirigir a la página de confirmación
