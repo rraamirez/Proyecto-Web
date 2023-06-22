@@ -466,14 +466,7 @@ class Conexion {
     ################################################################################################################################
     ################################################################################################################################
     
-    function addComentario($idIncidencia, $usuario, $mensaje, $fecha) {
-        // Primero, obtenemos el id del usuario
-        $id_usuario = $this->getId($usuario);
-        
-        if($id_usuario === null) {
-            return false;
-        }
-    
+    function addComentario($idIncidencia, $id_usuario, $mensaje, $fecha) {
         // Preparamos la consulta SQL
         $stmt = $this->conn->prepare("INSERT INTO comentarios (id_incidencia, id_usuario, mensaje, fecha) VALUES (?, ?, ?, ?)");
         

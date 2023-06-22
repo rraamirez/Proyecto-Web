@@ -10,20 +10,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Procesar los datos del formulario de comentario
     $mensaje = trim(stripslashes(htmlspecialchars($_POST['mensaje'])));
     $idIncidencia = $_SESSION['idIncidencia'];
-    setcookie('id', $idIncidencia, time()+600);
-    $usuario = trim(stripslashes(htmlspecialchars($_SESSION['user'])));
-    $fecha = date("Y-m-d H:i:s"); // Fecha y hora actual
-    // Realizar la conexión a la base de datos
+
     $conexion = new Conexion();
     $conexion->conectar();
+
+    if(isset($_SESSION['user']))
+        $id_usuario = $conexion->getId(trim(stripslashes(htmlspecialchars($_SESSION['user']))));
+    else
+        $id_usuario = null;
+    
+    $fecha = date("Y-m-d H:i:s"); // Fecha y hora actual
+
+    // Realizar la conexión a la base de datos
+    
     // Llamar al método DBaddComentario() para agregar el comentario a la base de datos
-    if ($conexion->addComentario($idIncidencia, $usuario, $mensaje, $fecha)) {
+    if ($conexion->addComentario($idIncidencia, $id_usuario, $mensaje, $fecha)) {
         // Comentario registrado exitosamente
         echo 'Comentario registrado exitosamente.';
         echo '<script>alert("Comentario creado correctamente");</script>';
         header('Location: verIncidencias.php'); // Redireccionar a verIncidencias.php
     } else {
         // Error al registrar el comentario
+        echo $idIncidencia, $id_usuario, $mensaje, $fecha;
         echo 'Error al registrar el comentario.';
     }
     // Cerrar la conexión a la base de datos

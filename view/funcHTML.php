@@ -362,12 +362,16 @@ function HTMLIncidencias()
             $comentarios = $db->searchComentarios($incidencia['id_incidencia']);
         
             foreach ($comentarios as $comentario) {
+                if($comentario['id_usuario'] != null)
+                    $nombre = $db->getUsuario($comentario['id_usuario']);
+                else
+                    $nombre = "Anónimo";
                 echo <<<HTML
                     <div class="row comentario">
                         <div class="col-sm-6">
                             <div class="d-flex align-items-start">
                                 <div class="comment-username">
-                                    <strong>{$db->getUsuario($comentario['id_usuario'])}</strong>
+                                    <strong>{$nombre}</strong>
                                 </div>
                                 <div class="comment-date">
                                     {$comentario['fecha']}
