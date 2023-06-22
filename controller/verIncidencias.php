@@ -25,16 +25,6 @@ HTMLContentEnd();
 HTMLfooter();
 HTMLfin();
 
-if (!isset($_SESSION['valoraciones'])) {
-    $_SESSION['valoraciones'] = [];
-}
-
-if (isset($_COOKIE['valoracion_id'])) {
-    $valoracion_id = $_COOKIE['valoracion_id'];
-    $incidencia_id = $db->extractIncidenciaID($valoracion_id);
-    $_SESSION['valoraciones'][$incidencia_id][$valoracion_id] = true;
-}
-
 if (isset($_SESSION['message'])) {
     echo '<script>alert("' . $_SESSION['message'] . '");</script>';
     // Borrar el mensaje una vez que se ha mostrado

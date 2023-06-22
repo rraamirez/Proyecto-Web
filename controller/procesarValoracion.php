@@ -15,7 +15,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $conexion = new Conexion();
     $conexion->conectar();
     
-    $conexion->addValoracion($idIncidencia, $valoracion);
+    
+    if ($conexion->addValoracion($idIncidencia, $valoracion)) {
+    } else {
+    }
     
     $conexion->desconectar();
 }

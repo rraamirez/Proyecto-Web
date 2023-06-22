@@ -517,16 +517,16 @@ class Conexion {
     ################################################################################################################################
 
     function addValoracion($incidencia_id, $valoracion) {
-        session_start();
+        $cookie_name = 'valoraciones_' . $incidencia_id;
 
-        if (isset($_COOKIE['valoracion_id'])) {
-            $valoracion_id = $_COOKIE['valoracion_id'];
-            $stored_incidencia_id = $this->extractIncidenciaID($valoracion_id);
-
-            if (isset($_SESSION['valoraciones'][$stored_incidencia_id][$valoracion_id])) {
-                return false;
-            }
+        // Verifica si ya existe una cookie para la incidencia específica
+        if (isset($_COOKIE[$cookie_name])) {
+            return false;
         }
+
+        // Agrega la cookie para la incidencia
+        $cookie_value = 'valorado';
+        setcookie($cookie_name, $cookie_value, time() + 86400, '/');
 
         if ($incidencia_id === null || $valoracion === null || !in_array($valoracion, [-1, 0, 1])) {
             return false;
@@ -560,9 +560,6 @@ class Conexion {
                 $updateStmt->close();
                 return false;
             }
-
-            $valoracion_id = $incidencia_id . '_' . uniqid();
-            setcookie('valoracion_id', $valoracion_id, time() + 86400, '/');
     
             $updateStmt->close();
         } else {
@@ -571,11 +568,6 @@ class Conexion {
         }
     
         return true;
-    }
-
-    function extractIncidenciaID($valoracion_id) {
-        $parts = explode('_', $valoracion_id);
-        return $parts[0];
     }
 
 }
