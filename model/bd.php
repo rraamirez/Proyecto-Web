@@ -458,7 +458,6 @@ class Conexion {
     
         return $incidencias;
     }
-    
 
     ################################################################################################################################
     ################################################################################################################################
@@ -518,47 +517,66 @@ class Conexion {
     ################################################################################################################################
 
     function addValoracion($incidencia_id, $valoracion) {
-        if($incidencia_id === null || $valoracion === null || !in_array($valoracion, [-1, 0, 1])) {
+        session_start();
+
+        if (isset($_COOKIE['valoracion_id'])) {
+            $valoracion_id = $_COOKIE['valoracion_id'];
+            $stored_incidencia_id = $this->extractIncidenciaID($valoracion_id);
+
+            if (isset($_SESSION['valoraciones'][$stored_incidencia_id][$valoracion_id])) {
+                return false;
+            }
+        }
+
+        if ($incidencia_id === null || $valoracion === null || !in_array($valoracion, [-1, 0, 1])) {
             return false;
         }
     
-        $stmt = $this->conn->prepare("SELECT val_pos, val_neg FROM incidencias WHERE id_incidencia = ?");
-        $stmt->bind_param('i', $incidencia_id);
-        
-        if(!$stmt->execute()) {
-            error_log("Error executing SELECT statement: " . $stmt->error);
-            $stmt->close();
+        $selectStmt = $this->conn->prepare("SELECT val_pos, val_neg FROM incidencias WHERE id_incidencia = ?");
+        $selectStmt->bind_param('i', $incidencia_id);
+    
+        if (!$selectStmt->execute()) {
+            error_log("Error executing SELECT statement: " . $selectStmt->error);
+            $selectStmt->close();
             return false;
         }
     
-        $stmt->bind_result($val_pos, $val_neg);
-        
-        if ($stmt->fetch()) {
+        $selectStmt->bind_result($val_pos, $val_neg);
+    
+        if ($selectStmt->fetch()) {
             if ($valoracion > 0) {
                 $val_pos = intval($val_pos + 1);
             } elseif ($valoracion < 0) {
                 $val_neg = intval($val_neg + 1);
             }
     
+            $selectStmt->close();
+    
             $updateStmt = $this->conn->prepare("UPDATE incidencias SET val_pos = ?, val_neg = ? WHERE id_incidencia = ?");
             $updateStmt->bind_param('iii', $val_pos, $val_neg, $incidencia_id);
-            
-            if(!$updateStmt->execute()) {
+    
+            if (!$updateStmt->execute()) {
                 error_log("Error executing UPDATE statement: " . $updateStmt->error);
                 $updateStmt->close();
-                $stmt->close();
                 return false;
             }
-            
+
+            $valoracion_id = $incidencia_id . '_' . uniqid();
+            setcookie('valoracion_id', $valoracion_id, time() + 86400, '/');
+    
             $updateStmt->close();
         } else {
-            $stmt->close();
+            $selectStmt->close();
             return false;
         }
-        
-        $stmt->close();
-        
+    
         return true;
     }
+
+    function extractIncidenciaID($valoracion_id) {
+        $parts = explode('_', $valoracion_id);
+        return $parts[0];
+    }
+
 }
 ?>
