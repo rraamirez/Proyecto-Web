@@ -418,31 +418,47 @@ function HTMLContentEnd()
 
 function HTMLUsuarios()
 {
-    echo <<<HTML
-        <link href="../view/vista.css" rel="stylesheet">
-    HTML;
     $db = new Conexion();
     $db->conectar();
     $usuarios = $db->getUsuarios();
-    $db->desconectar();
     $contador = 0;
     foreach ($usuarios as $user) {
         $contador++;
-        $clase = $contador % 2 == 0 ? 'row mt-3 beige-bg' : 'row mt-3 grey-bg'; // Cambia los nombres de clase para colores personalizados
+        $clase = $contador % 2 == 0 ? 'row mt-3 beige-bg' : 'row mt-3 grey-bg'; 
 
-        echo "<div class='$clase'>";
-        echo "<div class='col-md-2'>";
-        echo "<img src='data:image/jpg;base64," . $user['foto'] . "' class='img-fluid rounded-circle' style='width: 100px; height: 100px; object-fit: cover;' alt='Foto de perfil'>";
-        echo "</div>"; // cierre de columna de imagen
-        echo "<div class='col-md-10'>";
-        echo "<br>";
-        echo "<p><strong>Usuario:</strong> " . $user['usuario'] . " <strong>Email:</strong> " . $user['email'] . "<br>";
-        echo "<strong>Dirección:</strong>   <strong>Teléfono:</strong> <br>";
-        echo "<strong>Rol:</strong> " . $user['rol'] . " <strong>Estado:</strong> </p>";
-        echo "</div>"; // cierre de columna de información
-        echo "</div>"; // cierre de fila
+        echo <<<HTML
+        <link href="../view/vista.css" rel="stylesheet">
+        <div class='$clase'>
+            <div class='col-md-2'>
+                <img src='data:image/jpg;base64,{$user['foto']}' class='img-fluid rounded-circle' style='width: 100px; height: 100px; object-fit: cover;' alt='Foto de perfil'>
+            </div>
+            <div class='col-md-8'>
+                <br>
+                <p><strong>Usuario:</strong> {$user['usuario']} <strong>Email:</strong> {$user['email']}<br>
+                <strong>Dirección:</strong>   <strong>Teléfono:</strong> <br>
+                <strong>Rol:</strong> {$user['rol']} <strong>Estado:</strong> </p>
+            </div>
+            <div class='col-md-2 d-flex align-items-center justify-content-end'>
+                <form action="editarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;">
+                    <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
+                    <button type="submit" class="btn btn-lg">
+                        <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
+                    </button>
+                </form>
+                <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;">
+                    <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
+                    <button type="submit" class="btn btn-lg">
+                        <img src="../img/delete_icon.png" alt="Delete" style="width: 40px; height: 40px;">
+                    </button>
+                </form>
+            </div>
+        </div>
+        HTML;
     }
+    $db->desconectar();
 }
+
+
 
 function HTMLMisIncidencias()
 {
