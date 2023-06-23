@@ -319,25 +319,7 @@ function HTMLIncidencias()
         // Itera a través de cada incidencia.
         foreach ($incidencias as $incidencia) {
             echo <<<HTML
-            <style>
-                .card-header {
-                    background-color: #ADD8E6;
-                }
-                .keyword {
-                    color: blue;
-                    margin-right: 20px;
-                }
-                .value {
-                    margin-right: 40px;
-                }
-                .comment-username {
-                    margin-left: 20px;
-                    font-weight: bold;
-                }
-                .comment-date {
-                    margin-left: 20px;
-                }
-            </style>
+            <link href="../view/vista.css" rel="stylesheet">
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title">{$incidencia['titulo']}</h5>
@@ -358,6 +340,16 @@ function HTMLIncidencias()
                     <p class="card-text">{$incidencia['descripcion']}</p>
                 </div>
             HTML;
+
+            $fotos = $db->searchFotos($incidencia['id_incidencia']);
+
+            echo '<div class="foto-container">';
+            foreach ($fotos as $foto) {
+                echo <<<HTML
+                    <img class="foto" src="data:image/jpg;base64,$foto" alt="Foto de la incidencia">
+                HTML;
+            }
+            echo '</div>';  
 
             $comentarios = $db->searchComentarios($incidencia['id_incidencia']);
         
@@ -462,11 +454,9 @@ function HTMLMisIncidencias()
     $user = $_SESSION['user'];
     $id = $db->getId($user);
     $incidencias = $db->getUsuarioIncidencias($id);
-    $db->desconectar();
-    $contador = 0;
     foreach ($incidencias as $incidencia) {
         echo <<<HTML
-            <div class="card mb-2">
+            <div class="card mb-3">
                     <div class="card-header">
                         <h5 class="card-title">{$incidencia['titulo']}</h5>
                     </div>
@@ -474,7 +464,7 @@ function HTMLMisIncidencias()
                         <li class="list-group-item">
                             <span class="keyword">Lugar:</span> <span class="value">{$incidencia['ubicacion']}</span>
                             <span class="keyword">Fecha:</span> <span class="value">{$incidencia['fecha']}</span>
-                            <span class="keyword">Usuario:</span> <span class="value">{$incidencia['id_usuario']}</span>
+                            <span class="keyword">Usuario:</span> <span class="value">{$db->getUsuario($incidencia['id_usuario'])}</span>
                         </li>
                         <li class="list-group-item">
                             <span class="keyword">Palabras clave:</span> <span class="value">{$incidencia['palabras_clave']}</span>
@@ -487,6 +477,7 @@ function HTMLMisIncidencias()
                     </div>
         HTML;
     }
+    $db->desconectar();
 }
 
 function HTMLfooter()

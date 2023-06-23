@@ -658,5 +658,36 @@ class Conexion {
         // Retornamos el resultado
         return $foto_id;
     }
+
+    function searchFotos($id_incidencia) {
+        // Preparamos la consulta SQL
+        $stmt = $this->conn->prepare("SELECT imagen FROM imagenes WHERE id_incidencia = ?");
+        
+        // Asignamos los parámetros
+        $stmt->bind_param('i', $id_incidencia);
+        
+        // Ejecutamos la consulta
+        $stmt->execute();
+        
+        // Obtenemos el resultado
+        $result = $stmt->get_result();
+        
+        // Inicializamos un arreglo vacío para almacenar las fotos
+        $fotos = array();
+        
+        // Si hay resultados, los agregamos al arreglo
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $fotos[] = $row['imagen'];
+            }
+        }
+        
+        // Cerramos la consulta
+        $stmt->close();
+        
+        // Retornamos el resultado
+        return $fotos;
+    }
+    
 }
 ?>
