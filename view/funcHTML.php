@@ -442,41 +442,30 @@ function HTMLIncidencias()
             $comentarios = $db->searchComentarios($incidencia['id_incidencia']);
         
             $i = 0;
-            foreach ($comentarios as $comentario) {
-                if($comentario['id_usuario'] != null)
-                    $nombre = $db->getUsuario($comentario['id_usuario']);
-                else
-                    $nombre = "Anónimo";
-                    
-                $bgColor = ($i++ % 2 == 0) ? '#e0e0e0' : '#d3d3d3';  
-                echo <<<HTML
-                    <div class="row comentario" style="background-color: {$bgColor};">
-                        <div class="col-sm-6">
-                            <div class="d-flex align-items-start">
-                                <div class="comment-username">
-                                    <strong>{$nombre}</strong>
-                                </div>
-                                <div class="comment-date">
-                                    {$comentario['fecha']}
-                                </div>
-                            </div>
-                            <p>{$comentario['mensaje']}</p>
-                        </div>
-                HTML;
-                if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
-                    echo <<<HTML
-                        <div class="col-sm-4 text-right">
-                            <form action="borrarComentario.php" method="POST">
-                                <input type="hidden" name="id_comentario" value="{$comentario['id_comentario']}">
-                                <button type="submit" class="btn btn-primary btn-circle btn-sm">
-                                    <img src="../img/delete_icon.png" alt="Borrar" style="width: 15px; height: 15px;">
-                                </button>
-                            </form>
-                        </div>
-                    HTML;
-                }
-                echo "</div>";
-            }
+foreach ($comentarios as $comentario) {
+    if ($comentario['id_usuario'] != null)
+        $nombre = $db->getUsuario($comentario['id_usuario']);
+    else
+        $nombre = "Anónimo";
+
+    $bgColor = ($i++ % 2 == 0) ? 'bg-light' : 'bg-secondary';
+    echo <<<HTML
+    <div class="row comentario {$bgColor} m-3 p-3">
+        <div class="col-sm-6">
+            <div class="d-flex align-items-start">
+                <div class="comment-username">
+                    <strong>{$nombre}</strong>
+                </div>
+                <div class="comment-date">
+                    {$comentario['fecha']}
+                </div>
+            </div>
+            <p>{$comentario['mensaje']}</p>
+        </div>
+    </div>
+    HTML;
+}
+
 
             echo <<<HTML
                 <div class="row comentario" style="background-color: #d3d3d3;">
