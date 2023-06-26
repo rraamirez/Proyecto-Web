@@ -365,6 +365,20 @@ class Conexion {
         $stmt->close();
         return $total;
     }
+
+    function getIncidenciaMasComentada(){
+        $stmt = $this->conn->prepare("SELECT incidencias.id_incidencia, COUNT(comentarios.id_incidencia) AS total FROM incidencias INNER JOIN comentarios ON incidencias.id_incidencia = comentarios.id_incidencia GROUP BY incidencias.id_incidencia ORDER BY total DESC LIMIT 1");
+        $stmt->execute();
+        $stmt->bind_result($id_incidencia, $total);
+        $stmt->fetch();
+        $stmt->close();
+        $incidencia = array(
+            'id_incidencia' => $id_incidencia,
+            'total' => $total
+        );
+        return $incidencia;
+    }
+    
         
     function getIncidencia($id_incidencia) {
         // Prepara la consulta SQL para actualizar el usuario
@@ -498,6 +512,35 @@ class Conexion {
     
         // Devolver el conteo de incidencias
         return $row['total'];
+    }
+
+    function getNombreIncidencia($id_incidencia){
+        // Prepara la consulta SQL para obtener el nombre de la incidencia
+        $stmt = $this->conn->prepare("SELECT titulo FROM incidencias WHERE id_incidencia = ?");
+        $stmt->bind_param('i', $id_incidencia);
+
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Obtén el resultado
+        $stmt->bind_result($titulo);
+        $stmt->fetch();
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Comprueba si se encontró la incidencia
+        if(isset($titulo)){
+            // Crea un array asociativo con los valores
+            $incidencia = array(
+                'titulo' => $titulo
+            );
+            return $incidencia;
+        } else {
+            echo 'Incidencia no encontrada';
+            return null;
+        }
+        
     }
 
     function editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $incidencia_id) {

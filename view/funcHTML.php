@@ -166,15 +166,6 @@ function HTMLasideEnd()
 
 
 
-function HTMWidget2Start()
-{
-    echo <<<HTML
-        <div class="col-lg-2 ml-auto">
-            <aside class="p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3">
-    HTML;
-}
-
-
 function HTMLaside()
 {
     if (!isset($_SESSION['user'])) {
@@ -239,13 +230,39 @@ function HTMLwidget1()
 }
 
 
-function HTMWiget2End()
+
+// Inicio del widget 2
+function HTMWidget2Start()
 {
     echo <<<HTML
-            </aside>
+        <div class="row mt-4">
+            <div class="col d-flex flex-column justify-content-center align-items-center border border-primary rounded shadow-lg p-3" style="border-width:2px;">
+    HTML;
+}
+
+function HTMLWidget2()
+{
+    $db = new Conexion();
+    $db->conectar();
+    $incidenciaMasComentada = $db->getIncidenciaMasComentada();
+    $nombre = $db->getNombreIncidencia($incidenciaMasComentada['id_incidencia']);
+    $db->desconectar();
+    echo <<<HTML
+    Incidencia más comentada: {$nombre['titulo']} con {$incidenciaMasComentada['total']} comentarios
+    HTML;
+
+    
+}
+
+// Fin del widget 2
+function HTMWidget2End()
+{
+    echo <<<HTML
+            </div>
         </div>
     HTML;
 }
+
 
 
 function HTMLbodyStart()
@@ -326,7 +343,7 @@ function HTMLbusqueda()
                     </div>
                 </div>
             </div>
-            <input type='submit' value='Buscar' class='btn btn-primary btn-block' />
+            <input type='submit' name="search" value='Buscar' class='btn btn-primary btn-block' />
             </form>
             <div class="d-flex justify-content-between mt-3">
             <form method="POST" action="../controller/procesarPasarPagina.php">

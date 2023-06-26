@@ -21,6 +21,10 @@ HTMLaside();
 HTMWidget1Start();
 HTMLWidget1();
 HTMWidget1End();
+HTMWidget2Start();
+HTMLWidget2();
+HTMWidget2End();
+
 HTMLasideEnd();
 
 HTMLfooter();
