@@ -467,21 +467,21 @@ foreach ($comentarios as $comentario) {
 }
 
 
-            echo <<<HTML
-                <div class="row comentario" style="background-color: #d3d3d3;">
-                    <div class="col-sm-5">
-                        <h4>Nuevo Comentario</h4>
-                        <form method="POST" action="procesarComentario.php">
-                            <div class="form-group">
-                                <label for="mensaje">Mensaje:</label>
-                                <textarea class="form-control" name="mensaje" required></textarea>
-                            </div>
-                            <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
-                            <button type="submit" name="confirm" class="btn btn-primary">Registrar Comentario</button>
-                        </form>
-                    </div>
-                </div>
-            HTML;
+echo <<<HTML
+<div class="row nuevo-comentario bg-info text-light m-3 p-3">
+    <div class="col-sm-5">
+        <h4>Nuevo Comentario</h4>
+        <form method="POST" action="procesarComentario.php">
+            <div class="form-group">
+                <label for="mensaje">Mensaje:</label>
+                <textarea class="form-control" name="mensaje" required></textarea>
+            </div>
+            <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
+            <button type="submit" name="confirm" class="btn btn-primary">Registrar Comentario</button>
+        </form>
+    </div>
+</div>
+HTML;
                    
         
             echo <<<HTML
