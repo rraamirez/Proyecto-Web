@@ -267,6 +267,26 @@ class Conexion {
         return $usuarioData;
     }
 
+    // Función para obtener las incidencias de un usuario
+
+    function eliminarIncidenciasUsuario($idUsuario) {
+        $ids = $this->getIdsPerUser($idUsuario);
+        foreach ($ids as $id) {
+            $this->eliminarFotoIncidencias($id['id_incidencia']);
+        }
+        
+        $stmt = $this->conn->prepare("DELETE FROM incidencias WHERE id_usuario = ?");
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+    }
+        
+        
+    function eliminarComentariosUsuario($idUsuario) {
+        $stmt = $this->conn->prepare("DELETE FROM comentarios WHERE id_usuario = ?");
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+    }
+
     function eliminarUsuario($idUsuario) {
         $this->eliminarIncidenciasUsuario($idUsuario);
         $this->eliminarComentariosUsuario($idUsuario);
@@ -673,20 +693,7 @@ function getIdsPerUser($id_usuario){
     }
 
 
-    // Función para obtener las incidencias de un usuario
-    
-    function eliminarIncidenciasUsuario($idUsuario) {
-        $ids = $this->getIdsPerUser($idUsuario);
-        foreach ($ids as $id) {
-            $this->eliminarFotoIncidencias($id['id_incidencia']);
-        }
-        
-        $stmt = $this->conn->prepare("DELETE FROM incidencias WHERE id_usuario = ?");
-        $stmt->bind_param("i", $idUsuario);
-        $stmt->execute();
-    }
-    
-    
+
 
     ################################################################################################################################
     ################################################################################################################################
@@ -738,11 +745,6 @@ function getIdsPerUser($id_usuario){
         return $comentarios;
     }    
     
-    function eliminarComentariosUsuario($idUsuario) {
-        $stmt = $this->conn->prepare("DELETE FROM comentarios WHERE id_usuario = ?");
-        $stmt->bind_param("i", $idUsuario);
-        $stmt->execute();
-    }
 
     
     function eliminarComentariosIncidencia($id_incidencia){

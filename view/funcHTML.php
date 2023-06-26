@@ -441,48 +441,67 @@ function HTMLIncidencias()
 
             $comentarios = $db->searchComentarios($incidencia['id_incidencia']);
         
+                    
             $i = 0;
-foreach ($comentarios as $comentario) {
-    if ($comentario['id_usuario'] != null)
-        $nombre = $db->getUsuario($comentario['id_usuario']);
-    else
-        $nombre = "Anónimo";
+            foreach ($comentarios as $comentario) {
+                if ($comentario['id_usuario'] != null)
+                    $nombre = $db->getUsuario($comentario['id_usuario']);
+                else
+                    $nombre = "Anónimo";
 
-    $bgColor = ($i++ % 2 == 0) ? 'bg-light' : 'bg-secondary';
-    echo <<<HTML
-    <div class="row comentario {$bgColor} m-3 p-3">
-        <div class="col-sm-6">
-            <div class="d-flex align-items-start">
-                <div class="comment-username">
-                    <strong>{$nombre}</strong>
-                </div>
-                <div class="comment-date">
-                    {$comentario['fecha']}
+                $bgColor = ($i++ % 2 == 0) ? 'bg-light' : 'bg-custom';
+                echo <<<HTML
+                    <style>
+                        .bg-custom {
+                            background-color: #bebebe; 
+                        }
+                    </style>
+
+                    <div class="row comentario {$bgColor} m-3 p-3">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-start">
+                                <div class="comment-username">
+                                    <strong>{$nombre}</strong>
+                                </div>
+                                <div class="comment-date">
+                                    {$comentario['fecha']}
+                                </div>
+                            </div>
+                            <p>{$comentario['mensaje']}</p>
+                        </div>
+                    HTML;
+                if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
+                    echo <<<HTML
+                    <div class="col-sm-6 text-right">
+                        <form action="borrarComentario.php" method="POST">
+                            <input type="hidden" name="id_comentario" value="{$comentario['id_comentario']}">
+                            <button type="submit" class="btn btn-primary btn-circle btn-sm">
+                                <img src="../img/delete_icon.png" alt="Borrar" style="width: 15px; height: 15px;">
+                            </button>
+                        </form>
+                    </div>
+                HTML;
+                }
+                echo "</div>";
+            }
+
+            echo <<<HTML
+            <div class="row nuevo-comentario card-header text-light m-3 p-3">
+                <div class="col-sm-5">
+                    <h4>Nuevo Comentario</h4>
+                    <form method="POST" action="procesarComentario.php">
+                        <div class="form-group">
+                            <label for="mensaje">Mensaje:</label>
+                            <textarea class="form-control" name="mensaje" required></textarea>
+                        </div>
+                        <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
+                        <button type="submit" name="confirm" class="btn btn-primary">Registrar Comentario</button>
+                    </form>
                 </div>
             </div>
-            <p>{$comentario['mensaje']}</p>
-        </div>
-    </div>
-    HTML;
-}
+            HTML;
 
 
-echo <<<HTML
-<div class="row nuevo-comentario bg-info text-light m-3 p-3">
-    <div class="col-sm-5">
-        <h4>Nuevo Comentario</h4>
-        <form method="POST" action="procesarComentario.php">
-            <div class="form-group">
-                <label for="mensaje">Mensaje:</label>
-                <textarea class="form-control" name="mensaje" required></textarea>
-            </div>
-            <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
-            <button type="submit" name="confirm" class="btn btn-primary">Registrar Comentario</button>
-        </form>
-    </div>
-</div>
-HTML;
-                   
         
             echo <<<HTML
                 <style>
@@ -491,6 +510,7 @@ HTML;
                     }
                     
                     .btn-primary:hover,
+                    .btn-success:hover,
                     .btn-secondary:hover,
                     .btn-danger:hover,
                     .btn-orange:hover {
@@ -664,7 +684,6 @@ HTML;
 
 
 
-
 function HTMLUsuarios()
 {
     $db = new Conexion();
@@ -672,46 +691,46 @@ function HTMLUsuarios()
     $usuarios = $db->getUsuarios();
     $contador = 0;
     echo <<<HTML
-    <div class='row mt-3'>
-        <div class='col-md-12 d-flex justify-content-end'>
-            <button type="submit" class="btn btn-lg" style="margin-top: 10px; margin-bottom: 10px;">
-                <a href="../controller/addUser.php">Añadir usuarios</a>
-            </button>
-        </div>
+<div class='row mt-3'>
+    <div class='col-md-12 d-flex justify-content-end'>
+        <button type="submit" class="btn btn-lg" style="margin-top: 10px; margin-bottom: 10px;">
+            <a href="../controller/addUser.php">Añadir usuarios</a>
+        </button>
     </div>
-    HTML;
+</div>
+HTML;
     foreach ($usuarios as $user) {
         $contador++;
         $clase = $contador % 2 == 0 ? 'row mt-3 beige-bg' : 'row mt-3 grey-bg'; 
 
         echo <<<HTML
-        <link href="../view/vista.css" rel="stylesheet">
-        <div class='$clase'>
-            <div class='col-md-2'>
-                <img src='data:image/jpg;base64,{$user['foto']}' class='img-fluid rounded-circle' style='width: 100px; height: 100px; object-fit: cover;' alt='Foto de perfil'>
-            </div>
-            <div class='col-md-8'>
-                <br>
-                <p><strong>Usuario:</strong> {$user['usuario']} <strong>Email:</strong> {$user['email']}<br>
-                <strong>Dirección:</strong>   <strong>Teléfono:</strong> <br>
-                <strong>Rol:</strong> {$user['rol']} <strong>Estado:</strong> </p>
-            </div>
-            <div class='col-md-2 d-flex align-items-center justify-content-end'>
+<link href="../view/vista.css" rel="stylesheet">
+<div class='$clase'>
+    <div class='col-md-2'>
+        <img src='data:image/jpg;base64,{$user['foto']}' class='img-fluid rounded-circle' style='width: 100px; height: 100px; object-fit: cover;' alt='Foto de perfil'>
+    </div>
+    <div class='col-md-8'>
+        <br>
+        <p><strong>Usuario:</strong> {$user['usuario']} <strong>Email:</strong> {$user['email']}<br>
+        <strong>Dirección:</strong>   <strong>Teléfono:</strong> <br>
+        <strong>Rol:</strong> {$user['rol']} <strong>Estado:</strong> </p>
+    </div>
+    <div class='col-md-2 d-flex align-items-center justify-content-end'>
 
-                <button type="submit" class="btn btn-lg" style="margin-left: 10px; margin-top: 10px;">
-                    <a href="editarUsuarioAdmin.php?id={$db->getId($user['usuario'])}">
-                        <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
-                    </a>
-                </button>
-                <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;"  method="post">
-                    <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
-                    <button type="submit" class="btn btn-lg">
-                        <img src="../img/delete_icon.png" alt="Delete" style="width: 40px; height: 40px;">
-                    </button>
-                </form>
-            </div>
-        </div>
-        HTML;
+        <button type="submit" class="btn btn-lg" style="margin-left: 10px; margin-top: 10px;">
+            <a href="editarUsuarioAdmin.php?id={$db->getId($user['usuario'])}">
+                <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
+            </a>
+        </button>
+        <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;"  method="post">
+            <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
+            <button type="submit" class="btn btn-lg">
+                <img src="../img/delete_icon.png" alt="Delete" style="width: 40px; height: 40px;">
+            </button>
+        </form>
+    </div>
+</div>
+HTML;
     }
     $db->desconectar();
 }
