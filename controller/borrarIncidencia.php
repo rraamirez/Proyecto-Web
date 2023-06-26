@@ -2,7 +2,7 @@
   session_start();  
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['idIncidencia'];
+    $id = $_POST['id_incidencia'];
 
     require_once ("../model/bd.php");
     $conexion = new Conexion();

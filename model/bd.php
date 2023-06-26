@@ -735,13 +735,13 @@ function getIdsPerUser($id_usuario){
     
         // Ejecutar la consulta
         $stmt->execute();
+    
+        // Cerrar la consulta
+        $stmt->close();
 
         //Borramos las imagenes y comentarios
         $this->eliminarComentariosIncidencia($id_incidencia);
         $this->eliminarImagenesIncidencia($id_incidencia);
-    
-        // Cerrar la consulta
-        $stmt->close();
     }
     
     function eliminarComentariosIncidencia($id_incidencia){
