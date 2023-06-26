@@ -423,6 +423,15 @@ function HTMLUsuarios()
     $db->conectar();
     $usuarios = $db->getUsuarios();
     $contador = 0;
+    echo <<<HTML
+    <div class='row mt-3'>
+        <div class='col-md-12 d-flex justify-content-end'>
+            <button type="submit" class="btn btn-lg" style="margin-top: 10px; margin-bottom: 10px;">
+                <a href="../controller/addUser.php">Añadir usuarios</a>
+            </button>
+        </div>
+    </div>
+    HTML;
     foreach ($usuarios as $user) {
         $contador++;
         $clase = $contador % 2 == 0 ? 'row mt-3 beige-bg' : 'row mt-3 grey-bg'; 
@@ -458,6 +467,7 @@ function HTMLUsuarios()
     }
     $db->desconectar();
 }
+
 
 function HTMLLogs() {
     echo <<<HTML
@@ -539,6 +549,42 @@ function HTMLMisIncidencias()
                     </div>
         HTML;
         }
+
+        $fotos = $db->searchFotos($incidencia['id_incidencia']);
+
+            echo '<div class="foto-container">';
+            foreach ($fotos as $foto) {
+                echo <<<HTML
+                    <img class="foto" src="data:image/jpg;base64,$foto" alt="Foto de la incidencia">
+                HTML;
+            }
+            echo '</div>';  
+
+            $comentarios = $db->searchComentarios($incidencia['id_incidencia']);
+        
+            foreach ($comentarios as $comentario) {
+                if($comentario['id_usuario'] != null)
+                    $nombre = $db->getUsuario($comentario['id_usuario']);
+                else
+                    $nombre = "Anónimo";
+                echo <<<HTML
+                    <div class="row comentario">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-start">
+                                <div class="comment-username">
+                                    <strong>{$nombre}</strong>
+                                </div>
+                                <div class="comment-date">
+                                    {$comentario['fecha']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <p>{$comentario['mensaje']}</p>
+                        </div>
+                    </div>
+                HTML;
+            }            
     }
     $db->desconectar();
 }

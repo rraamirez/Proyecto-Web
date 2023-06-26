@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = htmlentities($_POST['email'], ENT_QUOTES, 'UTF-8');
     $clave = htmlentities($_POST['clave'], ENT_QUOTES, 'UTF-8');
     $usuario = htmlentities($_POST['usuario'], ENT_QUOTES, 'UTF-8');
+    $rol = htmlentities($_POST['rol'], ENT_QUOTES, 'UTF-8');
+
     
     // Comprueba si se ha cargado un archivo
     if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
@@ -24,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $foto = null;
         }
     }
-    $rol = 'colaborador';
+    
 
     // Aquí puedes realizar la validación de los datos y otras verificaciones necesarias antes de agregar el usuario a la base de datos
 
@@ -65,18 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Registro de Usuario</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        h2 {
-            text-align: center;
-        }
+    h2 {
+        text-align: center;
+    }
 
-        body {
-            padding: 20px;
-        }
+    body {
+        padding: 20px;
+    }
 
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
+    form {
+        max-width: 400px;
+        margin: 0 auto;
+    }
     </style>
 </head>
 
@@ -112,6 +114,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="usuario">Usuario:</label>
             <input type="text" class="form-control" name="usuario" required>
         </div>
+        <div class="form-group">
+            <label for="rol">Rol:</label>
+            <select class="form-control" name="rol" required>
+                <option value="colaborador">Colaborador</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+
         <button type="submit" class="btn btn-primary" formaction="register.php">Registrar</button>
     </form>
 

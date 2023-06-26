@@ -5,7 +5,7 @@ require_once('../model/bd.php');
 $conexion = new Conexion();
 $conexion->conectar();
 
-$conexion->addLog($conexion->getId(($_SESSION['user'])), date("Y-m-d H:i:s"), "INFO: El usuario {$_SESSION['user']} accede al sistema");
+$conexion->addLog($conexion->getId(($_SESSION['user'])), date("Y-m-d H:i:s"), "INFO: El usuario {$_SESSION['user']} sale del sistema");
 
 $conexion->desconectar();
 session_destroy();

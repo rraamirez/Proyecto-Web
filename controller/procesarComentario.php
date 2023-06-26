@@ -22,7 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fecha = date("Y-m-d H:i:s");
     
     if ($conexion->addComentario($idIncidencia, $id_usuario, $mensaje, $fecha)) {
-        $conexion->addLog(($id_usuario), date("Y-m-d H:i:s"), "INFO: El usuario {$conexion->getUsuario($id_usuario)} accede al sistema");
+        if($id_usuario == null)
+            $conexion->addLog(($id_usuario), date("Y-m-d H:i:s"), "INFO: El usuario anónimo ha añadido un comentario a la incidencia {$idIncidencia}");
+        else
+            $conexion->addLog(($id_usuario), date("Y-m-d H:i:s"), "INFO: El usuario {$conexion->getUsuario($id_usuario)} ha añadido un comentario a la incidencia {$idIncidencia}");
         
         header('Location: verIncidencias.php');
     } else {
@@ -32,6 +35,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     // Cerrar la conexión a la base de datos
     $conexion->desconectar();
-
 } 
 ?>

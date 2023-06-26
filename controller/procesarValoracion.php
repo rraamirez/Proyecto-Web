@@ -15,12 +15,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $conexion = new Conexion();
     $conexion->conectar();
     
+    if(isset($_SESSION['user']))
+        $id_usuario = $conexion->getId(trim(stripslashes(htmlspecialchars($_SESSION['user']))));
+    else
+        $id_usuario = null;
     
     if ($conexion->addValoracion($idIncidencia, $valoracion)) {
-        if(isset($_SESSION['user']))
-            $conexion->addLog($conexion->getId($_SESSION['user']), date("Y-m-d H:i:s"), "INFO: El usuario {$_SESSION['user']} accede al sistema");
+        if($id_usuario == null)
+            $conexion->addLog($id_usuario, date("Y-m-d H:i:s"), "INFO: El usuario anónimo accede al sistema");
         else
-            $conexion->addLog($conexion->getId(null), date("Y-m-d H:i:s"), "INFO: El usuario anónimo accede al sistema");
+            $conexion->addLog($id_usuario, date("Y-m-d H:i:s"), "INFO: El usuario {$_SESSION['user']} ha valorado la incidencia {$idIncidencia}");
     } else {
     }
     

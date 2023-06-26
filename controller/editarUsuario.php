@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $idUsuario = $conexion->editarUsuario($nombre, $apellidos, $email, $foto, $clave, $user);
         if ($idUsuario) {
+            $conexion->addLog($idUsuario, date("Y-m-d H:i:s"), "INFO: El usuario {$conexion->getUsuario($idUsuario)} ha sido modificado");
             // Usuario editado exitosamente
             echo 'Usuario editado con ID: ' . $idUsuario;
             echo '<script>alert("Usuario editado correctamente.");</script>';

@@ -392,7 +392,7 @@ class Conexion {
     }
 
 
-    function searchIncidencias($numInc, $tipoBusqueda, $lugar, $palabrasClave, $estado) {
+    function searchIncidencias($numInc, $tipoBusqueda, $lugar, $palabrasClave, $estados) {
         // Preparar la consulta SQL
         $sql = "SELECT id_incidencia, id_usuario, titulo, descripcion, fecha, ubicacion, estado, val_pos, val_neg, palabras_clave FROM incidencias WHERE 1";
     
@@ -404,8 +404,9 @@ class Conexion {
             $sql .= " AND (titulo LIKE ? OR descripcion LIKE ?)";
         }
     
-        if (!is_null($estado)) {
-            $sql .= " AND estado = ?";
+        if (!is_null($estados) && is_array($estados)) {
+            $placeholders = str_repeat('?,', count($estados) - 1) . '?';
+            $sql .= " AND estado IN ($placeholders)";
         }
     
         switch ($tipoBusqueda) {
@@ -440,9 +441,9 @@ class Conexion {
             $bind_types .= 'ss';
             array_push($bind_values, "%$palabrasClave%", "%$palabrasClave%");
         }
-        if (!is_null($estado)) {
-            $bind_types .= 's';
-            array_push($bind_values, $estado);
+        if (!is_null($estados) && is_array($estados)) {
+            $bind_types .= str_repeat('s', count($estados));
+            $bind_values = array_merge($bind_values, $estados);
         }
         if ($numInc != 'todas') {
             $bind_types .= 'i';
@@ -462,6 +463,7 @@ class Conexion {
     
         return $incidencias;
     }
+    
 
     function editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $incidencia_id) {
         // Prepara la consulta SQL para actualizar la incidencia
@@ -555,7 +557,7 @@ function getIdsPerUser($id_usuario){
 
 
     // Función para obtener las incidencias de un usuario
-    //TODO BORRRAR USUARIO
+    
     function eliminarIncidenciasUsuario($idUsuario) {
         $ids = $this->getIdsPerUser($idUsuario);
         foreach ($ids as $id) {

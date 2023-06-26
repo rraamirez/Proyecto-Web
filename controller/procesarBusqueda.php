@@ -16,18 +16,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // El campo 'estado' es un array, por lo que hay que verificar cada una de sus opciones
     $estado = isset($_POST['estado']) ? $_POST['estado'] : null;
     if ($estado) {
-        $opcion1 = in_array('opcion1', $estado);
-        $opcion2 = in_array('opcion2', $estado);
-        $opcion3 = in_array('opcion3', $estado);
-        $opcion4 = in_array('opcion4', $estado);
-        $opcion5 = in_array('opcion5', $estado);
-    } else {
-        $opcion1 = $opcion2 = $opcion3 = $opcion4 = $opcion5 = false;
+        $estadoMap = [
+            'opcion1' => 'Pendiente',
+            'opcion2' => 'Comprobada',
+            'opcion3' => 'Tramitada',
+            'opcion4' => 'Irresoluble',
+            'opcion5' => 'Resuelta',
+        ];
+        $estado = array_map(function($opcion) use ($estadoMap) {
+            return $estadoMap[$opcion] ?? null;
+        }, $estado);
+        $estado = array_filter($estado);  // Elimina los elementos nulos
     }
 
-    //$_SESSION['estado'] = $estado;
+    $_SESSION['estado'] = $estado;
 
-    $_SESSION['estado'] = "Pendiente";
 }
 
 header('Location: ./verIncidencias.php');
