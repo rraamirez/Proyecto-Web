@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $resultado = $conexion->editarIncidencia($id_incidencia, $titulo, $descripcion, $ubicacion, $palabras_clave);
 
         if ($resultado) {
-            header('Location: verIncidencias.php');
+            header('Location: misIncidencias.php');
         } else {
             // Error al actualizar la incidencia
             echo 'Error al actualizar la incidencia.';
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <h2>Editar Incidencia</h2>
-    <form method="POST" action="editarIncidencia.php" enctype="multipart/form-data">
+    <form method="POST" action="editarIncidenciaBoton.php" enctype="multipart/form-data">
         <div class="form-group">
             <label for="titulo">Título:</label>
             <input type="text" class="form-control" name="titulo" value="<?= $titulo ?? '' ?>" required>

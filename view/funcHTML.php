@@ -589,7 +589,7 @@ function HTMLMisIncidencias()
                 <div class="card-footer d-flex justify-content-end">
                     <form action="editarIncidenciaBoton.php" method="POST" class="mr-1">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
-                        <button type="submit" name="modify" class="btn btn-danger btn-circle btn-sm">
+                        <button type="submit" class="btn btn-danger btn-circle btn-sm">
                             <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>
