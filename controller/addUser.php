@@ -4,6 +4,13 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    if(!isset($_SESSION['usuario']) || $_SESSION['rol'] != 'admin') {
+        // No está conectado o no es un administrador, redirigir a página de inicio
+        header('Location: ../index.php');
+        exit(); 
+    }
+
     // Procesar los datos del formulario de registro
     $nombre = htmlentities($_POST['nombre'], ENT_QUOTES, 'UTF-8');
     $apellidos = htmlentities($_POST['apellidos'], ENT_QUOTES, 'UTF-8');
@@ -27,9 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-
-    // Aquí puedes realizar la validación de los datos y otras verificaciones necesarias antes de agregar el usuario a la base de datos
-
     // Realizar la conexión a la base de datos
     require_once('../model/bd.php'); // Archivo que contiene la clase Conexion
     $conexion = new Conexion();

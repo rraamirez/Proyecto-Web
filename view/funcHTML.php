@@ -291,7 +291,6 @@ function HTMLContentStart()
 
 function HTMLIncidencias()
 {
-    //FALTA BUSQUEDA POR ESTADO
     $db = new Conexion();
     $db->conectar();
 
@@ -400,14 +399,27 @@ function HTMLIncidencias()
                             <img src="../img/comment.png" alt="Comment" style="width: 15px; height: 15px;">
                         </button>
                     </form>
+            HTML;
+
+            if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
+                echo <<<HTML
+                    <form action="editarIncidenciaAdmin.php" method="POST" class="mr-1">
+                        <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
+                        <button type="submit" name="ini_modify" class="btn btn-danger btn-circle btn-sm">
+                            <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
+            HTML;
+            }
+
+            echo <<<HTML
                 </div>
             </div>
             HTML;
-        }
-    }
+                }
 
     $db->desconectar();
-}
+}}
 
 function HTMLContentEnd()
 {
@@ -589,7 +601,7 @@ function HTMLMisIncidencias()
                 <div class="card-footer d-flex justify-content-end">
                     <form action="editarIncidenciaBoton.php" method="POST" class="mr-1">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
-                        <button type="submit" class="btn btn-danger btn-circle btn-sm">
+                        <button type="submit" name="ini_modify" class="btn btn-danger btn-circle btn-sm">
                             <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>

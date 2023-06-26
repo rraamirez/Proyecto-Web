@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $descripcion = $incidencia['descripcion'];
         $ubicacion = $incidencia['ubicacion'];
         $palabras_clave = $incidencia['palabras_clave'];
+        $estado = $incidencia['estado'];
     }
     else if(isset($_POST['modify'])) {
         // Procesar los datos del formulario de incidencia
@@ -25,33 +26,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $descripcion = trim(stripslashes(htmlspecialchars($_POST['descripcion'])));
         $ubicacion = trim(stripslashes(htmlspecialchars($_POST['ubicacion'])));
         $palabras_clave = trim(stripslashes(htmlspecialchars($_POST['palabras_clave'])));
+        $estado = trim(stripslashes(htmlspecialchars($_POST['estado'])));
 
         // Actualizar la incidencia en la base de datos
-        $resultado = $conexion->editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $id_incidencia);
-
-        $_SESSION['titulo'] = $titulo;
-        $_SESSION['descripcion'] = $descripcion;
-        $_SESSION['ubicacion'] = $ubicacion;
-        $_SESSION['palabras_clave'] = $palabras_clave;
+        $resultado = $conexion->editarIncidenciaAdmin($titulo, $descripcion, $ubicacion, $palabras_clave,$estado, $id_incidencia);
 
         if ($resultado) {
-            header('Location: misIncidencias.php');
+            header('Location: verIncidencias.php');
         } else {
             // Error al actualizar la incidencia
             echo 'Error al actualizar la incidencia.';
         }
     }
-    else if(isset($_POST['upload'])) {
-        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
-        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
-        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
-        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
+    elseif(isset($_POST['upload'])) {
+        $titulo = $incidencia['titulo'];
+        $descripcion = $incidencia['descripcion'];
+        $ubicacion = $incidencia['ubicacion'];
+        $palabras_clave = $incidencia['palabras_clave'];
+        $estado = $incidencia['estado'];
 
         if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
             $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
             $resultadoFoto = $conexion->addFoto($id_incidencia, $foto);
+            if (!$resultadoFoto) {
+                // Error al agregar la foto
+                echo 'Error al agregar la foto.';
+            } else {
+                header('Location: verIncidencias.php');
+            }
         }
     }
+
     // Cerrar la conexión a la base de datos
     $conexion->desconectar();
 }
@@ -103,8 +108,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" class="form-control" name="palabras_clave" value="<?= $palabras_clave ?? '' ?>" required>
         </div>
 
+        <div class="form-group">
+            <label for="estado">Estado:</label>
+            <select class="form-control" name="estado" required>
+                <option value="Pendiente" <?= ($estado == 'Pendiente') ? 'selected' : '' ?>>Pendiente</option>
+                <option value="Comprobada" <?= ($estado == 'Comprobada') ? 'selected' : '' ?>>Comprobada</option>
+                <option value="Tramitada" <?= ($estado == 'Tramitada') ? 'selected' : '' ?>>Tramitada</option>
+                <option value="Irresoluble" <?= ($estado == 'Irresoluble') ? 'selected' : '' ?>>Irresoluble</option>
+                <option value="Resuelta" <?= ($estado == 'Resuelta') ? 'selected' : '' ?>>Resuelta</option>
+            </select>
+        </div>
+
         <button type="submit" name="modify" class="btn btn-primary">Actualizar Incidencia</button>
-        
+
         <div class="form-group">
             <label for="foto">Selecciona una foto:</label>
             <div class="input-group">
@@ -120,4 +136,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

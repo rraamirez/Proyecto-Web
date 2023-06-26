@@ -360,14 +360,14 @@ class Conexion {
         
     function getIncidencia($id_incidencia) {
         // Prepara la consulta SQL para actualizar el usuario
-        $stmt = $this->conn->prepare("SELECT id_usuario,titulo,descripcion,fecha,ubicacion,estado FROM incidencias WHERE id_incidencia = ?");
+        $stmt = $this->conn->prepare("SELECT id_usuario,titulo,descripcion,fecha,ubicacion,estado,palabras_clave FROM incidencias WHERE id_incidencia = ?");
         $stmt->bind_param('i', $id_incidencia);
 
         // Ejecuta la consulta
         $stmt->execute();
     
         // Obtén el resultado
-        $stmt->bind_result($id_usuario, $titulo, $descripcion, $fecha, $ubicacion, $estado);
+        $stmt->bind_result($id_usuario, $titulo, $descripcion, $fecha, $ubicacion, $estado, $palabras_clave);
         $stmt->fetch();
     
         // Cierra la consulta
@@ -382,7 +382,8 @@ class Conexion {
                 'descripcion' => $descripcion,
                 'fecha' => $fecha,
                 'ubicacion' => $ubicacion,
-                'estado' => $estado
+                'estado' => $estado,
+                'palabras_clave' => $palabras_clave
             );
             return $incidencia;
         } else {
@@ -485,6 +486,24 @@ class Conexion {
         // Retorna el resultado de la operación
         return $result;
     }
+
+    function editarIncidenciaAdmin($titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $incidencia_id) {
+        // Prepara la consulta SQL para actualizar la incidencia
+        $stmt = $this->conn->prepare("UPDATE incidencias SET titulo = ?, descripcion = ?, ubicacion = ?, palabras_clave = ?, estado = ? WHERE id_incidencia = ?");
+        
+        // Asocia los parámetros a las variables
+        $stmt->bind_param('sssssi', $titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $incidencia_id);
+        
+        // Ejecuta la consulta
+        $result = $stmt->execute();
+        
+        // Cierra la consulta
+        $stmt->close();
+        
+        // Retorna el resultado de la operación
+        return $result;
+    }
+    
 
     function getUsuarioIncidencias($id_usuario){
         $incidencias = array();
