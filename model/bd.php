@@ -422,9 +422,7 @@ class Conexion {
                 break;
         }
     
-        if ($numInc != 'todas') {
-            $sql .= " LIMIT ?";
-        }
+        $sql .= " LIMIT ?";  // Siempre agregamos la cláusula LIMIT
     
         // Preparar la sentencia
         $stmt = $this->conn->prepare($sql);
@@ -445,10 +443,15 @@ class Conexion {
             $bind_types .= str_repeat('s', count($estados));
             $bind_values = array_merge($bind_values, $estados);
         }
+    
         if ($numInc != 'todas') {
             $bind_types .= 'i';
             array_push($bind_values, $numInc);
+        } else {
+            $bind_types .= 'i';
+            array_push($bind_values, PHP_INT_MAX); // Usamos el número entero más grande posible si queremos todas las incidencias
         }
+    
         $stmt->bind_param($bind_types, ...$bind_values);
     
         // Ejecutar la consulta
@@ -463,6 +466,7 @@ class Conexion {
     
         return $incidencias;
     }
+    
     
 
     function editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $incidencia_id) {

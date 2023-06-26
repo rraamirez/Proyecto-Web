@@ -548,7 +548,7 @@ function HTMLMisIncidencias()
                         <p class="card-text">{$incidencia['descripcion']}</p>
                     </div>
         HTML;
-        }
+        
 
         $fotos = $db->searchFotos($incidencia['id_incidencia']);
 
@@ -584,7 +584,26 @@ function HTMLMisIncidencias()
                         </div>
                     </div>
                 HTML;
-            }            
+            }
+            echo <<<HTML
+                <div class="card-footer d-flex justify-content-end">
+                    <form action="editarIncidenciaBoton.php" method="POST" class="mr-1">
+                        <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
+                        <button type="submit" name="modify" class="btn btn-danger btn-circle btn-sm">
+                            <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
+                    <form action="borrarIncidencia.php" method="POST">
+                        <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
+                        <button type="submit" class="btn btn-primary btn-circle btn-sm">
+                            <img src="../img/delete_icon.png" alt="Borrar" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
+                </div>
+            </div>
+            HTML;      
+        }      
+        
     }
     $db->desconectar();
 }

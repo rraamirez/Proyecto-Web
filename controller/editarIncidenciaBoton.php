@@ -11,37 +11,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conexion->conectar();
 
     if(isset($_POST['modify'])) {
+        // Procesar los datos del formulario de incidencia
         $titulo = trim(stripslashes(htmlspecialchars($_POST['titulo'])));
         $descripcion = trim(stripslashes(htmlspecialchars($_POST['descripcion'])));
         $ubicacion = trim(stripslashes(htmlspecialchars($_POST['ubicacion'])));
         $palabras_clave = trim(stripslashes(htmlspecialchars($_POST['palabras_clave'])));
+        $id_incidencia = trim(stripslashes(htmlspecialchars($_POST['id_incidencia'])));  // Obtener el ID de la incidencia
+
         // Actualizar la incidencia en la base de datos
-        $resultado = $conexion->editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $_SESSION['incidencia']['id']);
+        $resultado = $conexion->editarIncidencia($id_incidencia, $titulo, $descripcion, $ubicacion, $palabras_clave);
 
         if ($resultado) {
-            unset($_SESSION['incidencia']);
             header('Location: verIncidencias.php');
         } else {
-            // Error al registrar la incidencia
+            // Error al actualizar la incidencia
             echo 'Error al actualizar la incidencia.';
-        }
-    } elseif(isset($_POST['upload'])) {
-        if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
-            $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
-            $resultadoFoto = $conexion->addFoto($_SESSION['incidencia']['id'], $foto);
-            if (!$resultadoFoto) {
-                // Error al agregar la foto
-                echo 'Error al agregar la foto.';
-            } else {
-                header('Location: editarIncidencia.php');
-            }
         }
     }
 
     // Cerrar la conexión a la base de datos
     $conexion->desconectar();
 } else {
-    if(isset($_SESSION['incidencia'])) {
+    if(isset($_POST['id_incidencia'])) {
+        $id_incidencia = trim(stripslashes(htmlspecialchars($_POST['id_incidencia'])));
+        // Obtener la incidencia actual de la base de datos
+        $conexion = new Conexion();
+        $conexion->conectar();
+        $_SESSION['incidencia'] = $conexion->getIncidencia($id_incidencia);
+        $conexion->desconectar();
+        
         $titulo = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['titulo'])));
         $descripcion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['descripcion'])));
         $ubicacion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['ubicacion'])));
