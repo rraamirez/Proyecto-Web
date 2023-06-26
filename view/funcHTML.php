@@ -496,6 +496,18 @@ function HTMLIncidencias()
                    
         
             echo <<<HTML
+                <style>
+                    .btn-orange {
+                        background-color: orange; 
+                    }
+                    
+                    .btn-primary:hover,
+                    .btn-secondary:hover,
+                    .btn-danger:hover,
+                    .btn-orange:hover {
+                        transform: scale(1.2);
+                    }
+                </style>
                 <div class="card-footer d-flex justify-content-end">
                     <form action="procesarValoracion.php" method="POST" class="mr-1">
                         <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
@@ -515,10 +527,23 @@ function HTMLIncidencias()
 
             if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
                 echo <<<HTML
+                <style>
+                    .btn-orange {
+                        background-color: orange; 
+                    }
+
+                    .btn-primary:hover,
+                    .btn-secondary:hover,
+                    .btn-danger:hover,
+                    .btn-orange:hover {
+                        transform: scale(1.2); 
+                    }
+                </style>
+
                     <form action="editarIncidenciaAdmin.php" method="POST" class="mr-1">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
-                        <button type="submit" name="ini_modify" class="btn btn-danger btn-circle btn-sm">
-                            <img src="../img/edit-icon.png" alt="Editar" style="width: 15px; height: 15px;">
+                        <button type="submit" name="modify" class="btn btn-primary btn-orange btn-circle btn-sm">
+                            <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>
                     <form action="borrarIncidencia.php" method="POST">
@@ -615,6 +640,40 @@ function HTMLregister() {
 </html>
 HTML;
 }
+
+
+// function HTMLNuevaIncidencia() {
+//     // Definir variables aquí si es necesario
+//     echo <<<HTML
+//         <h2>Nueva Incidencia</h2>
+//         <form method="POST" action="procesarNuevaIncidencia.php">
+//             <div class="form-group">
+//                 <label for="titulo">Título:</label>
+//                 <input type="text" class="form-control" name="titulo" value="{$titulo ?? ''}" required>
+//             </div>
+
+//             <div class="form-group">
+//                 <label for="descripcion">Descripción:</label>
+//                 <textarea class="form-control" name="descripcion" required>{$descripcion ?? ''}</textarea>
+//             </div>
+
+//             <div class="form-group">
+//                 <label for="ubicacion">Ubicación:</label>
+//                 <input type="text" class="form-control" name="ubicacion" value="{$ubicacion ?? ''}" required>
+//             </div>
+
+//             <div class="form-group">
+//                 <label for="palabras_clave">Palabras Clave:</label>
+//                 <input type="text" class="form-control" name="palabras_clave" value="{$palabras_clave ?? ''}" required>
+//             </div>
+
+//             <button type="submit" name="confirm" class="btn btn-primary">Registrar Incidencia</button>
+//         </form>
+//     HTML;
+// }
+
+
+
 
 
 function HTMLUsuarios()
