@@ -691,46 +691,46 @@ function HTMLUsuarios()
     $usuarios = $db->getUsuarios();
     $contador = 0;
     echo <<<HTML
-<div class='row mt-3'>
-    <div class='col-md-12 d-flex justify-content-end'>
-        <button type="submit" class="btn btn-lg" style="margin-top: 10px; margin-bottom: 10px;">
-            <a href="../controller/addUser.php">Añadir usuarios</a>
-        </button>
-    </div>
-</div>
-HTML;
+        <div class='row mt-3'>
+            <div class='col-md-12 d-flex justify-content-end'>
+                <button type="submit" class="btn btn-lg" style="margin-top: 10px; margin-bottom: 10px;">
+                    <a href="../controller/addUser.php">Añadir usuarios</a>
+                </button>
+            </div>
+        </div>
+        HTML;
     foreach ($usuarios as $user) {
         $contador++;
         $clase = $contador % 2 == 0 ? 'row mt-3 beige-bg' : 'row mt-3 grey-bg'; 
 
         echo <<<HTML
-<link href="../view/vista.css" rel="stylesheet">
-<div class='$clase'>
-    <div class='col-md-2'>
-        <img src='data:image/jpg;base64,{$user['foto']}' class='img-fluid rounded-circle' style='width: 100px; height: 100px; object-fit: cover;' alt='Foto de perfil'>
-    </div>
-    <div class='col-md-8'>
-        <br>
-        <p><strong>Usuario:</strong> {$user['usuario']} <strong>Email:</strong> {$user['email']}<br>
-        <strong>Dirección:</strong>   <strong>Teléfono:</strong> <br>
-        <strong>Rol:</strong> {$user['rol']} <strong>Estado:</strong> </p>
-    </div>
-    <div class='col-md-2 d-flex align-items-center justify-content-end'>
+            <link href="../view/vista.css" rel="stylesheet">
+            <div class='$clase'>
+                <div class='col-md-2'>
+                    <img src='data:image/jpg;base64,{$user['foto']}' class='img-fluid rounded-circle' style='width: 100px; height: 100px; object-fit: cover;' alt='Foto de perfil'>
+                </div>
+                <div class='col-md-8'>
+                    <br>
+                    <p><strong>Usuario:</strong> {$user['usuario']} <strong>Email:</strong> {$user['email']}<br>
+                    <strong>Dirección:</strong>   <strong>Teléfono:</strong> <br>
+                    <strong>Rol:</strong> {$user['rol']} <strong>Estado:</strong> </p>
+                </div>
+                <div class='col-md-2 d-flex align-items-center justify-content-end'>
 
-        <button type="submit" class="btn btn-lg" style="margin-left: 10px; margin-top: 10px;">
-            <a href="editarUsuarioAdmin.php?id={$db->getId($user['usuario'])}">
-                <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
-            </a>
-        </button>
-        <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;"  method="post">
-            <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
-            <button type="submit" class="btn btn-lg">
-                <img src="../img/delete_icon.png" alt="Delete" style="width: 40px; height: 40px;">
-            </button>
-        </form>
-    </div>
-</div>
-HTML;
+                    <button type="submit" class="btn btn-lg" style="margin-left: 10px; margin-top: 10px;">
+                        <a href="editarUsuarioAdmin.php?id={$db->getId($user['usuario'])}">
+                            <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
+                        </a>
+                    </button>
+                    <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;"  method="post">
+                        <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
+                        <button type="submit" class="btn btn-lg">
+                            <img src="../img/delete_icon.png" alt="Delete" style="width: 40px; height: 40px;">
+                        </button>
+                    </form>
+                </div>
+            </div>
+            HTML;
     }
     $db->desconectar();
 }
