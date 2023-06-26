@@ -246,12 +246,15 @@ function HTMLWidget2()
     $db->conectar();
     $incidenciaMasComentada = $db->getIncidenciaMasComentada();
     $nombre = $db->getNombreIncidencia($incidenciaMasComentada['id_incidencia']);
-    $db->desconectar();
-    echo <<<HTML
-    Incidencia más comentada: {$nombre['titulo']} con {$incidenciaMasComentada['total']} comentarios
-    HTML;
+    if($nombre == null){
+        $nombre['titulo'] = 'No hay incidencias';
+    }else{  
+        echo <<<HTML
+        Incidencia más comentada: {$nombre['titulo']} con {$incidenciaMasComentada['total']} comentarios
+        HTML;
+    }
 
-    
+    $db->desconectar();
 }
 
 // Fin del widget 2
@@ -405,7 +408,7 @@ function HTMLIncidencias()
         foreach ($incidencias as $incidencia) {
             echo <<<HTML
             <link href="../view/vista.css" rel="stylesheet">
-            <div class="card mb-3">
+            <div class="card mb-5">
                 <div class="card-header">
                     <h5 class="card-title">{$incidencia['titulo']}</h5>
                 </div>
@@ -438,13 +441,16 @@ function HTMLIncidencias()
 
             $comentarios = $db->searchComentarios($incidencia['id_incidencia']);
         
+            $i = 0;
             foreach ($comentarios as $comentario) {
                 if($comentario['id_usuario'] != null)
                     $nombre = $db->getUsuario($comentario['id_usuario']);
                 else
                     $nombre = "Anónimo";
+                    
+                $bgColor = ($i++ % 2 == 0) ? '#e0e0e0' : '#d3d3d3';  
                 echo <<<HTML
-                    <div class="row comentario">
+                    <div class="row comentario" style="background-color: {$bgColor};">
                         <div class="col-sm-6">
                             <div class="d-flex align-items-start">
                                 <div class="comment-username">
@@ -454,13 +460,40 @@ function HTMLIncidencias()
                                     {$comentario['fecha']}
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6">
                             <p>{$comentario['mensaje']}</p>
                         </div>
-                    </div>
                 HTML;
-            }            
+                if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
+                    echo <<<HTML
+                        <div class="col-sm-4 text-right">
+                            <form action="borrarComentario.php" method="POST">
+                                <input type="hidden" name="id_comentario" value="{$comentario['id_comentario']}">
+                                <button type="submit" class="btn btn-primary btn-circle btn-sm">
+                                    <img src="../img/delete_icon.png" alt="Borrar" style="width: 15px; height: 15px;">
+                                </button>
+                            </form>
+                        </div>
+                    HTML;
+                }
+                echo "</div>";
+            }
+
+            echo <<<HTML
+                <div class="row comentario" style="background-color: #d3d3d3;">
+                    <div class="col-sm-5">
+                        <h4>Nuevo Comentario</h4>
+                        <form method="POST" action="procesarComentario.php">
+                            <div class="form-group">
+                                <label for="mensaje">Mensaje:</label>
+                                <textarea class="form-control" name="mensaje" required></textarea>
+                            </div>
+                            <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
+                            <button type="submit" name="confirm" class="btn btn-primary">Registrar Comentario</button>
+                        </form>
+                    </div>
+                </div>
+            HTML;
+                   
         
             echo <<<HTML
                 <div class="card-footer d-flex justify-content-end">
@@ -478,12 +511,6 @@ function HTMLIncidencias()
                             <img src="../img/minus.png" alt="Negative" style="width: 15px; height: 15px;">
                         </button>
                     </form>
-                    <form action="nuevoComentario.php" method="POST">
-                        <input type="hidden" name="idIncidencia" value="{$incidencia['id_incidencia']}">
-                        <button type="submit" class="btn btn-primary btn-circle btn-sm">
-                            <img src="../img/comment.png" alt="Comment" style="width: 15px; height: 15px;">
-                        </button>
-                    </form>
             HTML;
 
             if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
@@ -491,7 +518,7 @@ function HTMLIncidencias()
                     <form action="editarIncidenciaAdmin.php" method="POST" class="mr-1">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
                         <button type="submit" name="ini_modify" class="btn btn-danger btn-circle btn-sm">
-                            <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
+                            <img src="../img/edit-icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>
                     <form action="borrarIncidencia.php" method="POST">
@@ -756,8 +783,15 @@ function HTMLMisIncidencias()
                             <p>{$comentario['mensaje']}</p>
                         </div>
                     </div>
+                    <form action="borrarComentario.php" method="POST">
+                        <input type="hidden" name="id_comentario" value="{$comentario['id_comentario']}">
+                        <button type="submit" class="btn btn-primary btn-circle btn-sm">
+                            <img src="../img/delete_icon.png" alt="Borrar" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
                 HTML;
             }
+            
             echo <<<HTML
                 <div class="card-footer d-flex justify-content-end">
                     <form action="editarIncidenciaBoton.php" method="POST" class="mr-1">

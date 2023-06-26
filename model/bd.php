@@ -651,6 +651,27 @@ function getIdsPerUser($id_usuario){
         return $incidencias;
     }
 
+    function eliminarIncidencia($id_incidencia){
+        //Borramos las imagenes y comentarios
+        $this->eliminarComentariosIncidencia($id_incidencia);
+        $this->eliminarImagenesIncidencia($id_incidencia);
+
+        // Preparar la consulta SQL
+        $sql = "DELETE FROM incidencias WHERE id_incidencia = ?";
+    
+        // Preparar la sentencia
+        $stmt = $this->conn->prepare($sql);
+    
+        // Vincular los parámetros
+        $stmt->bind_param('i', $id_incidencia);
+    
+        // Ejecutar la consulta
+        $stmt->execute();
+    
+        // Cerrar la consulta
+        $stmt->close();
+    }
+
 
     // Función para obtener las incidencias de un usuario
     
@@ -723,26 +744,6 @@ function getIdsPerUser($id_usuario){
         $stmt->execute();
     }
 
-    function eliminarIncidencia($id_incidencia){
-        // Preparar la consulta SQL
-        $sql = "DELETE FROM incidencias WHERE id_incidencia = ?";
-    
-        // Preparar la sentencia
-        $stmt = $this->conn->prepare($sql);
-    
-        // Vincular los parámetros
-        $stmt->bind_param('i', $id_incidencia);
-    
-        // Ejecutar la consulta
-        $stmt->execute();
-    
-        // Cerrar la consulta
-        $stmt->close();
-
-        //Borramos las imagenes y comentarios
-        $this->eliminarComentariosIncidencia($id_incidencia);
-        $this->eliminarImagenesIncidencia($id_incidencia);
-    }
     
     function eliminarComentariosIncidencia($id_incidencia){
         // Preparar la consulta SQL
@@ -760,22 +761,12 @@ function getIdsPerUser($id_usuario){
         // Cerrar la consulta
         $stmt->close();
     }
-    
-    function eliminarImagenesIncidencia($id_incidencia){
-        // Preparar la consulta SQL
-        $sql = "DELETE FROM imagenes WHERE id_incidencia = ?";
-    
-        // Preparar la sentencia
-        $stmt = $this->conn->prepare($sql);
-    
-        // Vincular los parámetros
-        $stmt->bind_param('i', $id_incidencia);
-    
-        // Ejecutar la consulta
+
+
+    function eliminarComentario($id){
+        $stmt = $this->conn->prepare("DELETE FROM comentarios WHERE id_comentario = ?");
+        $stmt->bind_param("i", $id);
         $stmt->execute();
-    
-        // Cerrar la consulta
-        $stmt->close();
     }
     
 
@@ -951,6 +942,24 @@ function getIdsPerUser($id_usuario){
         $stmt->close();
         
         return true;
+    }
+
+
+    function eliminarImagenesIncidencia($id_incidencia){
+        // Preparar la consulta SQL
+        $sql = "DELETE FROM imagenes WHERE id_incidencia = ?";
+    
+        // Preparar la sentencia
+        $stmt = $this->conn->prepare($sql);
+    
+        // Vincular los parámetros
+        $stmt->bind_param('i', $id_incidencia);
+    
+        // Ejecutar la consulta
+        $stmt->execute();
+    
+        // Cerrar la consulta
+        $stmt->close();
     }
 
     ################################################################################################################################

@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Conectar a la base de datos
     $conexion = new Conexion();
     $conexion->conectar();
+    $incidencia = $conexion->getIncidencia($_SESSION['incidencia']['id']);
+
 
     if(isset($_POST['modify'])) {
         $titulo = trim(stripslashes(htmlspecialchars($_POST['titulo'])));
@@ -19,9 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $resultado = $conexion->editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $_SESSION['incidencia']['id']);
 
         if ($resultado) {
-            // Refrescar los datos de la incidencia en la sesión
-            $_SESSION['incidencia'] = $conexion->getIncidencia($_SESSION['incidencia']['id']);
-            session_write_close();
+            unset($_SESSION['incidencia']);  
             header('Location: verIncidencias.php');
             exit;
         } else {

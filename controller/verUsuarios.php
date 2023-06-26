@@ -19,6 +19,9 @@ if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     HTMWidget1Start();
     HTMLWidget1();
     HTMWidget1End();
+    HTMWidget2Start();
+    HTMLWidget2();
+    HTMWidget2End();
     HTMLasideEnd();
     HTMLfooter();
     HTMLfin();

@@ -42,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     else if(isset($_POST['upload'])) {
-        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
-        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
-        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
-        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
+        $titulo = $_SESSION['titulo'];
+        $descripcion = $_SESSION['descripcion'];
+        $ubicacion = $_SESSION['ubicacion'];
+        $palabras_clave = $_SESSION['palabras_clave'];
 
         if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
             $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
@@ -53,11 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     elseif(isset($_POST['delete'])) {
-        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
-        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
-        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
-        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
-        $estado = $_SESSION['estado'] ?? $incidencia['estado'];
+        $titulo = $_SESSION['titulo'];
+        $descripcion = $_SESSION['descripcion'];
+        $ubicacion = $_SESSION['ubicacion'];
+        $palabras_clave = $_SESSION['palabras_clave'];
+        $estado = $_SESSION['estado'];
 
         $fotoId = $_POST['delete'];
         $resultadoFoto = $conexion->deleteFoto($fotoId);
