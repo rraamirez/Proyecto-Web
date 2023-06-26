@@ -357,6 +357,14 @@ class Conexion {
         return $incidencia_id;
     }
 
+    function getTotalIncidencias(){
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM incidencias");
+        $stmt->execute();
+        $stmt->bind_result($total);
+        $stmt->fetch();
+        $stmt->close();
+        return $total;
+    }
         
     function getIncidencia($id_incidencia) {
         // Prepara la consulta SQL para actualizar el usuario
@@ -396,6 +404,7 @@ class Conexion {
     function searchIncidencias($numInc, $tipoBusqueda, $lugar, $palabrasClave, $estados) {
         // Preparar la consulta SQL
         $sql = "SELECT id_incidencia, id_usuario, titulo, descripcion, fecha, ubicacion, estado, val_pos, val_neg, palabras_clave FROM incidencias WHERE 1";
+        $_SESSION['perPage'] = $numInc;
     
         if (!is_null($lugar)) {
             $sql .= " AND ubicacion = ?";
@@ -423,11 +432,6 @@ class Conexion {
                 break;
         }
     
-        $sql .= " LIMIT ?";  // Siempre agregamos la cláusula LIMIT
-    
-        // Preparar la sentencia
-        $stmt = $this->conn->prepare($sql);
-    
         // Ligando los parámetros
         $bind_types = '';
         $bind_values = [];
@@ -446,12 +450,17 @@ class Conexion {
         }
     
         if ($numInc != 'todas') {
-            $bind_types .= 'i';
-            array_push($bind_values, $numInc);
+            $bind_types .= 'ii';  // Agregamos dos parámetros enteros
+            array_push($bind_values, ($_SESSION['page']-1)*$numInc, $numInc);
+            $sql .= " LIMIT ?, ?";
         } else {
-            $bind_types .= 'i';
+            $bind_types .= 'i'; // Añadimos un parámetro entero
             array_push($bind_values, PHP_INT_MAX); // Usamos el número entero más grande posible si queremos todas las incidencias
+            $sql .= " LIMIT ?";
         }
+    
+        // Preparar la sentencia
+        $stmt = $this->conn->prepare($sql);
     
         $stmt->bind_param($bind_types, ...$bind_values);
     
@@ -469,6 +478,27 @@ class Conexion {
     }
     
     
+    
+    function countIncidencias() {
+        // Preparar la consulta SQL
+        $sql = "SELECT COUNT(*) as total FROM incidencias";
+    
+        // Preparar la sentencia
+        $stmt = $this->conn->prepare($sql);
+    
+        // Ejecutar la consulta
+        $stmt->execute();
+    
+        // Obtener los resultados
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        // Cerrar la consulta
+        $stmt->close();
+    
+        // Devolver el conteo de incidencias
+        return $row['total'];
+    }
 
     function editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $incidencia_id) {
         // Prepara la consulta SQL para actualizar la incidencia

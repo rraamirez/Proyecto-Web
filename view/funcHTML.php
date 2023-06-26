@@ -133,9 +133,46 @@ function HTMLasideStart()
     echo <<<HTML
         <div class="col-lg-2 ml-auto">
             <aside class="p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3">
+            <div class="container">
     HTML;
 }
 
+// El inicio del widget sería algo así
+function HTMWidget1Start()
+{
+    echo <<<HTML
+        <div class="row mt-4">
+            <div class="col d-flex flex-column justify-content-center align-items-center border border-primary rounded shadow-lg p-3" style="border-width:2px;">
+    HTML;
+}
+
+// Y el final del widget sería así
+function HTMWidget1End()
+{
+    echo <<<HTML
+            </div>
+        </div>
+    HTML;
+}
+
+function HTMLasideEnd()
+{
+    echo <<<HTML
+            </div>
+            </aside>
+        </div>
+    HTML;
+}
+
+
+
+function HTMWidget2Start()
+{
+    echo <<<HTML
+        <div class="col-lg-2 ml-auto">
+            <aside class="p-3 border border-primary border-3 rounded shadow-lg mt-3 mb-3">
+    HTML;
+}
 
 
 function HTMLaside()
@@ -189,7 +226,20 @@ HTML;
     }
 }
 
-function HTMLasideEnd()
+//get Total incidencias
+function HTMLwidget1()
+{
+    $db = new Conexion();
+    $db->conectar();
+    $totalIncidencias = $db->getTotalIncidencias();
+    $db->desconectar();
+    echo <<< HTML
+        Incidencias totales: $totalIncidencias 
+    HTML;
+}
+
+
+function HTMWiget2End()
 {
     echo <<<HTML
             </aside>
@@ -207,6 +257,14 @@ function HTMLbodyStart()
 
 function HTMLbusqueda()
 {
+    $db = new Conexion();
+    $db->conectar();
+    $botonAnteriorDisabled = $_SESSION['page'] <= 1 ? 'disabled' : '';
+    $botonPosteriorDisabled = '';
+
+    if(isset($_SESSION['perPage']) && intval($_SESSION['perPage']) != 0)
+        $botonPosteriorDisabled = $_SESSION['page'] > ($db->countIncidencias())/intval($_SESSION['perPage']) ? 'disabled' : '';
+
     echo <<<HTML
     <form method="POST" action="procesarBusqueda.php">
         <h2 class="border">Listado de incidencias:</h2>
@@ -269,7 +327,17 @@ function HTMLbusqueda()
                 </div>
             </div>
             <input type='submit' value='Buscar' class='btn btn-primary btn-block' />
-    </form>
+            </form>
+            <div class="d-flex justify-content-between mt-3">
+            <form method="POST" action="../controller/procesarPasarPagina.php">
+                <input type="hidden" name="direccion" value="anterior">
+                <button type="submit" class="btn btn-primary" $botonAnteriorDisabled>Anterior</button>
+            </form>
+            <form method="POST" action="../controller/procesarPasarPagina.php">
+                <input type="hidden" name="direccion" value="siguiente">
+                <button type="submit" class="btn btn-primary" $botonPosteriorDisabled>Siguiente</button>
+            </form>
+        </div>
     HTML;
 }
 

@@ -52,6 +52,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $resultadoFoto = $conexion->addFoto($id_incidencia, $foto);
         }
     }
+    elseif(isset($_POST['delete'])) {
+        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
+        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
+        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
+        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
+        $estado = $_SESSION['estado'] ?? $incidencia['estado'];
+
+        $fotoId = $_POST['delete'];
+        $resultadoFoto = $conexion->deleteFoto($fotoId);
+        if (!$resultadoFoto) {
+            // Error al eliminar la foto
+            echo 'Error al eliminar la foto.';
+        }
+    }
+
     // Cerrar la conexión a la base de datos
     $conexion->desconectar();
 }
@@ -75,6 +90,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         form {
             max-width: 600px;
             margin: 0 auto;
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .image-container .image-item {
+            position: relative;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .image-container .image-item img {
+            display: block;
+            max-width: 100px;
+            height: auto;
+        }
+
+        .image-container .image-item .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
         }
     </style>
 </head>
@@ -114,6 +153,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
+        <?php
+        $conexion = new Conexion();
+        $conexion->conectar();
+
+        $fotos = $conexion->searchFotosWithID($id_incidencia);
+        if (!empty($fotos)) {
+            echo '<div class="image-container">';
+            foreach ($fotos as $foto) {
+                echo '<div class="image-item">';
+                echo '<img src="data:image/jpeg;base64,' . $foto['imagen'] . '">';
+                echo '<button type="submit" name="delete" value="' . $foto['id_imagen'] . '" class="btn btn-danger delete-button">Eliminar</button>';
+                echo '</div>';
+            }
+            echo '</div>';
+        }
+        $conexion->desconectar();
+        ?>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

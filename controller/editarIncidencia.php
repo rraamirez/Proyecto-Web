@@ -19,22 +19,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $resultado = $conexion->editarIncidencia($titulo, $descripcion, $ubicacion, $palabras_clave, $_SESSION['incidencia']['id']);
 
         if ($resultado) {
-            unset($_SESSION['incidencia']);
+            // Refrescar los datos de la incidencia en la sesión
+            $_SESSION['incidencia'] = $conexion->getIncidencia($_SESSION['incidencia']['id']);
+            session_write_close();
             header('Location: verIncidencias.php');
+            exit;
         } else {
             // Error al registrar la incidencia
             echo 'Error al actualizar la incidencia.';
         }
+        
+        
     } elseif(isset($_POST['upload'])) {
+        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
+        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
+        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
+        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
+
         if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
             $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
             $resultadoFoto = $conexion->addFoto($_SESSION['incidencia']['id'], $foto);
-            if (!$resultadoFoto) {
-                // Error al agregar la foto
-                echo 'Error al agregar la foto.';
-            } else {
-                header('Location: editarIncidencia.php');
-            }
+        }
+    }elseif(isset($_POST['delete'])) {
+        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
+        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
+        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
+        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
+        $estado = $_SESSION['estado'] ?? $incidencia['estado'];
+
+        $fotoId = $_POST['delete'];
+        $resultadoFoto = $conexion->deleteFoto($fotoId);
+        if (!$resultadoFoto) {
+            // Error al eliminar la foto
+            echo 'Error al eliminar la foto.';
         }
     }
 
@@ -106,6 +123,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
+        <?php
+        $conexion = new Conexion();
+        $conexion->conectar();
+
+        $fotos = $conexion->searchFotosWithID($_SESSION['incidencia']['id']);
+        if (!empty($fotos)) {
+            echo '<div class="image-container">';
+            foreach ($fotos as $foto) {
+                echo '<div class="image-item">';
+                echo '<img src="data:image/jpeg;base64,' . $foto['imagen'] . '">';
+                echo '<button type="submit" name="delete" value="' . $foto['id_imagen'] . '" class="btn btn-danger delete-button">Eliminar</button>';
+                echo '</div>';
+            }
+            echo '</div>';
+        }
+        $conexion->desconectar();
+        ?>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

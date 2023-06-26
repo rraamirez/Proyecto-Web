@@ -9,6 +9,9 @@ require_once('../model/bd.php');
 $db = new Conexion();
 $db->conectar();
 
+if(!isset($_SESSION['page']))
+    $_SESSION['page'] = 1;
+
 HTMLinicio("Incidencias");
 HTMLheader(0);
 HTMLnav(0);
@@ -18,6 +21,9 @@ HTMLbusqueda();
 HTMLbodyEnd();
 HTMLasideStart();
 HTMLaside();
+HTMWidget1Start();
+HTMLWidget1();
+HTMWidget1End();
 HTMLasideEnd();
 HTMLContentStart();
 HTMLIncidencias();

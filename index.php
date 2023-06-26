@@ -18,7 +18,11 @@ HTMLbienvenido();
 HTMLbienvenidaEnd();
 HTMLasideStart();
 HTMLaside();
+HTMWidget1Start();
+HTMLWidget1();
+HTMWidget1End();
 HTMLasideEnd();
+
 HTMLfooter();
 HTMLfin();
 
