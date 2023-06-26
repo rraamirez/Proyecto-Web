@@ -1,6 +1,9 @@
 // importar.php
 <?php
 require_once('dbcredencialesRaul.php');
+require_once('bd.php');
+$conexion = new Conexion();
+$conexion->conectar();
 
 $backup_file = $_FILES['backupFile']['tmp_name'];
 
@@ -17,6 +20,8 @@ if($output == 0) {
 } else {
     $_SESSION['message'] = 'Ha ocurrido un error durante la importación.';
 }
+
+$conexion->desconectar();
 
 header("Location: ../index.php");
 

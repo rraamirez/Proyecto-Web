@@ -722,8 +722,8 @@ function HTMLUsuarios()
                             <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
                         </a>
                     </button>
-                    <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;"  method="post">
-                        <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
+                    <form action="borrarUsuario.php" method="POST">
+                        <input type="hidden" name="idUsuario" value="{$user['id']}">
                         <button type="submit" class="btn btn-lg">
                             <img src="../img/delete_icon.png" alt="Delete" style="width: 40px; height: 40px;">
                         </button>

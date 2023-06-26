@@ -1,5 +1,8 @@
 <?php
 require_once('dbcredencialesRaul.php');
+require_once('bd.php');
+$conexion = new Conexion();
+$conexion->conectar();
 
 $backup_file = 'backup.sql';
 
@@ -16,6 +19,8 @@ if($output == 0) {
 } else {
     $_SESSION['message'] = 'Ha ocurrido un error durante la exportación.';
 }
+
+$conexion->desconectar();
 
 header("Location: ../index.php");
 

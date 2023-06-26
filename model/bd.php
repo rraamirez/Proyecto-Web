@@ -287,9 +287,16 @@ class Conexion {
         $stmt->execute();
     }
 
+    function eliminarLogsUsuario($idUsuario) {
+        $stmt = $this->conn->prepare("DELETE FROM logs WHERE id_usuario = ?");
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+    }
+
     function eliminarUsuario($idUsuario) {
         $this->eliminarIncidenciasUsuario($idUsuario);
         $this->eliminarComentariosUsuario($idUsuario);
+        $this->eliminarLogsUsuario($idUsuario);
         $stmt = $this->conn->prepare("DELETE FROM usuarios WHERE id = ?");
         $stmt->bind_param("i", $idUsuario);
         $stmt->execute();
