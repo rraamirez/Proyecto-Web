@@ -494,6 +494,13 @@ function HTMLIncidencias()
                             <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>
+                    <form action="borrarIncidencia.php" method="POST">
+                        <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
+                        <input type="hidden" name="localizacion" value="verIncidencias.php">
+                        <button type="submit" class="btn btn-primary btn-circle btn-sm">
+                            <img src="../img/delete_icon.png" alt="Borrar" style="width: 15px; height: 15px;">
+                        </button>
+                    </form>
             HTML;
             }
 
@@ -761,6 +768,7 @@ function HTMLMisIncidencias()
                     </form>
                     <form action="borrarIncidencia.php" method="POST">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
+                        <input type="hidden" name="localizacion" value="misIncidencias.php">
                         <button type="submit" class="btn btn-primary btn-circle btn-sm">
                             <img src="../img/delete_icon.png" alt="Borrar" style="width: 15px; height: 15px;">
                         </button>
