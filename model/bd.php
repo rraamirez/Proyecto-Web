@@ -775,10 +775,53 @@ function getIdsPerUser($id_usuario){
         return $fotos;
     }
     
+    function searchFotosWithID($id_incidencia) {
+        // Preparamos la consulta SQL
+        $stmt = $this->conn->prepare("SELECT imagen, id_imagen FROM imagenes WHERE id_incidencia = ?");
+        
+        // Asignamos los parámetros
+        $stmt->bind_param('i', $id_incidencia);
+        
+        // Ejecutamos la consulta
+        $stmt->execute();
+        
+        // Obtenemos el resultado
+        $result = $stmt->get_result();
+        
+        // Inicializamos un arreglo vacío para almacenar las fotos
+        $fotos = array();
+        
+        // Si hay resultados, los agregamos al arreglo
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $fotos[] = array(
+                    'id_imagen' => $row['id_imagen'],
+                    'imagen' => $row['imagen']
+                );
+            }
+        }
+        
+        // Cerramos la consulta
+        $stmt->close();
+        
+        // Retornamos el resultado
+        return $fotos;
+    }
+
     function eliminarFotoIncidencias($idIncidencia) {
         $stmt = $this->conn->prepare("DELETE FROM imagenes WHERE id_incidencia = ?");
         $stmt->bind_param("i", $idIncidencia);
         $stmt->execute();
+        $stmt->close();
+    }
+
+    function deleteFoto($id_foto){
+        $stmt = $this->conn->prepare("DELETE FROM imagenes WHERE id_imagen = ?");
+        $stmt->bind_param("i", $id_foto);
+        $stmt->execute();
+        $stmt->close();
+        
+        return true;
     }
 
     ################################################################################################################################
