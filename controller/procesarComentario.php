@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Procesar los datos del formulario de comentario
     $mensaje = trim(stripslashes(htmlspecialchars($_POST['mensaje'])));
-    $idIncidencia = $_SESSION['idIncidencia'];
+    $idIncidencia = $_POST['idIncidencia'];
 
     $conexion = new Conexion();
     $conexion->conectar();
