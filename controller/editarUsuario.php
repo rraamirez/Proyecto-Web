@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $nombre = htmlspecialchars(trim($_SESSION['nombre']));
         $apellidos = htmlspecialchars(trim($_SESSION['apellidos']));
         $email = htmlspecialchars(trim($_SESSION['email']));
-        $foto = $_SESSION['foto'];  // Assuming this is properly handled before being saved in session
-        $clave = $_SESSION['clave']; // Please hash the password before saving it in session
+        $foto = $_SESSION['foto'];  
+        $clave = $_SESSION['clave']; 
         $user = $_SESSION['user'];
 
         $idUsuario = $conexion->editarUsuario($nombre, $apellidos, $email, $foto, $clave, $user);
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['foto'] = $db->getImage($_SESSION['user']);
             $db->desconectar();
         }
-        $_SESSION['clave'] = $_POST['clave']; // Please hash the password before saving it in session
+        $_SESSION['clave'] = $_POST['clave']; 
         $editMode = false;
     }
 }

@@ -30,14 +30,10 @@ class Conexion {
         if ($this->conn->connect_error) {
             die("Conexión fallida: " . $this->conn->connect_error);
         }
-
-        echo "Conexión exitosa";
     }
 
     public function desconectar() {
         $this->conn->close();
-
-        echo "Desconexión exitosa";
     }
 
     public static function getInstance() {
@@ -269,6 +265,14 @@ class Conexion {
     
         // Retorna los datos del usuario
         return $usuarioData;
+    }
+
+    function eliminarUsuario($idUsuario) {
+        $this->eliminarIncidenciasUsuario($idUsuario);
+        $this->eliminarComentariosUsuario($idUsuario);
+        $stmt = $this->conn->prepare("DELETE FROM usuarios WHERE id = ?");
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
     }
     
     
@@ -507,8 +511,6 @@ class Conexion {
                 'val_neg' => $val_neg
 
             );
-    
-            // Añade el array asociativo al array de incidencias
             $incidencias[] = $incidencia;
         }
         
@@ -517,6 +519,52 @@ class Conexion {
         
         // Retorna el resultado de la operación
         return $incidencias;
+    }
+
+
+function getIdsPerUser($id_usuario){
+        $incidencias = array();
+    
+        // Prepara la consulta SQL para obtener las incidencias
+        $stmt = $this->conn->prepare("SELECT id_incidencia FROM incidencias WHERE id_usuario = ?");
+        
+        // Asocia los parámetros a las variables
+        $stmt->bind_param('i', $id_usuario);
+        
+        // Ejecuta la consulta
+        $stmt->execute();
+    
+        // Vincula las variables a las columnas del resultado
+        $stmt->bind_result($id_incidencia);
+    
+        // Recorre los resultados
+        while ($stmt->fetch()) {
+            // Crea un array asociativo con los valores
+            $incidencia = array(
+                'id_incidencia' => $id_incidencia
+            );
+            $incidencias[] = $incidencia;
+        }
+        
+        // Cierra la consulta
+        $stmt->close();
+        
+        // Retorna el resultado de la operación
+        return $incidencias;
+    }
+
+
+    // Función para obtener las incidencias de un usuario
+    //TODO BORRRAR USUARIO
+    function eliminarIncidenciasUsuario($idUsuario) {
+        $ids = $this->getIdsPerUser($idUsuario);
+        foreach ($ids as $id) {
+            $this->eliminarFotoIncidencias($id['id_incidencia']);
+        }
+        
+        $stmt = $this->conn->prepare("DELETE FROM incidencias WHERE id_usuario = ?");
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
     }
     
     
@@ -571,6 +619,11 @@ class Conexion {
         return $comentarios;
     }    
     
+    function eliminarComentariosUsuario($idUsuario) {
+        $stmt = $this->conn->prepare("DELETE FROM comentarios WHERE id_usuario = ?");
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+    }
 
     ################################################################################################################################
     ################################################################################################################################
@@ -632,6 +685,14 @@ class Conexion {
         return true;
     }
 
+
+    function eliminarValoracionUsuario($idUsuario) {
+        $stmt = $this->conn->prepare("DELETE FROM valoraciones WHERE id_usuario = ?");
+        $stmt->bind_param("i", $idUsuario);
+        $stmt->execute();
+    }
+  
+
     ################################################################################################################################
     ################################################################################################################################
         #METODOS FOTO
@@ -689,5 +750,11 @@ class Conexion {
         return $fotos;
     }
     
+    function eliminarFotoIncidencias($idIncidencia) {
+        $stmt = $this->conn->prepare("DELETE FROM imagenes WHERE id_incidencia = ?");
+        $stmt->bind_param("i", $idIncidencia);
+        $stmt->execute();
+    }
 }
+
 ?>

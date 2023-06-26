@@ -169,6 +169,7 @@ function HTMLaside()
         <p class="text-center">
             Bienvenido, {$_SESSION['user']}
         </p>
+        <p class="text-center" style="color: blue">Eres un: {$_SESSION['rol']}</p>
         <div class="text-center">
             <img src="data:image/jpg;base64,$foto" class="img-fluid rounded-circle" style="width: 100px; height: auto; object-fit: cover;" alt="Foto de perfil">
         </div>
@@ -439,13 +440,13 @@ function HTMLUsuarios()
                 <strong>Rol:</strong> {$user['rol']} <strong>Estado:</strong> </p>
             </div>
             <div class='col-md-2 d-flex align-items-center justify-content-end'>
-                <form action="editarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;">
-                    <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
-                    <button type="submit" class="btn btn-lg">
+
+                <button type="submit" class="btn btn-lg" style="margin-left: 10px; margin-top: 10px;">
+                    <a href="editarUsuarioAdmin.php?id={$db->getId($user['usuario'])}">
                         <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
-                    </button>
-                </form>
-                <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;">
+                    </a>
+                </button>
+                <form action="borrarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;"  method="post">
                     <input type="hidden" name="idUsuario" value="{$db->getId($user['usuario'])}">
                     <button type="submit" class="btn btn-lg">
                         <img src="../img/delete_icon.png" alt="Delete" style="width: 40px; height: 40px;">
@@ -460,6 +461,7 @@ function HTMLUsuarios()
 
 
 
+
 function HTMLMisIncidencias()
 {
     echo <<<HTML
@@ -470,7 +472,15 @@ function HTMLMisIncidencias()
     $user = $_SESSION['user'];
     $id = $db->getId($user);
     $incidencias = $db->getUsuarioIncidencias($id);
-    foreach ($incidencias as $incidencia) {
+    if(empty($incidencias)){
+        echo <<<HTML
+            <div class="card mb-3">
+                <h5 class="text-center" style="background-color:beige">No tienes ninguna incidencia</h5>
+            </div>
+        HTML;
+    }
+    else{
+        foreach ($incidencias as $incidencia) {
         echo <<<HTML
             <div class="card mb-3">
                     <div class="card-header">
@@ -492,6 +502,7 @@ function HTMLMisIncidencias()
                         <p class="card-text">{$incidencia['descripcion']}</p>
                     </div>
         HTML;
+        }
     }
     $db->desconectar();
 }
