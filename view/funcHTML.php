@@ -551,7 +551,7 @@ function HTMLIncidencias()
 
                     <form action="editarIncidenciaAdmin.php" method="POST" class="mr-1">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
-                        <button type="submit" name="modify" class="btn btn-primary btn-orange btn-circle btn-sm">
+                        <button type="submit" name="ini_modify" class="btn btn-primary btn-orange btn-circle btn-sm">
                             <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>
@@ -717,11 +717,12 @@ function HTMLUsuarios()
                 </div>
                 <div class='col-md-2 d-flex align-items-center justify-content-end'>
 
-                    <button type="submit" class="btn btn-lg" style="margin-left: 10px; margin-top: 10px;">
-                        <a href="editarUsuarioAdmin.php?id={$db->getId($user['usuario'])}">
-                            <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
-                        </a>
-                    </button>
+                    <form action="editarUsuarioAdmin.php" method="GET">
+                        <input type="hidden" name="id" value="{$user['id']}">
+                        <button type="submit" class="btn btn-lg">
+                            <img src="../img/edit_icon.png" alt="Edit" style="width: 40px; height: 40px;">
+                        </button>
+                    </form>
                     <form action="borrarUsuario.php" method="POST">
                         <input type="hidden" name="idUsuario" value="{$user['id']}">
                         <button type="submit" class="btn btn-lg">

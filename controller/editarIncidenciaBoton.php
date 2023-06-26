@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $descripcion = $_SESSION['descripcion'];
         $ubicacion = $_SESSION['ubicacion'];
         $palabras_clave = $_SESSION['palabras_clave'];
-        $estado = $_SESSION['estado'];
 
         $fotoId = $_POST['delete'];
         $resultadoFoto = $conexion->deleteFoto($fotoId);

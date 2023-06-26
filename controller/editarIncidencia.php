@@ -4,11 +4,11 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
 require_once('../model/bd.php');
-
+// Conectar a la base de datos
+$conexion = new Conexion();
+$conexion->conectar();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Conectar a la base de datos
-    $conexion = new Conexion();
-    $conexion->conectar();
+    
     $incidencia = $conexion->getIncidencia($_SESSION['incidencia']['id']);
 
 
@@ -31,21 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         
     } elseif(isset($_POST['upload'])) {
-        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
-        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
-        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
-        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
+        $titulo = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['titulo'])));
+        $descripcion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['descripcion'])));
+        $ubicacion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['ubicacion'])));
+        $palabras_clave = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['palabras_clave'])));
 
         if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
             $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
             $resultadoFoto = $conexion->addFoto($_SESSION['incidencia']['id'], $foto);
         }
     }elseif(isset($_POST['delete'])) {
-        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
-        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
-        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
-        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
-        $estado = $_SESSION['estado'] ?? $incidencia['estado'];
+        $titulo = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['titulo'])));
+        $descripcion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['descripcion'])));
+        $ubicacion = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['ubicacion'])));
+        $palabras_clave = trim(stripslashes(htmlspecialchars($_SESSION['incidencia']['palabras_clave'])));
 
         $fotoId = $_POST['delete'];
         $resultadoFoto = $conexion->deleteFoto($fotoId);

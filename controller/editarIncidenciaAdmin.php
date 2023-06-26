@@ -14,11 +14,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $incidencia = $conexion->getIncidencia($id_incidencia);
 
     if(isset($_POST['ini_modify'])){
+        var_dump($incidencia);
         $titulo = $incidencia['titulo'];
         $descripcion = $incidencia['descripcion'];
         $ubicacion = $incidencia['ubicacion'];
         $palabras_clave = $incidencia['palabras_clave'];
         $estado = $incidencia['estado'];
+
+        $_SESSION['titulo'] = $titulo;
+        $_SESSION['descripcion'] = $descripcion;
+        $_SESSION['ubicacion'] = $ubicacion;
+        $_SESSION['palabras_clave'] = $palabras_clave;
+        $_SESSION['estado'] = $estado;
     }
     else if(isset($_POST['modify'])) {
         // Procesar los datos del formulario de incidencia
@@ -45,11 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     elseif(isset($_POST['upload'])) {
-        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
-        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
-        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
-        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
-        $estado = $_SESSION['estado'] ?? $incidencia['estado'];
+        $titulo = $_SESSION['titulo'];
+        $descripcion = $_SESSION['descripcion'];
+        $ubicacion = $_SESSION['ubicacion'];
+        $palabras_clave = $_SESSION['palabras_clave'];
+        $estado = $_SESSION['estado'];
 
         if (is_uploaded_file($_FILES['foto']['tmp_name'])) {
             $foto = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));
@@ -61,12 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     elseif(isset($_POST['delete'])) {
-        $titulo = $_SESSION['titulo'] ?? $incidencia['titulo'];
-        $descripcion = $_SESSION['descripcion'] ?? $incidencia['descripcion'];
-        $ubicacion = $_SESSION['ubicacion'] ?? $incidencia['ubicacion'];
-        $palabras_clave = $_SESSION['palabras_clave'] ?? $incidencia['palabras_clave'];
-        $estado = $_SESSION['estado'] ?? $incidencia['estado'];
-
+        $titulo = $_SESSION['titulo'];
+        $descripcion = $_SESSION['descripcion'];
+        $ubicacion = $_SESSION['ubicacion'];
+        $palabras_clave = $_SESSION['palabras_clave'];
+        $estado = $_SESSION['estado'];
+        
         $fotoId = $_POST['delete'];
         $resultadoFoto = $conexion->deleteFoto($fotoId);
         if (!$resultadoFoto) {

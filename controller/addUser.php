@@ -1,11 +1,12 @@
 <?php
+session_start();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if(!isset($_SESSION['usuario']) || $_SESSION['rol'] != 'admin') {
+    if($_SESSION['rol'] != 'admin') {
         // No está conectado o no es un administrador, redirigir a página de inicio
         header('Location: ../index.php');
         exit(); 
@@ -88,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <h2>Registro de Usuario</h2>
-    <form method="POST" action="register.php" enctype="multipart/form-data">
+    <form method="POST" action="addUser.php">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
             <input type="text" class="form-control" name="nombre" required>
@@ -121,12 +122,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="rol">Rol:</label>
             <select class="form-control" name="rol" required>
+                
                 <option value="colaborador">Colaborador</option>
                 <option value="admin">Admin</option>
+                
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary" formaction="register.php">Registrar</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
