@@ -755,6 +755,61 @@ function getIdsPerUser($id_usuario){
         $stmt->bind_param("i", $idIncidencia);
         $stmt->execute();
     }
+
+    ################################################################################################################################
+    ################################################################################################################################
+        #METODOS LOG
+    ################################################################################################################################
+    ################################################################################################################################
+
+    function addLog($id_usuario, $fecha, $mensaje){
+        // Preparamos la consulta SQL
+        $stmt = $this->conn->prepare("INSERT INTO logs (id_usuario, fecha, mensaje) VALUES (?, ?, ?)");
+        
+        // Asignamos los parámetros
+        $stmt->bind_param('iss', $id_usuario, $fecha, $mensaje);
+    
+        // Ejecutamos la consulta
+        if($stmt->execute()) {
+            $log_id = $stmt->insert_id;
+        } else {
+            $log_id = false;
+        }
+    
+        // Cerramos la consulta
+        $stmt->close();
+        
+        // Retornamos el resultado
+        return $log_id;
+    }
+
+    function getLogs() {
+        // Preparamos la consulta SQL
+        $stmt = $this->conn->prepare("SELECT fecha, mensaje FROM logs");
+        
+        // Ejecutamos la consulta
+        $stmt->execute();
+        
+        // Obtenemos el resultado
+        $result = $stmt->get_result();
+        
+        // Inicializamos un arreglo vacío para almacenar los logs
+        $logs = array();
+        
+        // Si hay resultados, los agregamos al arreglo
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                $logs[] = $row;
+            }
+        }
+        
+        // Cerramos la consulta
+        $stmt->close();
+        
+        // Retornamos el resultado
+        return $logs;
+    }
+    
 }
 
 ?>

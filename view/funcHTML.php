@@ -63,9 +63,9 @@ function HTMLnav($index)
         } else if ($_SESSION['rol'] == 'admin') {
             $items = ["Incidencias","Mis incidencias","Nueva Incidencia", "Usuarios", "Logs", "BBDD"];
             if($index == 1)
-                $links = ["/controller/verIncidencias.php", "/controller/misIncidencias.php", "/controller/nuevaIncidencia.php", "/controller/verUsuarios.php", "/controller/logs.php", "/controller/verBaseDatos.php"];
+                $links = ["/controller/verIncidencias.php", "/controller/misIncidencias.php", "/controller/nuevaIncidencia.php", "/controller/verUsuarios.php", "/controller/verLogs.php", "/controller/verBaseDatos.php"];
             else
-            $links = ["verIncidencias.php", "misIncidencias.php", "nuevaIncidencia.php", "verUsuarios.php", "logs.php", "verBaseDatos.php"];    
+            $links = ["verIncidencias.php", "misIncidencias.php", "nuevaIncidencia.php", "verUsuarios.php", "verLogs.php", "verBaseDatos.php"];    
         }
     }
     foreach ($items as $index => $item) {
@@ -459,6 +459,42 @@ function HTMLUsuarios()
     $db->desconectar();
 }
 
+function HTMLLogs() {
+    echo <<<HTML
+<link href="../view/vista.css" rel="stylesheet">
+<div class="card mb-3">
+    <h5 class="text-center" style="background-color:beige">Eventos de sistema</h5>
+</div>
+HTML;
+    $db = new Conexion();
+    $db->conectar();
+    $logs = $db->getLogs();
+
+    if(empty($logs)){
+        echo <<<HTML
+<div class="card mb-3">
+    <h5 class="text-center" style="background-color:beige">No tienes ningun registro de evento</h5>
+</div>
+HTML;
+    }
+    else{
+        foreach ($logs as $log) {
+        echo <<<HTML
+<div class="card mb-3">
+    <div class="card-header">
+        <h5 class="card-title">{$log['fecha']}</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <span class="value">{$log['mensaje']}</span>
+        </li>
+    </ul>
+</div>
+HTML;
+        }
+    }
+    $db->desconectar();
+}
 
 
 
@@ -506,6 +542,7 @@ function HTMLMisIncidencias()
     }
     $db->desconectar();
 }
+
 
 function HTMLfooter()
 {

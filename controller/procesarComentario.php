@@ -19,16 +19,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else
         $id_usuario = null;
     
-    $fecha = date("Y-m-d H:i:s"); // Fecha y hora actual
-
-    // Realizar la conexión a la base de datos
+    $fecha = date("Y-m-d H:i:s");
     
-    // Llamar al método DBaddComentario() para agregar el comentario a la base de datos
     if ($conexion->addComentario($idIncidencia, $id_usuario, $mensaje, $fecha)) {
-        // Comentario registrado exitosamente
-        echo 'Comentario registrado exitosamente.';
-        echo '<script>alert("Comentario creado correctamente");</script>';
-        header('Location: verIncidencias.php'); // Redireccionar a verIncidencias.php
+        $conexion->addLog(($id_usuario), date("Y-m-d H:i:s"), "INFO: El usuario {$conexion->getUsuario($id_usuario)} accede al sistema");
+        
+        header('Location: verIncidencias.php');
     } else {
         // Error al registrar el comentario
         echo $idIncidencia, $id_usuario, $mensaje, $fecha;
