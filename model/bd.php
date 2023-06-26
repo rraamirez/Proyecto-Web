@@ -723,6 +723,31 @@ function getIdsPerUser($id_usuario){
         $stmt->execute();
     }
 
+    function eliminarIncidencia($id_incidencia){
+        // Preparar la consulta SQL
+        $sql = "DELETE FROM incidencias WHERE id_incidencia = ?";
+    
+        // Preparar la sentencia
+        $stmt = $this->conn->prepare($sql);
+    
+        // Vincular los parámetros
+        $stmt->bind_param('i', $id_incidencia);
+    
+        // Ejecutar la consulta
+        $stmt->execute();
+    
+        // Cerrar la consulta
+        $stmt->close();
+    }
+    
+    function eliminarComentariosIncidencia($id_incidencia){
+
+    }
+
+    function eliminarImagenesIncidencia($id_incidencia){
+        
+    }
+
     ################################################################################################################################
     ################################################################################################################################
         #METODOS VALORACION
