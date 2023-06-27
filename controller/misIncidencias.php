@@ -9,7 +9,7 @@ require_once('../model/bd.php');
 $db = new Conexion();
 $db->conectar();
 
-if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
+if (isset($_SESSION['user']) && $_SESSION['rol'] == 'admin' || $_SESSION['rol'] == 'colaborador') {
     HTMLinicio("Incidencias");
     HTMLheader(0);
     HTMLnav(0);

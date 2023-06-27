@@ -5,6 +5,12 @@ error_reporting(E_ALL);
 session_start();
 require_once('../model/bd.php');
 // Conectar a la base de datos
+
+if($_SESSION['rol'] != 'admin' && $_SESSION['rol'] != 'colaborador') {
+    header('Location: ../index.php');
+    exit(); 
+}
+
 $conexion = new Conexion();
 $conexion->conectar();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

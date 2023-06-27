@@ -195,6 +195,26 @@ class Conexion {
         return $result;
     }
 
+    function editarUsuarioAdmin($nombre, $apellidos, $email, $foto, $clave, $rol, $usuario) {
+        // Prepara la consulta SQL para actualizar el usuario
+        $stmt = $this->conn->prepare("UPDATE usuarios SET nombre = ?, apellidos = ?, email = ?, foto = ?, clave = ?, rol = ? WHERE usuario = ?");
+    
+        // Encripta la clave
+        $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT);
+    
+        // Asocia los parámetros a las variables
+        $stmt->bind_param('sssssss', $nombre, $apellidos, $email, $foto, $clave_encriptada, $rol, $usuario);
+    
+        // Ejecuta la consulta
+        $result = $stmt->execute();
+    
+        // Cierra la consulta
+        $stmt->close();
+    
+        // Retorna el resultado de la operación
+        return $result;
+    }
+
     function getUsuarios() {
         // Prepara la consulta SQL para obtener los usuarios
         $stmt = $this->conn->prepare("SELECT id, nombre, apellidos, email, foto, clave, usuario, rol FROM usuarios ORDER BY id DESC");

@@ -5,6 +5,11 @@ error_reporting(E_ALL);
 require_once('../model/bd.php');
 session_start();
 
+if($_SESSION['rol'] != 'admin' && $_SESSION['rol'] != 'colaborador') {
+    header('Location: ../index.php');
+    exit(); 
+}
+
 $editMode = true;
 
 // Carga los datos del usuario la primera vez que se abre la página

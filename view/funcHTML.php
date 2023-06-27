@@ -112,9 +112,6 @@ function HTMLbbdd() {
             <input type="file" name="backupFile" required>
             <button type="submit" class="btn btn-outline-success">Importar</button>
         </form>
-        <form action="../model/borrarBBDD.php" method="post" onsubmit="return confirm('¿Estás seguro de que quieres borrar la base de datos? Esta acción no se puede deshacer. Continúe sólo si sabe lo que está haciendo.');">
-            <button type="submit" class="btn btn-outline-danger">Borrar Base de Datos</button>
-        </form>
     </div>
     HTML;
 }
@@ -894,10 +891,12 @@ function HTMLfooter()
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
             <p>Proyecto realizado por Jorge y Raúl</p>
+            <a href="../dpcu.pdf" class="btn btn-light" target="_blank">Documentación del Proyecto</a>
         </div>
     </footer>
     HTML;
 }
+
 
 function HTMLfin()
 {

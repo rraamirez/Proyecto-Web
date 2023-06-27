@@ -5,6 +5,11 @@ error_reporting(E_ALL);
 session_start();
 require_once('../model/bd.php');
 
+if($_SESSION['rol'] != 'admin') {
+    header('Location: ../index.php');
+    exit(); 
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Conectar a la base de datos
     $conexion = new Conexion();
@@ -14,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $incidencia = $conexion->getIncidencia($id_incidencia);
 
     if(isset($_POST['ini_modify'])){
-        var_dump($incidencia);
         $titulo = $incidencia['titulo'];
         $descripcion = $incidencia['descripcion'];
         $ubicacion = $incidencia['ubicacion'];

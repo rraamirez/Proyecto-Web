@@ -25,8 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apellidos = $_POST['apellidos'];
     $email = $_POST['email'];
     $clave = $_POST['clave'];
+    $rol = $_POST['rol'];
 
-    $idUsuario = $conexion->editarUsuario($nombre, $apellidos, $email, $foto, $clave, $usuario['usuario']);
+    $idUsuario = $conexion->editarUsuarioAdmin($nombre, $apellidos, $email, $foto, $clave, $rol, $usuario['usuario']);
 
     if ($idUsuario) {
         $conexion->addLog($idUsuario, date("Y-m-d H:i:s"), "INFO: El usuario {$usuario['usuario']} ha sido modificado");
@@ -93,6 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="clave">Contraseña:</label>
             <input type="password" class="form-control" name="clave" value="<?php echo htmlspecialchars($usuario['clave'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" <?php echo $editMode ? '' : 'readonly' ?> required>
+        </div>
+
+        <div class="form-group">
+            <label for="rol">Rol:</label>
+            <select class="form-control" name="rol" <?php echo $editMode ? '' : 'disabled' ?>>
+                <option value="admin" <?php echo $usuario['rol'] == 'admin' ? 'selected' : '' ?>>Admin</option>
+                <option value="colaborador" <?php echo $usuario['rol'] == 'colaborador' ? 'selected' : '' ?>>Colaborador</option>
+            </select>
         </div>
 
         <button type="submit" class="btn btn-primary" name="<?php echo $editMode ? 'edit' : 'confirm' ?>" formaction="editarUsuarioAdmin.php?id=<?php echo $idUser?>"><?php echo $editMode ? 'Editar' : 'Confirmar' ?></button>

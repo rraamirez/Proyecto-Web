@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $clave = htmlentities($_POST['clave'], ENT_QUOTES, 'UTF-8');
     $usuario = htmlentities($_POST['usuario'], ENT_QUOTES, 'UTF-8');
     $rol = htmlentities($_POST['rol'], ENT_QUOTES, 'UTF-8');
-
     
     // Comprueba si se ha cargado un archivo
     if (is_uploaded_file($_FILES['foto']['tmp_name'])) {

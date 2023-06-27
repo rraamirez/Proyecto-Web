@@ -5,6 +5,12 @@ error_reporting(E_ALL);
 session_start();
 require_once('../model/bd.php');
 
+if($_SESSION['rol'] != 'admin' && $_SESSION['rol'] != 'colaborador') {
+    // No está conectado o no es un administrador, redirigir a página de inicio
+    header('Location: ../index.php');
+    exit(); 
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(isset($_POST['confirm'])) {
         // Procesar los datos del formulario de incidencia
@@ -25,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $val_pos, $val_neg);
         $_SESSION['incidencia']['id'] = $idIncidencia;
         if ($idIncidencia) {
-            
             header('Location: editarIncidencia.php');
         } else {
             // Error al registrar la incidencia

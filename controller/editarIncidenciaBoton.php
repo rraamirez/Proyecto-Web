@@ -3,7 +3,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 session_start();
+
 require_once('../model/bd.php');
+if($_SESSION['rol'] != 'admin' && $_SESSION['rol'] != 'colaborador') {
+    header('Location: ../index.php');
+    exit(); 
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Conectar a la base de datos
