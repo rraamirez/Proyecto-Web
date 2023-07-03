@@ -166,12 +166,15 @@ function HTMLasideEnd()
 function HTMLaside($index)
 {
     if (!isset($_SESSION['user'])) {
-        if($index == 1)
-            $url = "controller/procesarLogin.php";
-        else
-            $url = "../controller/procesarLogin.php";
-        
-        echo "<form method='POST' action='$url' class='form-signin'>";
+        if($index == 1){
+            $login = "controller/procesarLogin.php";
+            $register = "controller/procesarLogin.php";
+        }
+        else{
+            $login = "../controller/procesarLogin.php";
+            $register = "../controller/procesarLogin.php";
+        }
+        echo "<form method='POST' action='$login' class='form-signin'>";
         echo <<<HTML
             <label for="inputUser" class="sr-only">Usuario</label>
             <input type="text" id="inputUser" name='user' class="form-control" placeholder="Usuario" required autofocus>
@@ -183,7 +186,7 @@ function HTMLaside($index)
         </form>
         HTML;
         
-        echo "<form action='$url' class='form-signin'>";
+        echo "<form action='$register' class='form-signin'>";
         echo <<<HTML
             <div class="d-flex justify-content-center mt-3">
                 <button class="btn btn-lg btn-secondary" type="submit">Registrar</button>
