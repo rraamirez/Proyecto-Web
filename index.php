@@ -17,7 +17,7 @@ HTMLbienvenidaStart();
 HTMLbienvenido();
 HTMLbienvenidaEnd();
 HTMLasideStart();
-HTMLaside();
+HTMLaside(1);
 HTMWidget1Start();
 HTMLWidget1();
 HTMWidget1End();

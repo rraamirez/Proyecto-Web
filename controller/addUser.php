@@ -4,14 +4,13 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+if($_SESSION['rol'] != 'admin') {
+    // No está conectado o no es un administrador, redirigir a página de inicio
+    header('Location: ../index.php');
+    exit(); 
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    if($_SESSION['rol'] != 'admin') {
-        // No está conectado o no es un administrador, redirigir a página de inicio
-        header('Location: ../index.php');
-        exit(); 
-    }
-
     // Procesar los datos del formulario de registro
     $nombre = htmlentities($_POST['nombre'], ENT_QUOTES, 'UTF-8');
     $apellidos = htmlentities($_POST['apellidos'], ENT_QUOTES, 'UTF-8');

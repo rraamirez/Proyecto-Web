@@ -20,7 +20,7 @@ HTMLbodyStart();
 HTMLbusqueda();
 HTMLbodyEnd();
 HTMLasideStart();
-HTMLaside();
+HTMLaside(0);
 HTMWidget1Start();
 HTMLWidget1();
 HTMWidget1End();

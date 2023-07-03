@@ -63,7 +63,7 @@ function HTMLnav($index)
         } else if ($_SESSION['rol'] == 'admin') {
             $items = ["Incidencias","Mis incidencias","Nueva Incidencia", "Usuarios", "Logs", "BBDD"];
             if($index == 1)
-                $links = ["/controller/verIncidencias.php", "/controller/misIncidencias.php", "/controller/nuevaIncidencia.php", "/controller/verUsuarios.php", "/controller/verLogs.php", "/controller/verBaseDatos.php"];
+                $links = ["controller/verIncidencias.php", "controller/misIncidencias.php", "controller/nuevaIncidencia.php", "controller/verUsuarios.php", "controller/verLogs.php", "controller/verBaseDatos.php"];
             else
             $links = ["verIncidencias.php", "misIncidencias.php", "nuevaIncidencia.php", "verUsuarios.php", "verLogs.php", "verBaseDatos.php"];    
         }
@@ -111,6 +111,9 @@ function HTMLbbdd() {
         <form action="../model/importar.php" method="post" enctype="multipart/form-data">
             <input type="file" name="backupFile" required>
             <button type="submit" class="btn btn-outline-success">Importar</button>
+        </form>
+        <form action="../model/borrarBBDD.php" method="post" onsubmit="return confirm('¿Estás seguro de que quieres borrar la base de datos? Esta acción no se puede deshacer. Continúe sólo si sabe lo que está haciendo.');">
+            <button type="submit" class="btn btn-outline-danger">Borrar Base de Datos</button>
         </form>
     </div>
     HTML;
@@ -163,11 +166,16 @@ function HTMLasideEnd()
 
 
 
-function HTMLaside()
+function HTMLaside($index)
 {
     if (!isset($_SESSION['user'])) {
+        if($index == 1)
+            $url = "controller/procesarLogin.php";
+        else
+            $url = "../controller/procesarLogin.php";
+        
+        echo "<form method='POST' action='$url' class='form-signin'>";
         echo <<<HTML
-        <form method="POST" action="../controller/procesarLogin.php" class="form-signin">
             <label for="inputUser" class="sr-only">Usuario</label>
             <input type="text" id="inputUser" name='user' class="form-control" placeholder="Usuario" required autofocus>
             <label for="inputPassword" class="sr-only">Contraseña</label>
@@ -176,7 +184,10 @@ function HTMLaside()
                 <button class="btn btn-lg btn-primary" type="submit">Iniciar sesión</button>
             </div>
         </form>
-        <form action="../controller/register.php" class="form-signin">
+        HTML;
+        
+        echo "<form action='$url' class='form-signin'>";
+        echo <<<HTML
             <div class="d-flex justify-content-center mt-3">
                 <button class="btn btn-lg btn-secondary" type="submit">Registrar</button>
             </div>
@@ -548,7 +559,7 @@ function HTMLIncidencias()
 
                     <form action="editarIncidenciaAdmin.php" method="POST" class="mr-1">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
-                        <button type="submit" name="ini_modify" class="btn btn-primary btn-orange btn-circle btn-sm">
+                        <button type="submit" name="modify" class="btn btn-primary btn-orange btn-circle btn-sm">
                             <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>
@@ -714,12 +725,11 @@ function HTMLUsuarios()
                 </div>
                 <div class='col-md-2 d-flex align-items-center justify-content-end'>
 
-                    <form action="editarUsuarioAdmin.php" method="GET">
-                        <input type="hidden" name="id" value="{$user['id']}">
-                        <button type="submit" class="btn btn-lg">
-                            <img src="../img/edit_icon.png" alt="Edit" style="width: 40px; height: 40px;">
-                        </button>
-                    </form>
+                    <button type="submit" class="btn btn-lg" style="margin-left: 10px; margin-top: 10px;">
+                        <a href="editarUsuarioAdmin.php?id={$db->getId($user['usuario'])}">
+                            <img src="../img/edit_icon.png" alt="Edit" style="width: 30px; height: 30px;">
+                        </a>
+                    </button>
                     <form action="borrarUsuario.php" method="POST">
                         <input type="hidden" name="idUsuario" value="{$user['id']}">
                         <button type="submit" class="btn btn-lg">
@@ -891,12 +901,10 @@ function HTMLfooter()
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
             <p>Proyecto realizado por Jorge y Raúl</p>
-            <a href="../Documentacion.pdf" class="btn btn-light" target="_blank">Documentación del Proyecto</a>
         </div>
     </footer>
     HTML;
 }
-
 
 function HTMLfin()
 {
