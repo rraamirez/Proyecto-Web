@@ -112,9 +112,6 @@ function HTMLbbdd() {
             <input type="file" name="backupFile" required>
             <button type="submit" class="btn btn-outline-success">Importar</button>
         </form>
-        <form action="../model/borrarBBDD.php" method="post" onsubmit="return confirm('¿Estás seguro de que quieres borrar la base de datos? Esta acción no se puede deshacer. Continúe sólo si sabe lo que está haciendo.');">
-            <button type="submit" class="btn btn-outline-danger">Borrar Base de Datos</button>
-        </form>
     </div>
     HTML;
 }
@@ -194,6 +191,16 @@ function HTMLaside($index)
         </form>
     HTML;
     } else {
+        if($index == 1){
+            $edit = "controller/editarUsuario.php";
+            $foto_edit = "img/edit_icon.png";
+            $logout = "controller/procesarLogout.php";
+        }
+        else{
+            $edit = "../controller/editarUsuario.php";
+            $foto_edit = "../img/edit_icon.png";
+            $logout = "../controller/procesarLogout.php";
+        }
         // Convertir la foto a base64 para poder mostrarla en un elemento de imagen
         $db = new Conexion();
         $db->conectar();
@@ -211,12 +218,18 @@ function HTMLaside($index)
         </div>
 
         <div class="d-flex justify-content-center mt-3">
-            <form action="../controller/editarUsuario.php" class="form-signin" style="margin-left: 10px; margin-top: 10px;">
+        HTML;
+            echo "<form action='$edit' class='form-signin' style='margin-left: 10px; margin-top: 10px;'>";
+        echo <<<HTML
                 <button class="btn btn-lg">
-                    <img src="../img/edit_icon.png" alt="Editar" style="width: 50px; height: 50px;"/>
+        HTML;
+                    echo "<img src='$foto_edit' alt='Editar' style='width: 50px; height: 50px;'/>";
+        echo <<<HTML
                 </button>
             </form>
-            <form action="../controller/procesarLogout.php" class="form-signin">
+        HTML;
+            echo "<form action='$logout' class='form-signin'>";
+        echo <<<HTML
                 <button class="btn btn-lg btn-secondary" type="submit">Cerrar sesión</button>
             </form>
             

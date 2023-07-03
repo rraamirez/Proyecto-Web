@@ -24,7 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['foto'] = $conexion->getImage($usuario);
             $_SESSION['message'] = "Login correcto.";
 
-            $conexion->addLog($conexion->getId($usuario), date("Y-m-d H:i:s"), "INFO: El usuario {$usuario} accede al sistema");
+            $conexion->addLog($conexion->getId($_SESSION['user']), date("Y-m-d H:i:s"), "INFO: El usuario {$_SESSION['user']} accede al sistema");
         }
         else
             $_SESSION['message'] = "Error en el login.";

@@ -31,6 +31,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $conexion->desconectar();
 }
 
-header('Location: ./verIncidencias.php');
+header('Location: verIncidencias.php');
 
 ?>

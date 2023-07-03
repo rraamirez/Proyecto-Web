@@ -31,6 +31,7 @@ if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     HTMLContentEnd();
     HTMLfooter();
     HTMLfin();
+    $db->desconectar();
 
     if (isset($_SESSION['message'])) {
         echo '<script>alert("' . $_SESSION['message'] . '");</script>';
@@ -44,5 +45,5 @@ if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     exit();
 }
 
-$db->desconectar();
+
 ?>

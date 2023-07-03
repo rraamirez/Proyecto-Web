@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idIncidencia = $conexion->addIncidencia($usuario, $titulo, $descripcion, $ubicacion, $palabras_clave, $estado, $val_pos, $val_neg);
         $_SESSION['incidencia']['id'] = $idIncidencia;
         if ($idIncidencia) {
+            $conexion->addLog($conexion->getId($usuario),  date("Y-m-d H:i:s"), "INFO: El usuario {$usuario} ha creado una nueva incidencia." );
             header('Location: editarIncidencia.php');
         } else {
             // Error al registrar la incidencia
