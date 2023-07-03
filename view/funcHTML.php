@@ -914,6 +914,7 @@ function HTMLfooter()
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
             <p>Proyecto realizado por Jorge y Raúl</p>
+            <a href="Documentacion.pdf" class="btn btn-light" target="_blank">Documentación del Proyecto</a>
         </div>
     </footer>
     HTML;
