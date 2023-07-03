@@ -31,7 +31,7 @@ HTMLasideEnd();
 HTMLContentStart();
 HTMLIncidencias();
 HTMLContentEnd();
-HTMLfooter();
+HTMLfooter(0);
 HTMLfin();
 
 if (isset($_SESSION['message'])) {

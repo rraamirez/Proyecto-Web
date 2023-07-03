@@ -23,7 +23,7 @@ if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     HTMLWidget2();
     HTMWidget2End();
     HTMLasideEnd();
-    HTMLfooter();
+    HTMLfooter(0);
     HTMLfin();
 
     if (isset($_SESSION['message'])) {

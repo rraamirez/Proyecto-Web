@@ -168,11 +168,11 @@ function HTMLaside($index)
     if (!isset($_SESSION['user'])) {
         if($index == 1){
             $login = "controller/procesarLogin.php";
-            $register = "controller/procesarLogin.php";
+            $register = "controller/register.php";
         }
         else{
             $login = "../controller/procesarLogin.php";
-            $register = "../controller/procesarLogin.php";
+            $register = "../controller/register.php";
         }
         echo "<form method='POST' action='$login' class='form-signin'>";
         echo <<<HTML
@@ -575,7 +575,7 @@ function HTMLIncidencias()
 
                     <form action="editarIncidenciaAdmin.php" method="POST" class="mr-1">
                         <input type="hidden" name="id_incidencia" value="{$incidencia['id_incidencia']}">
-                        <button type="submit" name="modify" class="btn btn-primary btn-orange btn-circle btn-sm">
+                        <button type="submit" name="ini_modify" class="btn btn-primary btn-orange btn-circle btn-sm">
                             <img src="../img/edit_icon.png" alt="Editar" style="width: 15px; height: 15px;">
                         </button>
                     </form>
@@ -794,7 +794,7 @@ HTML;
 HTML;
         }
     }
-    $db->desconectar();
+    
 }
 
 
@@ -911,13 +911,20 @@ function HTMLWidgetIncidencias(){
     
 }
 
-function HTMLfooter()
+function HTMLfooter($index)
 {
+    if($index == 1)
+        $url = "Documentacion.pdf";
+    else
+        $url = "../Documentacion.pdf";
+
     echo <<<HTML
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
             <p>Proyecto realizado por Jorge y Raúl</p>
-            <a href="Documentacion.pdf" class="btn btn-light" target="_blank">Documentación del Proyecto</a>
+    HTML;
+            echo "<a href='$url' class='btn btn-light' target='_blank'>Documentación del Proyecto</a>";
+    echo <<<HTML
         </div>
     </footer>
     HTML;

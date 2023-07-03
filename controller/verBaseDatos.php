@@ -26,7 +26,7 @@ if (isset($_SESSION['user']) && $db->getRol($_SESSION['user']) === 'admin') {
     HTMLWidget2();
     HTMWidget2End();
     HTMLasideEnd();
-    HTMLfooter();
+    HTMLfooter(0);
     HTMLfin();
 }else {
     // Si el usuario no es un administrador o no está logueado, redirigir a otra página

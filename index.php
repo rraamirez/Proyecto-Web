@@ -27,7 +27,7 @@ HTMWidget2End();
 
 HTMLasideEnd();
 
-HTMLfooter();
+HTMLfooter(1);
 HTMLfin();
 
 if (isset($_SESSION['message'])) {
