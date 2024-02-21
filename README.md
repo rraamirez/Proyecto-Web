@@ -1,5 +1,3 @@
 # ProyectoFinalTW
-Por hacer:\
-Saneamiento de datos\
-Documentacion\
-Borrar tablas base de datos\
+Página web para denunciar incidencias en vecindarios. 
+Totalmente funcional.
