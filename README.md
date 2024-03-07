@@ -1,3 +1,4 @@
-# ProyectoFinalTW
-Página web para denunciar incidencias en vecindarios. 
-Totalmente funcional.
+# Proyecto Final "Tecnologías Web"
+Proyecto realizado con HTML, CSS y PHP.
+Uso de framework bootstrap
+Completamente funcional.
