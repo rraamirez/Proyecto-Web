@@ -1,4 +1,7 @@
-# Proyecto Final "Tecnologías Web"
-Proyecto realizado con HTML, CSS y PHP.
-Uso de framework bootstrap
-Completamente funcional.
+# Final Project "Web Technologies"
+Project made with HTML, CSS and PHP.
+Use of bootstrap framework
+Fully functional.
+
+Fully functional application (backend and frontend)
+for managing incidents in municipalities.
